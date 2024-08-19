@@ -1,0 +1,17 @@
+<h1 class="text-2xl">Test Train Backend</h1>
+<div class="flex justify-center">
+  <p-fieldset legend="GET">
+    <p class="m-0">Enter endpoint, press button, see browser console.</p>
+    <p-inputGroup>
+      <p-inputGroupAddon>/api/</p-inputGroupAddon>
+
+      <input type="text" pInputText #getEndpoint />
+      <p-button
+        type="button"
+        icon="pi pi-send"
+        severity="info"
+        (onClick)="onGet(getEndpoint.value)"
+      ></p-button>
+    </p-inputGroup>
+  </p-fieldset>
+</div>
