@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { BackendService } from '../../services/backend.service';
 
 @Component({
   selector: 'app-header',
@@ -10,4 +11,10 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  constructor(private backendService: BackendService) {}
+
+  sendStation() {
+    this.backendService.logGETResponse('station');
+  }
+}
