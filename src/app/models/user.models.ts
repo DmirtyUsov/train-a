@@ -1,10 +1,10 @@
 export enum UserRole {
-    Manager = 'manager',
-    User = 'user'
-  }
-  
+  Manager = 'manager',
+  User = 'user',
+}
+
 export interface UserProfile {
-    name: string;
-    email: string;
-    role: UserRole;
+  name: string;
+  email: string;
+  role: UserRole;
 }
