@@ -8,5 +8,5 @@ export interface Station {
   city: string;
   latitude: number;
   longitude: number;
-  connectedTo: StationConnection[];
+  connectedTo?: StationConnection[];
 }
