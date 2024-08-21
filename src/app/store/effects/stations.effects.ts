@@ -4,16 +4,14 @@ import * as StationsActions from '../actions/stations.actions';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { StationsService } from '../../services/stations.service';
-import { Station } from '../../models/station.models'; // Ensure the path is correct
+import { Station } from '../../models/station.models';
 
 @Injectable()
 export class StationsEffects {
   constructor(
     private actions$: Actions,
     private stationsService: StationsService,
-  ) {
-    console.log('Actions service:', this.actions$);
-  }
+  ) {}
 
   loadStations$ = createEffect(() =>
     this.actions$.pipe(

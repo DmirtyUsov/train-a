@@ -15,7 +15,10 @@
     (onChange)="onToCityChange($event)"
   ></p-dropdown>
 
-  <p-calendar formControlName="date"></p-calendar>
+  <p-calendar
+    formControlName="date"
+    (onChange)="onDateChange($event)"
+  ></p-calendar>
 
   <p-button type="submit" label="Search"></p-button>
 </form>

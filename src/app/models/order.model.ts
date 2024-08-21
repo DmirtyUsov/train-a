@@ -6,6 +6,7 @@ export enum OrderStatus {
 }
 
 export interface ScheduleSegment {
+  occupiedSeats: number[];
   time: [string, string];
   price: { [key: string]: number };
 }

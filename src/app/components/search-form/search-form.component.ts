@@ -5,11 +5,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { loadStations } from '../../store/actions/stations.actions';
 import { selectAllStations } from '../../store/selectors/stations.selectors';
 import { SearchService } from '../../services/search.service';
 import { CommonModule } from '@angular/common';
+import { Station } from '../../models/station.models';
+import {
+  selectDate,
+  selectFromStation,
+  selectToStation,
+} from '../../store/actions/search.actions';
 
 @Component({
   selector: 'app-search-form',
@@ -28,6 +35,7 @@ export class SearchFormComponent implements OnInit {
   formGroup: FormGroup;
   fromCities: { name: string; code: string }[] = [];
   toCities: { name: string; code: string }[] = [];
+  allStations$: Observable<Station[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -40,20 +48,23 @@ export class SearchFormComponent implements OnInit {
       date: [null],
     });
 
-    // Initialize observables
-    this.store
-      .select(selectAllStations)
+    this.allStations$ = this.store.select(selectAllStations);
+
+    this.allStations$
       .pipe(
         filter((stations) => stations !== null),
         map((stations) => {
-          const cities = Array.from(
+          const uniqueCities = Array.from(
             new Set(stations.map((station) => station.city)),
-          ).map((city) => ({ name: city, code: city }));
-
-          this.fromCities = cities;
-          this.toCities = cities;
-
-          return cities;
+          );
+          this.fromCities = uniqueCities.map((city) => ({
+            name: city,
+            code: city,
+          }));
+          this.toCities = uniqueCities.map((city) => ({
+            name: city,
+            code: city,
+          }));
         }),
       )
       .subscribe();
@@ -65,7 +76,6 @@ export class SearchFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.formGroup.valid) {
-      console.log('Form Value:', this.formGroup.value);
       this.searchService.getSearchResult();
     } else {
       console.error('Form is invalid');
@@ -73,13 +83,39 @@ export class SearchFormComponent implements OnInit {
   }
 
   onFromCityChange(event: any): void {
-    const selectedCity = event.value;
-    console.log('Selected From City:', selectedCity);
+    const selectedCityName = event.value;
+    this.allStations$
+      .pipe(
+        map((stations) =>
+          stations.find((station) => station.city === selectedCityName.name),
+        ),
+      )
+      .subscribe((selectedStation) => {
+        if (selectedStation) {
+          this.store.dispatch(selectFromStation({ station: selectedStation }));
+        }
+      });
   }
 
-  // Method to handle the change event for 'To' dropdown
   onToCityChange(event: any): void {
-    const selectedCity = event.value;
-    console.log('Selected To City:', selectedCity);
+    const selectedCityName = event.value;
+    this.allStations$
+      .pipe(
+        map((stations) =>
+          stations.find((station) => station.city === selectedCityName.name),
+        ),
+      )
+      .subscribe((selectedStation) => {
+        if (selectedStation) {
+          this.store.dispatch(selectToStation({ station: selectedStation }));
+        }
+      });
+  }
+
+  onDateChange(event: any): void {
+    const selectedDate = event.value;
+    if (selectedDate) {
+      this.store.dispatch(selectDate({ date: new Date(selectedDate) }));
+    }
   }
 }
