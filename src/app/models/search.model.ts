@@ -6,4 +6,3 @@ export interface SearchResponse {
   to: Station;
   routes: Route[];
 }
-
