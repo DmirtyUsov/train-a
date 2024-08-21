@@ -39,11 +39,15 @@ export class SearchFormComponent implements OnInit {
   formGroup: FormGroup;
 
   fromStations: Station[] = [];
+
   toStations: Station[] = [];
 
   allStations$: Observable<Station[]>;
+
   fromStation$: Observable<Station | null>;
+
   toStation$: Observable<Station | null>;
+
   date$: Observable<Date | null>;
 
   constructor(
