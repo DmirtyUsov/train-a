@@ -20,16 +20,25 @@ export const initialState: SearchState = {
 
 export const searchReducer = createReducer(
   initialState,
-  on(selectFromStation, (state, { station }) => ({
-    ...state,
-    fromStationSelected: station,
-  })),
-  on(selectToStation, (state, { station }) => ({
-    ...state,
-    toStationSelected: station,
-  })),
-  on(selectDate, (state, { date }) => ({
-    ...state,
-    dateSelected: date,
-  })),
+  on(
+    selectFromStation,
+    (state, { station }): SearchState => ({
+      ...state,
+      fromStationSelected: station,
+    }),
+  ),
+  on(
+    selectToStation,
+    (state, { station }): SearchState => ({
+      ...state,
+      toStationSelected: station,
+    }),
+  ),
+  on(
+    selectDate,
+    (state, { date }): SearchState => ({
+      ...state,
+      dateSelected: date,
+    }),
+  ),
 );

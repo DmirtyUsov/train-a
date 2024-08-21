@@ -13,8 +13,8 @@ export class StationsEffects {
     private stationsService: StationsService,
   ) {}
 
-  loadStations$ = createEffect(() =>
-    this.actions$.pipe(
+  loadStations$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(StationsActions.loadStations),
       mergeMap(() =>
         this.stationsService.getAllStations().pipe(
@@ -26,6 +26,6 @@ export class StationsEffects {
           ),
         ),
       ),
-    ),
-  );
+    );
+  });
 }

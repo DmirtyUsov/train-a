@@ -16,19 +16,28 @@ export const initialState: StationsState = {
 
 export const stationsReducer = createReducer(
   initialState,
-  on(StationsActions.loadStations, (state) => ({
-    ...state,
-    loading: true,
-    error: null,
-  })),
-  on(StationsActions.loadStationsSuccess, (state, { stations }) => ({
-    ...state,
-    loading: false,
-    stations,
-  })),
-  on(StationsActions.loadStationsFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-  })),
+  on(
+    StationsActions.loadStations,
+    (state): StationsState => ({
+      ...state,
+      loading: true,
+      error: null,
+    }),
+  ),
+  on(
+    StationsActions.loadStationsSuccess,
+    (state, { stations }): StationsState => ({
+      ...state,
+      loading: false,
+      stations,
+    }),
+  ),
+  on(
+    StationsActions.loadStationsFailure,
+    (state, { error }): StationsState => ({
+      ...state,
+      loading: false,
+      error,
+    }),
+  ),
 );
