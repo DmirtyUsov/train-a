@@ -5,7 +5,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { loadStations } from '../../store/actions/stations.actions';
 import { selectAllStations } from '../../store/selectors/stations.selectors';
@@ -16,6 +16,11 @@ import {
   selectFromStation,
   selectToStation,
 } from '../../store/actions/search.actions';
+import {
+  selectDateSelected,
+  selectFromStationSelected,
+  selectToStationSelected,
+} from '../../store/selectors/search.selectors';
 
 @Component({
   selector: 'app-search-form',
@@ -33,11 +38,13 @@ import {
 export class SearchFormComponent implements OnInit {
   formGroup: FormGroup;
 
-  fromCities: { name: string; code: string }[] = [];
-
-  toCities: { name: string; code: string }[] = [];
+  fromStations: Station[] = [];
+  toStations: Station[] = [];
 
   allStations$: Observable<Station[]>;
+  fromStation$: Observable<Station | null>;
+  toStation$: Observable<Station | null>;
+  date$: Observable<Date | null>;
 
   constructor(
     private fb: FormBuilder,
@@ -45,28 +52,22 @@ export class SearchFormComponent implements OnInit {
     private store: Store,
   ) {
     this.formGroup = this.fb.group({
-      selectedFromCity: [null],
-      selectedToCity: [null],
+      selectedFromStation: [null],
+      selectedToStation: [null],
       date: [null],
     });
 
     this.allStations$ = this.store.select(selectAllStations);
+    this.fromStation$ = this.store.select(selectFromStationSelected);
+    this.toStation$ = this.store.select(selectToStationSelected);
+    this.date$ = this.store.select(selectDateSelected);
 
     this.allStations$
       .pipe(
-        filter((stations) => stations !== null),
+        filter((stations) => stations.length > 0),
         map((stations) => {
-          const uniqueCities = Array.from(
-            new Set(stations.map((station) => station.city)),
-          );
-          this.fromCities = uniqueCities.map((city) => ({
-            name: city,
-            code: city,
-          }));
-          this.toCities = uniqueCities.map((city) => ({
-            name: city,
-            code: city,
-          }));
+          this.fromStations = stations;
+          this.toStations = stations;
         }),
       )
       .subscribe();
@@ -77,47 +78,43 @@ export class SearchFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.formGroup.valid) {
-      this.searchService.getSearchResult();
-    } else {
-      console.error('Form is invalid');
+    this.fromStation$
+      .pipe(
+        switchMap((fromStation) =>
+          this.toStation$.pipe(
+            switchMap((toStation) =>
+              this.date$.pipe(
+                map((date) => ({ fromStation, toStation, date })),
+              ),
+            ),
+          ),
+        ),
+      )
+      .subscribe(({ fromStation, toStation, date }) => {
+        if (fromStation && toStation) {
+          this.searchService.getSearchResult(fromStation, toStation, date);
+        }
+      });
+  }
+
+  onFromStationChange(event: { value: Station }): void {
+    const selectedStation = event.value;
+    if (selectedStation) {
+      this.store.dispatch(selectFromStation({ station: selectedStation }));
     }
   }
 
-  onFromCityChange(event: any): void {
-    const selectedCityName = event.value;
-    this.allStations$
-      .pipe(
-        map((stations) =>
-          stations.find((station) => station.city === selectedCityName.name),
-        ),
-      )
-      .subscribe((selectedStation) => {
-        if (selectedStation) {
-          this.store.dispatch(selectFromStation({ station: selectedStation }));
-        }
-      });
+  onToStationChange(event: { value: Station }): void {
+    const selectedStation = event.value;
+    if (selectedStation) {
+      this.store.dispatch(selectToStation({ station: selectedStation }));
+    }
   }
 
-  onToCityChange(event: any): void {
-    const selectedCityName = event.value;
-    this.allStations$
-      .pipe(
-        map((stations) =>
-          stations.find((station) => station.city === selectedCityName.name),
-        ),
-      )
-      .subscribe((selectedStation) => {
-        if (selectedStation) {
-          this.store.dispatch(selectToStation({ station: selectedStation }));
-        }
-      });
-  }
-
-  onDateChange(event: any): void {
+  onDateChange(event: { value: Date }): void {
     const selectedDate = event.value;
     if (selectedDate) {
-      this.store.dispatch(selectDate({ date: new Date(selectedDate) }));
+      this.store.dispatch(selectDate({ date: selectedDate }));
     }
   }
 }
