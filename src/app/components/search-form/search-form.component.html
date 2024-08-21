@@ -1,0 +1,19 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <p-dropdown
+    formControlName="selectedFromCity"
+    [options]="cities"
+    optionLabel="name"
+    placeholder="From"
+  ></p-dropdown>
+
+  <p-dropdown
+    formControlName="selectedToCity"
+    [options]="cities"
+    optionLabel="name"
+    placeholder="To"
+  ></p-dropdown>
+
+  <p-calendar formControlName="date"></p-calendar>
+
+  <p-button type="submit" label="Search"></p-button>
+</form>
