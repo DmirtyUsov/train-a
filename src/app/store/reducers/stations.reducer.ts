@@ -1,11 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import * as StationsActions from '../actions/stations.actions';
 import { Station } from '../../models/station.models';
+import { ResponseError } from '../../models/error.model';
 
 export interface StationsState {
   stations: Station[];
   loading: boolean;
-  error: any;
+  error: ResponseError | null;
 }
 
 export const initialState: StationsState = {
@@ -37,7 +38,7 @@ export const stationsReducer = createReducer(
     (state, { error }): StationsState => ({
       ...state,
       loading: false,
-      error,
+      ...error,
     }),
   ),
 );
