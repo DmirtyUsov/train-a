@@ -1,16 +1,18 @@
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <p-dropdown
     formControlName="selectedFromCity"
-    [options]="cities"
+    [options]="fromCities"
     optionLabel="name"
     placeholder="From"
+    (onChange)="onFromCityChange($event)"
   ></p-dropdown>
 
   <p-dropdown
     formControlName="selectedToCity"
-    [options]="cities"
+    [options]="toCities"
     optionLabel="name"
     placeholder="To"
+    (onChange)="onToCityChange($event)"
   ></p-dropdown>
 
   <p-calendar formControlName="date"></p-calendar>
