@@ -41,6 +41,7 @@ export class AuthService {
       next: (response: AuthResponse) => {
         localStorage.setItem(this.tokenKey, response.token);
         this.isAuthenticated.set(true);
+        console.log('Successful login ', response);
       },
       error: (error: AuthError) => {
         throwError(() => new Error(error.error.message));
@@ -51,6 +52,9 @@ export class AuthService {
   signUp(email: string, password: string): void {
     const body = { email, password };
     this.http.post<void>(this.apiSignUpUrl, body).subscribe({
+      next: () => {
+        console.log('Successful sign Up ');
+      },
       error: (error: AuthError) => {
         throwError(() => new Error(error.error.message));
       },
@@ -60,6 +64,6 @@ export class AuthService {
   logout(): void {
     this.token = null;
     localStorage.removeItem('token');
-    this.isAuthenticated.set(true);
+    this.isAuthenticated.set(false);
   }
 }

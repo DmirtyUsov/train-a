@@ -1,0 +1,37 @@
+<h1 class="text-2xl">Test Auth</h1>
+<div class="flex justify-center">
+  <form [formGroup]="signInForm" (ngSubmit)="onSignIn()">
+    <p-fieldset legend="Sign In">
+      <p-inputGroup>
+        <p-inputGroupAddon>email</p-inputGroupAddon>
+        <input type="text" pInputText formControlName="email" />
+      </p-inputGroup>
+      <p-inputGroup>
+        <p-inputGroupAddon>password</p-inputGroupAddon>
+        <input type="text" pInputText formControlName="password" />
+      </p-inputGroup>
+      <p-button type="submit" label="submit" severity="info"></p-button>
+    </p-fieldset>
+  </form>
+
+  <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+    <p-fieldset legend="Sign Up">
+      <p-inputGroup>
+        <p-inputGroupAddon>email</p-inputGroupAddon>
+        <input type="text" pInputText formControlName="email" />
+      </p-inputGroup>
+      <p-inputGroup>
+        <p-inputGroupAddon>password</p-inputGroupAddon>
+        <input type="text" pInputText formControlName="password" />
+      </p-inputGroup>
+      <p-button type="submit" label="submit" severity="info"></p-button>
+    </p-fieldset>
+  </form>
+</div>
+<p-button
+  class="flex justify-center"
+  label="logOut"
+  disabled="{{ !isLogged() }}"
+  (onClick)="logOut()"
+></p-button>
+<p class="flex justify-center">Is logged? {{ isLogged() }}</p>
