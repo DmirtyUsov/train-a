@@ -1,7 +1,6 @@
 import { Injectable, signal, effect } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { SearchResponse } from '../models/search.model';
 import {

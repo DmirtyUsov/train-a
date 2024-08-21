@@ -8,5 +8,5 @@ export const loadStationsSuccess = createAction(
 );
 export const loadStationsFailure = createAction(
   '[Stations] Load Stations Failure',
-  props<{ error: any }>(),
+  props<{ error: Error }>(),
 );

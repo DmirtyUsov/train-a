@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
-import { ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
 import { loadStations } from '../../store/actions/stations.actions';
 import { selectAllStations } from '../../store/selectors/stations.selectors';
 import { SearchService } from '../../services/search.service';
-import { CommonModule } from '@angular/common';
 import { Station } from '../../models/station.models';
 import {
   selectDate,
@@ -33,8 +32,11 @@ import {
 })
 export class SearchFormComponent implements OnInit {
   formGroup: FormGroup;
+
   fromCities: { name: string; code: string }[] = [];
+
   toCities: { name: string; code: string }[] = [];
+
   allStations$: Observable<Station[]>;
 
   constructor(

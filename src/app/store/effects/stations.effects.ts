@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import * as StationsActions from '../actions/stations.actions';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import * as StationsActions from '../actions/stations.actions';
 import { StationsService } from '../../services/stations.service';
 import { Station } from '../../models/station.models';
 
