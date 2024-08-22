@@ -36,7 +36,13 @@ export class SignInFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.signInForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[\w\d_]+@[\w\d_]+.\w{2,7}$/),
+        ],
+      ],
       password: ['', Validators.required],
     });
   }
@@ -44,6 +50,7 @@ export class SignInFormComponent implements OnInit {
   onSignIn(): void {
     // const { email, password } = this.signInForm.value;
     this.isSubmitted = true;
+    console.log(this.email?.errors);
   }
 
   get email() {
