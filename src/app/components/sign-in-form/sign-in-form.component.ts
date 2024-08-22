@@ -50,6 +50,7 @@ export class SignInFormComponent implements OnInit {
   onSignIn(): void {
     // const { email, password } = this.signInForm.value;
     this.isSubmitted = true;
+    console.log(this.email?.errors);
   }
 
   get email() {
