@@ -1,20 +1,25 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { BackendService } from '../../services/backend.service';
+
+import { TOAST_KEY } from '../../services/toast.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ButtonModule, InputTextModule, FloatLabelModule],
+  imports: [
+    ButtonModule,
+    InputTextModule,
+    FloatLabelModule,
+    ToastModule,
+    RouterModule,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  constructor(private backendService: BackendService) {}
-
-  sendStation() {
-    this.backendService.logGETResponse('station');
-  }
+  protected readonly toastKey = TOAST_KEY;
 }
