@@ -1,0 +1,16 @@
+<h1 class="text-2xl">Sign In</h1>
+<div class="flex justify-center">
+  <form [formGroup]="signInForm" (ngSubmit)="onSignIn()">
+    <p-fieldset legend="Sign In">
+      <p-inputGroup>
+        <p-inputGroupAddon>email</p-inputGroupAddon>
+        <input type="text" pInputText formControlName="email" />
+      </p-inputGroup>
+      <p-inputGroup>
+        <p-inputGroupAddon>password</p-inputGroupAddon>
+        <input type="text" pInputText formControlName="password" />
+      </p-inputGroup>
+      <p-button type="submit" label="Sign In" severity="info"></p-button>
+    </p-fieldset>
+  </form>
+</div>
