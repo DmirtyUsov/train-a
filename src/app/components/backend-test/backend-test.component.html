@@ -1,20 +1,53 @@
-<h1 class="text-2xl">Test Train Backend</h1>
-<div class="flex justify-center">
-  <p-fieldset [toggleable]="true">
-    <ng-template pTemplate="header">
-      <div class="font-bold">GET Request</div>
-    </ng-template>
-    <p class="m-0">Enter endpoint, press button, see browser console.</p>
-    <p-inputGroup>
-      <p-inputGroupAddon>/api/</p-inputGroupAddon>
+<h1 class="text-2xl">Tests</h1>
+<div class="flex flex-col justify-center gap-2">
+  <div class="flex justify-center gap-2">
+    <p-fieldset [toggleable]="true">
+      <ng-template pTemplate="header">
+        <div class="font-bold">GET Request</div>
+      </ng-template>
+      <p class="m-0">Enter endpoint, press button, see browser console.</p>
+      <p-inputGroup>
+        <p-inputGroupAddon>/api/</p-inputGroupAddon>
 
-      <input type="text" pInputText #getEndpoint />
+        <input type="text" pInputText #getEndpoint />
+        <p-button
+          type="button"
+          icon="pi pi-send"
+          severity="info"
+          (onClick)="onGet(getEndpoint.value)"
+        ></p-button>
+      </p-inputGroup>
+    </p-fieldset>
+  </div>
+  <p-fieldset [toggleable]="true" class="flex justify-center gap-2">
+    <ng-template pTemplate="header">
+      <div class="font-bold">ToastService Show</div>
+    </ng-template>
+    <div class="flex justify-center gap-2">
       <p-button
         type="button"
-        icon="pi pi-send"
+        (onClick)="showSuccess()"
+        label="Success"
+        severity="success"
+      />
+      <p-button
+        type="button"
+        (onClick)="showInfo()"
+        label="Info"
         severity="info"
-        (onClick)="onGet(getEndpoint.value)"
-      ></p-button>
-    </p-inputGroup>
+      />
+      <p-button
+        type="button"
+        (onClick)="showWarn()"
+        label="Warn"
+        severity="warning"
+      />
+      <p-button
+        type="button"
+        (onClick)="showError()"
+        label="Error"
+        severity="danger"
+      />
+    </div>
   </p-fieldset>
 </div>
