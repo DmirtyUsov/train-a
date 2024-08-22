@@ -26,7 +26,7 @@
       @if (email?.invalid && email?.hasError("required") && isSubmitted) {
         <small class="p-error block absolute">Required</small>
       }
-      @if (email?.invalid && email?.hasError("email") && isSubmitted) {
+      @if (email?.invalid && email?.hasError("pattern") && isSubmitted) {
         <small class="p-error block absolute">Invalid email</small>
       }
     </div>
