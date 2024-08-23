@@ -7,20 +7,21 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import { loadStations } from '../../store/actions/stations.actions';
-import { selectAllStations } from '../../store/selectors/stations.selectors';
-import { SearchService } from '../../services/search.service';
-import { Station } from '../../models/station.models';
+import { loadStations } from '../../../../store/actions/stations.actions';
+import { selectAllStations } from '../../../../store/selectors/stations.selectors';
+import { SearchService } from '../../../../services/search.service';
+import { Station } from '../../../../models/station.models';
 import {
   selectDate,
   selectFromStation,
   selectToStation,
-} from '../../store/actions/search.actions';
+} from '../../../../store/actions/search.actions';
 import {
   selectDateSelected,
   selectFromStationSelected,
   selectToStationSelected,
-} from '../../store/selectors/search.selectors';
+} from '../../../../store/selectors/search.selectors';
+import { loadSearchResults } from '../../../../store/actions/search-result.actions';
 
 @Component({
   selector: 'app-search-form',
@@ -95,8 +96,16 @@ export class SearchFormComponent implements OnInit {
         ),
       )
       .subscribe(({ fromStation, toStation, date }) => {
+        console.log('Dispatching loadSearchResults:', {
+          fromStation,
+          toStation,
+          date,
+        });
         if (fromStation && toStation) {
-          this.searchService.getSearchResult(fromStation, toStation, date);
+          //this.searchService.getSearchResult(fromStation, toStation, date);
+          this.store.dispatch(
+            loadSearchResults({ fromStation, toStation, date }),
+          );
         }
       });
   }
@@ -115,8 +124,8 @@ export class SearchFormComponent implements OnInit {
     }
   }
 
-  onDateChange(event: { value: Date }): void {
-    const selectedDate = event.value;
+  onDateChange(event: Date): void {
+    const selectedDate = event;
     if (selectedDate) {
       this.store.dispatch(selectDate({ date: selectedDate }));
     }

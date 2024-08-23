@@ -1,7 +1,8 @@
-import { Injectable, signal, effect } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { SearchResponse } from '../models/search.model';
+import { Observable } from 'rxjs';
 import { Station } from '../models/station.models';
+import { SearchResponse } from '../models/search.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,24 +10,13 @@ import { Station } from '../models/station.models';
 export class SearchService {
   private apiUrl = '/api/search';
 
-  // Signal to hold the search response
-  searchResult = signal<SearchResponse | null>(null);
-
-  constructor(private http: HttpClient) {
-    // Set up an effect to automatically log the search result when it changes
-    effect(() => {
-      const result = this.searchResult();
-      if (result) {
-        console.log('Search Result:', result);
-      }
-    });
-  }
+  constructor(private http: HttpClient) {}
 
   getSearchResult(
     fromStation: Station,
     toStation: Station,
     date: Date | null,
-  ): void {
+  ): Observable<SearchResponse> {
     let params = new HttpParams()
       .set('fromLatitude', fromStation.latitude.toString())
       .set('fromLongitude', fromStation.longitude.toString())
@@ -37,13 +27,6 @@ export class SearchService {
       params = params.set('time', date.getTime().toString());
     }
 
-    this.http.get<SearchResponse>(this.apiUrl, { params }).subscribe({
-      next: (response: SearchResponse) => {
-        this.searchResult.set(response); // Set the signal with the response
-      },
-      error: (error) => {
-        console.error('Error fetching search result:', error);
-      },
-    });
+    return this.http.get<SearchResponse>(this.apiUrl, { params });
   }
 }

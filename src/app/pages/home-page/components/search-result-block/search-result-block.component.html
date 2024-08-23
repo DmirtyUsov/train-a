@@ -1,0 +1,12 @@
+<p>Search Result:</p>
+<div *ngIf="searchResult$ | async as searchResult; else noResult">
+  <p>From: {{ searchResult.from.city }}</p>
+  <p>To: {{ searchResult.to.city }}</p>
+  <p>Routes:</p>
+  <ul>
+    <li *ngFor="let route of searchResult.routes">route: {{ route.id }}</li>
+  </ul>
+</div>
+<ng-template #noResult>
+  <p>No search result available.</p>
+</ng-template>
