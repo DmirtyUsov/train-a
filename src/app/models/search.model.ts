@@ -1,4 +1,4 @@
-import { Route } from '@angular/router';
+import { Route } from './route.model';
 import { Station } from './station.models';
 
 export interface SearchResponse {
