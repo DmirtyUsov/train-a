@@ -5,11 +5,12 @@ import {
   loadSearchResultsFailure,
 } from '../actions/search-result.actions';
 import { SearchResponse } from '../../models/search.model';
+import { ResponseError } from '../../models/error.model';
 
 export interface SearchResultState {
   searchResponse: SearchResponse | null;
   loading: boolean;
-  error: any;
+  error: ResponseError | null;
 }
 
 export const initialSearchResultState: SearchResultState = {

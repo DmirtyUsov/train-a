@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Station } from '../../models/station.models';
 import { SearchResponse } from '../../models/search.model';
+import { ResponseError } from '../../models/error.model';
 
 export const loadSearchResults = createAction(
   '[Search Results] Load Search Results',
@@ -14,5 +15,5 @@ export const loadSearchResultsSuccess = createAction(
 
 export const loadSearchResultsFailure = createAction(
   '[Search Results] Load Search Results Failure',
-  props<{ error: any }>(),
+  props<{ error: ResponseError }>(),
 );

@@ -102,7 +102,6 @@ export class SearchFormComponent implements OnInit {
           date,
         });
         if (fromStation && toStation) {
-          //this.searchService.getSearchResult(fromStation, toStation, date);
           this.store.dispatch(
             loadSearchResults({ fromStation, toStation, date }),
           );

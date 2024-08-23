@@ -11,26 +11,23 @@ import { SearchService } from '../../services/search.service';
 
 @Injectable()
 export class SearchResultEffects {
-  loadSearchResults$ = createEffect(() =>
-    this.actions$.pipe(
+  loadSearchResults$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(loadSearchResults),
       mergeMap(({ fromStation, toStation, date }) => {
-        console.log('Effect triggered with:', { fromStation, toStation, date });
         return this.searchService
           .getSearchResult(fromStation, toStation, date)
           .pipe(
             map((searchResponse) => {
-              console.log('Search result received:', searchResponse);
               return loadSearchResultsSuccess({ searchResponse });
             }),
             catchError((error) => {
-              console.error('Error in effect:', error);
               return of(loadSearchResultsFailure({ error }));
             }),
           );
       }),
-    ),
-  );
+    );
+  });
 
   constructor(
     private actions$: Actions,
