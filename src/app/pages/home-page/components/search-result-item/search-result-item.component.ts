@@ -56,7 +56,7 @@ export class SearchResultItemComponent implements OnInit {
       toCityIndex !== -1 &&
       this.item.schedule.length > 0
     ) {
-      const segments = this.item.schedule[0].segments;
+      const [{ segments }] = this.item.schedule;
 
       // For fromCity, save only the start time
       const fromSegment = segments[fromCityIndex];
@@ -107,8 +107,8 @@ export class SearchResultItemComponent implements OnInit {
       console.log('End DateTime Object:', endDateTime);
 
       if (
-        !isNaN(startDateTime.getTime()) &&
-        !isNaN(endDateTime.getTime()) &&
+        !Number.isNaN(startDateTime.getTime()) &&
+        !Number.isNaN(endDateTime.getTime()) &&
         endDateTime > startDateTime
       ) {
         const startTimestamp = startDateTime.getTime();
