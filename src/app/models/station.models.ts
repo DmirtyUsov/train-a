@@ -4,7 +4,7 @@ export interface StationConnection {
 }
 
 export interface Station {
-  id: number;
+  stationId: number;
   city: string;
   latitude: number;
   longitude: number;
