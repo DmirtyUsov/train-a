@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { SearchResponse } from '../../../../models/search.model';
 import { selectSearchResult } from '../../../../store/selectors/search-result.selectors';
 import { SearchResultItemComponent } from '../search-result-item/search-result-item.component';
-import { Route } from '../../../../models/route.model';
 
 @Component({
   selector: 'app-search-result-block',

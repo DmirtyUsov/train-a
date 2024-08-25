@@ -12,15 +12,23 @@ import { Station } from '../../../../models/station.models';
 })
 export class SearchResultItemComponent implements OnInit {
   @Input() item!: Route;
+
   @Input() fromCity!: Station;
+
   @Input() toCity!: Station;
+
   @Input() first!: boolean;
 
   fromStationStartTime: { date: string; time: string } | undefined;
+
   toStationEndTime: { date: string; time: string } | undefined;
+
   weeks = 0;
+
   days = 0;
+
   hours = 0;
+
   minutes = 0;
 
   ngOnInit() {
@@ -49,7 +57,7 @@ export class SearchResultItemComponent implements OnInit {
       toCityIndex !== -1 &&
       this.item.schedule.length > 0
     ) {
-      const segments = this.item.schedule[0].segments;
+      const [{ segments }] = this.item.schedule;
 
       // For fromCity, save only the start time
       const fromSegment = segments[fromCityIndex];
@@ -83,17 +91,19 @@ export class SearchResultItemComponent implements OnInit {
 
   private formatDate(dateString: string): string {
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
+    if (Number.isNaN(date.getTime())) {
       console.error('Invalid date string:', dateString);
     }
-    return date.toLocaleDateString(); // Adjust format if needed
+    this;
+    return date.toLocaleDateString();
   }
 
   private formatTime(dateString: string): string {
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
+    if (Number.isNaN(date.getTime())) {
       console.error('Invalid date string:', dateString);
     }
+    this;
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
@@ -110,8 +120,8 @@ export class SearchResultItemComponent implements OnInit {
       const endDateTime = new Date(endDateTimeStr);
 
       if (
-        !isNaN(startDateTime.getTime()) &&
-        !isNaN(endDateTime.getTime()) &&
+        !Number.isNaN(startDateTime.getTime()) &&
+        !Number.isNaN(endDateTime.getTime()) &&
         endDateTime > startDateTime
       ) {
         const diffMs = endDateTime.getTime() - startDateTime.getTime();
