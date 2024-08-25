@@ -5,11 +5,12 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { SearchResponse } from '../../../../models/search.model';
 import { selectSearchResult } from '../../../../store/selectors/search-result.selectors';
+import { SearchResultItemComponent } from '../search-result-item/search-result-item.component';
 
 @Component({
   selector: 'app-search-result-block',
   standalone: true,
-  imports: [CommonModule, DataViewModule],
+  imports: [CommonModule, DataViewModule, SearchResultItemComponent],
   templateUrl: './search-result-block.component.html',
   styleUrls: ['./search-result-block.component.scss'],
 })
