@@ -2,6 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Route } from '../../../../models/route.model';
 import { Station } from '../../../../models/station.models';
+import {
+  formatDate,
+  formatTime,
+  convertToISOFormat,
+} from '../../../../helpers/date-utils';
 
 @Component({
   selector: 'app-search-result-item',
@@ -23,13 +28,7 @@ export class SearchResultItemComponent implements OnInit {
 
   toStationEndTime: { date: string; time: string } | undefined;
 
-  weeks = 0;
-
-  days = 0;
-
-  hours = 0;
-
-  minutes = 0;
+  timeDifference: string | undefined;
 
   ngOnInit() {
     console.log('Item:', this.item);
@@ -57,14 +56,14 @@ export class SearchResultItemComponent implements OnInit {
       toCityIndex !== -1 &&
       this.item.schedule.length > 0
     ) {
-      const [{ segments }] = this.item.schedule;
+      const segments = this.item.schedule[0].segments;
 
       // For fromCity, save only the start time
       const fromSegment = segments[fromCityIndex];
       if (fromSegment) {
         this.fromStationStartTime = {
-          date: this.formatDate(fromSegment.time[0]),
-          time: this.formatTime(fromSegment.time[0]),
+          date: formatDate(fromSegment.time[0]),
+          time: formatTime(fromSegment.time[0]),
         };
       }
 
@@ -73,8 +72,8 @@ export class SearchResultItemComponent implements OnInit {
         const previousSegment = segments[toCityIndex - 1];
         if (previousSegment) {
           this.toStationEndTime = {
-            date: this.formatDate(previousSegment.time[1]),
-            time: this.formatTime(previousSegment.time[1]),
+            date: formatDate(previousSegment.time[1]),
+            time: formatTime(previousSegment.time[1]),
           };
         }
       }
@@ -82,83 +81,62 @@ export class SearchResultItemComponent implements OnInit {
       const currentToSegment = segments[toCityIndex];
       if (currentToSegment) {
         this.toStationEndTime = {
-          date: this.formatDate(currentToSegment.time[1]),
-          time: this.formatTime(currentToSegment.time[1]),
+          date: formatDate(currentToSegment.time[1]),
+          time: formatTime(currentToSegment.time[1]),
         };
       }
     }
   }
 
-  private formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    if (Number.isNaN(date.getTime())) {
-      console.error('Invalid date string:', dateString);
-    }
-    this;
-    return date.toLocaleDateString();
-  }
-
-  private formatTime(dateString: string): string {
-    const date = new Date(dateString);
-    if (Number.isNaN(date.getTime())) {
-      console.error('Invalid date string:', dateString);
-    }
-    this;
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-
   private calculateTimeDifference() {
     if (this.fromStationStartTime && this.toStationEndTime) {
-      const startDateTimeStr = this.convertToISOFormat(
+      const startDateTimeStr = convertToISOFormat(
         `${this.fromStationStartTime.date}T${this.fromStationStartTime.time}`,
       );
-      const endDateTimeStr = this.convertToISOFormat(
+      const endDateTimeStr = convertToISOFormat(
         `${this.toStationEndTime.date}T${this.toStationEndTime.time}`,
       );
+
+      console.log('Start DateTime String:', startDateTimeStr);
+      console.log('End DateTime String:', endDateTimeStr);
 
       const startDateTime = new Date(startDateTimeStr);
       const endDateTime = new Date(endDateTimeStr);
 
+      console.log('Start DateTime Object:', startDateTime);
+      console.log('End DateTime Object:', endDateTime);
+
       if (
-        !Number.isNaN(startDateTime.getTime()) &&
-        !Number.isNaN(endDateTime.getTime()) &&
+        !isNaN(startDateTime.getTime()) &&
+        !isNaN(endDateTime.getTime()) &&
         endDateTime > startDateTime
       ) {
-        const diffMs = endDateTime.getTime() - startDateTime.getTime();
+        const startTimestamp = startDateTime.getTime();
+        const endTimestamp = endDateTime.getTime();
 
-        // Calculate total difference in minutes
-        const diffInMinutes = Math.floor(diffMs / (1000 * 60));
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        const diffInDays = Math.floor(diffInHours / 24);
-        const diffInWeeks = Math.floor(diffInDays / 7);
+        const diffMs = endTimestamp - startTimestamp;
 
-        this.weeks = diffInWeeks;
-        this.days = diffInDays % 7;
-        this.hours = diffInHours % 24;
-        this.minutes = diffInMinutes % 60;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const diffWeeks = Math.floor(diffDays / 7);
+        const remainderDays = diffDays % 7;
+        const diffHours = Math.floor(
+          (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        const diffMinutes = Math.floor(
+          (diffMs % (1000 * 60 * 60)) / (1000 * 60),
+        );
+
+        this.timeDifference = `${diffWeeks} week(s), ${remainderDays} day(s), ${diffHours} hour(s), ${diffMinutes} minute(s)`;
       } else {
         console.error(
           'Invalid date values or end time is not later than start time:',
           startDateTime,
           endDateTime,
         );
-        this.weeks = 0;
-        this.days = 0;
-        this.hours = 0;
-        this.minutes = 0;
+        this.timeDifference = 'Invalid time difference';
       }
     } else {
-      this.weeks = 0;
-      this.days = 0;
-      this.hours = 0;
-      this.minutes = 0;
+      this.timeDifference = 'Time data missing';
     }
-  }
-
-  private convertToISOFormat(dateTimeStr: string): string {
-    // Convert from DD.MM.YYYYTHH:mm to YYYY-MM-DDTHH:mm:ss
-    const [date, time] = dateTimeStr.split('T');
-    const [day, month, year] = date.split('.');
-    return `${year}-${month}-${day}T${time}:00`;
   }
 }
