@@ -5,9 +5,12 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
+import { Store } from '@ngrx/store';
 
 import { BackendService } from '../../services/backend.service';
 import { ToastService } from '../../services/toast.service';
+
+import { AuthActions } from '../../store';
 
 @Component({
   selector: 'app-backend-test',
@@ -27,6 +30,7 @@ export class BackendTestComponent {
   constructor(
     private backendService: BackendService,
     private toastService: ToastService,
+    private store: Store,
   ) {}
 
   onGet(endpoint: string) {
@@ -51,5 +55,15 @@ export class BackendTestComponent {
 
   showError() {
     this.toastService.error(' A deviation from accuracy or correctness!');
+  }
+
+  signIn() {
+    this.store.dispatch(
+      AuthActions.signIn({ email: 'admin@admin.com', password: 'my-password' }),
+    );
+  }
+
+  signOut() {
+    this.store.dispatch(AuthActions.signOut());
   }
 }
