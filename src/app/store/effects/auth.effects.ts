@@ -5,6 +5,7 @@ import { AuthActions } from '..';
 import { BackendService } from '../../services/backend.service';
 import { ResponseError } from '../../models/error.model';
 import { ToastService } from '../../services/toast.service';
+import { KeepAuthService } from '../../services/keep-auth.service';
 
 @Injectable()
 export class AuthEffects {
@@ -12,6 +13,7 @@ export class AuthEffects {
     private actions$: Actions,
     private backend: BackendService,
     private toastService: ToastService,
+    private keepAuth: KeepAuthService,
   ) {}
 
   signIn$ = createEffect(() => {
@@ -29,6 +31,16 @@ export class AuthEffects {
     );
   });
 
+  saveTokenOnSignSuccess$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(AuthActions.signInSuccess),
+        tap(({ token }) => this.keepAuth.save(token)),
+      );
+    },
+    { dispatch: false },
+  );
+
   signOut$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AuthActions.signOut),
@@ -44,4 +56,14 @@ export class AuthEffects {
       ),
     );
   });
+
+  removeTokenOnSignOutSuccess$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(AuthActions.signOutSuccess),
+        tap(() => this.keepAuth.remove()),
+      );
+    },
+    { dispatch: false },
+  );
 }
