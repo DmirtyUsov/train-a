@@ -66,4 +66,27 @@ export class AuthEffects {
     },
     { dispatch: false },
   );
+
+  getUserProfile$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthActions.getUserProfile),
+      mergeMap(() =>
+        this.backend.getProfile().pipe(
+          map((data) => AuthActions.getUserProfileSuccess({ profile: data })),
+          catchError((error) => {
+            return of(
+              AuthActions.getUserProfileFailure({ error: error.error }),
+            );
+          }),
+        ),
+      ),
+    );
+  });
+
+  checkUserProfileAfterSignInSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthActions.signInSuccess),
+      map(() => AuthActions.getUserProfile()),
+    );
+  });
 }

@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { ResponseError } from '../../models/error.model';
+import { UserProfile } from '../../models/user.models';
 
 const AUTH = '[Auth]';
 const SUCCESS = 'Success';
@@ -24,5 +25,15 @@ export const signOutSuccess = createAction(`${AUTH} SignOut ${SUCCESS}`);
 
 export const signOutFailure = createAction(
   `${AUTH} SignOut ${FAILURE}`,
+  props<{ error: ResponseError }>(),
+);
+
+export const getUserProfile = createAction(`${AUTH} Get User Profile`);
+export const getUserProfileSuccess = createAction(
+  `${AUTH} Get User Profile ${SUCCESS}`,
+  props<{ profile: UserProfile }>(),
+);
+export const getUserProfileFailure = createAction(
+  `${AUTH} Get User Profile ${FAILURE}`,
   props<{ error: ResponseError }>(),
 );
