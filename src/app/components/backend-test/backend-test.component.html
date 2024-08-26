@@ -50,4 +50,23 @@
       />
     </div>
   </p-fieldset>
+  <p-fieldset [toggleable]="true" class="flex justify-center gap-2">
+    <ng-template pTemplate="header">
+      <div class="font-bold">AuthState</div>
+    </ng-template>
+    <div class="flex justify-center gap-2">
+      <p-button
+        type="button"
+        (onClick)="signIn()"
+        label="SignIn with Manager credentials"
+        severity="success"
+      />
+      <p-button
+        type="button"
+        (onClick)="signOut()"
+        label="SignOut"
+        severity="warning"
+      />
+    </div>
+  </p-fieldset>
 </div>
