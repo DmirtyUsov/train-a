@@ -71,13 +71,14 @@
       }
     </div>
 
-    <p-button
-      label="Sign Up"
-      icon="pi pi-user"
-      class="flex w-full"
-      type="submit"
-      [disabled]="!signUpForm.valid"
-    >
-    </p-button>
+    <div class="p-fluid">
+      <p-button
+        label="Sign Up"
+        icon="pi pi-user"
+        type="submit"
+        [disabled]="!signUpForm.valid"
+      >
+      </p-button>
+    </div>
   </form>
 </div>
