@@ -48,6 +48,13 @@
       @if (password?.invalid && password?.hasError("required") && isSubmitted) {
         <small class="p-error block absolute">Required</small>
       }
+      @if (
+        password?.invalid && password?.hasError("minlength") && isSubmitted
+      ) {
+        <small class="p-error block absolute"
+          >Password must be at least 8 characters long</small
+        >
+      }
     </div>
 
     <div class="mb-5">

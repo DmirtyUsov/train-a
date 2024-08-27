@@ -48,7 +48,7 @@ export class SignUpFormComponent implements OnInit {
             Validators.pattern(/^[\w\d_]+@[\w\d_]+.\w{2,7}$/),
           ],
         ],
-        password: ['', Validators.required],
+        password: ['', [Validators.required, Validators.minLength(8)]],
         repeatPassword: ['', Validators.required],
       },
       { validators: this.matchPasswordValidator },
