@@ -1,3 +1,4 @@
+import { Store } from '@ngrx/store';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -6,6 +7,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { TOAST_KEY } from '../../services/toast.service';
+import { KeepAuthService } from '../../services/keep-auth.service';
+import { AuthActions } from '../../store';
 
 @Component({
   selector: 'app-header',
@@ -22,4 +25,14 @@ import { TOAST_KEY } from '../../services/toast.service';
 })
 export class HeaderComponent {
   protected readonly toastKey = TOAST_KEY;
+
+  constructor(
+    private keepAuth: KeepAuthService,
+    private store: Store,
+  ) {
+    const token = this.keepAuth.restore();
+    if (token) {
+      store.dispatch(AuthActions.signInSuccess({ token }));
+    }
+  }
 }
