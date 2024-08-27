@@ -4,7 +4,7 @@ import {
   loadSearchResultsSuccess,
   loadSearchResultsFailure,
 } from '../actions/search-result.actions';
-import { SearchResponse } from '../../models/search.model';
+import { SearchResponse } from '../../models/search-response.model';
 import { ResponseError } from '../../models/error.model';
 
 export interface SearchResultState {

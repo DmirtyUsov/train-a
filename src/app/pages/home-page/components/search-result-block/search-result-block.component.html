@@ -1,18 +1,9 @@
 <div *ngIf="searchResult$ | async as searchResult; else noResult">
-  <p-dataView [value]="searchResult.routes">
+  <p-dataView [value]="searchItems">
     <ng-template let-route pTemplate="list">
       <div class="grid grid-nogutter">
-        <div
-          class="col-12"
-          *ngFor="let item of searchResult.routes; let first = first"
-          class="col-12"
-        >
-          <app-search-result-item
-            [item]="item"
-            [fromCity]="searchResult.from"
-            [toCity]="searchResult.to"
-            [first]="first"
-          ></app-search-result-item>
+        <div class="col-12" *ngFor="let item of searchItems" class="col-12">
+          <app-search-result-item [item]="item"></app-search-result-item>
         </div>
       </div>
     </ng-template>

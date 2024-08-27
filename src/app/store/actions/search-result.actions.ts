@@ -1,11 +1,15 @@
 import { createAction, props } from '@ngrx/store';
-import { Station } from '../../models/station.models';
-import { SearchResponse } from '../../models/search.model';
+import { SearchResponseStation } from '../../models/station.models';
+import { SearchResponse } from '../../models/search-response.model';
 import { ResponseError } from '../../models/error.model';
 
 export const loadSearchResults = createAction(
   '[Search Results] Load Search Results',
-  props<{ fromStation: Station; toStation: Station; date: Date | null }>(),
+  props<{
+    fromStation: SearchResponseStation;
+    toStation: SearchResponseStation;
+    date: string | null;
+  }>(),
 );
 
 export const loadSearchResultsSuccess = createAction(

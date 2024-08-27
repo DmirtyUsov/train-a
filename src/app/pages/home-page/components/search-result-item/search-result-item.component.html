@@ -1,6 +1,6 @@
 <div
   class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3"
-  [ngClass]="{ 'border-top-1 surface-border': !first }"
+  [ngClass]="{ 'border-top-1 surface-border': true }"
 >
   <div
     class="flex flex-column md:flex-row justify-content-between md:align-items-center flex-1 gap-4"
@@ -10,7 +10,7 @@
         <!-- From City Block -->
         <div class="flex flex-col items-center">
           <div class="text-lg font-medium text-900 mt-2">
-            From: {{ fromCity.city }}
+            From: {{ item.fromStation.city }}
           </div>
           <div class="text-sm text-gray-500">
             {{ fromStationStartTime?.date }}
@@ -39,7 +39,7 @@
         <!-- To City Block -->
         <div class="flex flex-col items-center">
           <div class="text-lg font-medium text-900 mt-2">
-            To: {{ toCity.city }}
+            To: {{ item.toStation.city }}
           </div>
           <div class="text-sm text-gray-600">
             {{ toStationEndTime?.date }}
@@ -48,11 +48,28 @@
             {{ toStationEndTime?.time }}
           </div>
         </div>
+
+        <!-- Carriage Block -->
+        <div
+          *ngFor="let carriage of item.carriages"
+          class="flex flex-col items-center"
+        >
+          <div class="text-md font-medium text-600 mt-2">
+            Carriage type {{ carriage.type }}
+          </div>
+          <div class="text-lg text-gray-900">{{ carriage.price }} credits</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Route Info Block -->
 <div class="surface-100 p-1" style="border-radius: 30px">
+  <app-route-dialog
+    [route]="item.route"
+    [schedule]="item.schedule"
+  ></app-route-dialog>
   <div
     class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
     style="
@@ -63,8 +80,8 @@
     "
   >
     <span class="text-900 font-medium text-sm"
-      >City{{ item.path[0] }} -- City{{ item.path[item.path.length - 1] }}</span
+      >City {{ item.route.path[0] }} -- City
+      {{ item.route.path[item.route.path.length - 1] }}</span
     >
-    <span class="text-900 font-medium text-sm">Route: {{ item.id }}</span>
   </div>
 </div>
