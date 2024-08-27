@@ -1,29 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
-import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { loadStations } from '../../../../store/actions/stations.actions';
-import { selectAllStations } from '../../../../store/selectors/stations.selectors';
-import {
-  SearchResponseStation,
-  Station,
-} from '../../../../models/station.models';
-import {
-  selectDate,
-  selectFromStation,
-  selectToStation,
-} from '../../../../store/actions/search.actions';
+import { SearchResponseStation } from '../../../../models/station.models';
 import {
   selectDateSelected,
   selectFromStationSelected,
   selectToStationSelected,
 } from '../../../../store/selectors/search.selectors';
+import { loadStations } from '../../../../store/actions/stations.actions';
+import { selectAllStations } from '../../../../store/selectors/stations.selectors';
+import { transformStations } from '../../../../helpers/search-result.helpers';
 import { loadSearchResults } from '../../../../store/actions/search-result.actions';
+import {
+  selectDate,
+  selectFromStation,
+  selectToStation,
+} from '../../../../store/actions/search.actions';
 
 @Component({
   selector: 'app-search-form',
@@ -69,7 +67,7 @@ export class SearchFormComponent implements OnInit {
       .select(selectAllStations)
       .pipe(
         filter((stations) => stations.length > 0),
-        map((stations) => this.transformStations(stations)),
+        map((stations) => transformStations(stations)),
       )
       .subscribe((transformedStations) => {
         this.fromStations = transformedStations;
@@ -91,17 +89,6 @@ export class SearchFormComponent implements OnInit {
         this.formGroup.patchValue({ date });
       }
     });
-  }
-
-  private transformStations(stations: Station[]): SearchResponseStation[] {
-    return stations.map((station) => ({
-      stationId: station.id,
-      city: station.city,
-      geolocation: {
-        latitude: station.latitude,
-        longitude: station.longitude,
-      },
-    }));
   }
 
   onSubmit(): void {

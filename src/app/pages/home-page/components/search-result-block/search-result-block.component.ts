@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DataViewModule } from 'primeng/dataview';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { SearchResponse } from '../../../../models/search-response.model';
-import { selectSearchResult } from '../../../../store/selectors/search-result.selectors';
+import { CommonModule } from '@angular/common';
+import { DataViewModule } from 'primeng/dataview';
 import { SearchResultItemComponent } from '../search-result-item/search-result-item.component';
-import { Carriage, SearchItem } from '../../../../models/search-item.model';
-import { Route, Schedule } from '../../../../models/route.model';
+
+import { selectSearchResult } from '../../../../store/selectors/search-result.selectors';
+import { mapCarriages } from '../../../../helpers/search-result.helpers';
+import { SearchResponse } from '../../../../models/search-response.model';
+import { SearchItem } from '../../../../models/search-item.model';
 
 @Component({
   selector: 'app-search-result-block',
@@ -18,6 +19,7 @@ import { Route, Schedule } from '../../../../models/route.model';
 })
 export class SearchResultBlockComponent implements OnInit {
   searchResult$: Observable<SearchResponse | null>;
+
   searchItems: SearchItem[] = [];
 
   constructor(private store: Store) {
@@ -54,24 +56,11 @@ export class SearchResultBlockComponent implements OnInit {
           arrivalTime: new Date(
             schedule.segments[schedule.segments.length - 1].time[1],
           ),
-          carriages: this.mapCarriages(route, schedule, segmentIndex),
+          carriages: mapCarriages(route, schedule, segmentIndex),
         };
 
         this.searchItems.push(searchItem);
       });
-    });
-  }
-
-  private mapCarriages(
-    route: Route,
-    schedule: Schedule,
-    segmentIndex: number,
-  ): Carriage[] {
-    const uniqueCarriages = new Set(route.carriages);
-
-    return Array.from(uniqueCarriages).map((carriageType) => {
-      const price = schedule.segments[segmentIndex].price[carriageType] || 0;
-      return { type: carriageType, price };
     });
   }
 }
