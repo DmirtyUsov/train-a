@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -40,6 +40,10 @@ export class SearchFormComponent implements OnInit {
 
   allStations$: Observable<SearchResponseStation[]>;
 
+  fromStation$: Observable<SearchResponseStation | null>;
+
+  toStation$: Observable<SearchResponseStation | null>;
+
   fromStations: SearchResponseStation[] = [];
 
   toStations: SearchResponseStation[] = [];
@@ -57,6 +61,8 @@ export class SearchFormComponent implements OnInit {
     });
 
     this.allStations$ = this.store.select(selectTransformedStations);
+    this.fromStation$ = this.store.select(selectFromStationSelected);
+    this.toStation$ = this.store.select(selectToStationSelected);
 
     this.allStations$
       .pipe(
@@ -83,15 +89,27 @@ export class SearchFormComponent implements OnInit {
     //     this.toStations = transformedStations;
     //   });
 
-    this.store
-      .select(selectFromStationSelected)
-      .subscribe((selectedStation) => {
-        this.formGroup.patchValue({ selectedFromStation: selectedStation });
-      });
+    // this.store
+    //   .select(selectFromStationSelected)
+    //   .subscribe((selectedStation) => {
+    //     this.formGroup.patchValue({ selectedFromStation: selectedStation });
+    //   });
 
-    this.store.select(selectToStationSelected).subscribe((selectedStation) => {
-      this.formGroup.patchValue({ selectedToStation: selectedStation });
-    });
+    // this.store.select(selectToStationSelected).subscribe((selectedStation) => {
+    //   this.formGroup.patchValue({ selectedToStation: selectedStation });
+    // });
+
+    this.fromStation$.pipe(
+      tap((selectedStation) => {
+        this.formGroup.patchValue({ selectedFromStation: selectedStation });
+      }),
+    );
+
+    this.toStation$.pipe(
+      tap((selectedStation) => {
+        this.formGroup.patchValue({ selectedToStation: selectedStation });
+      }),
+    );
 
     this.date$.subscribe((date) => {
       if (date) {
