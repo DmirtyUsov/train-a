@@ -24,9 +24,11 @@ export const routes: Routes = [
     path: 'signup',
     component: SignupPageComponent,
   },
+
   {
     path: 'admin',
-    component: NotAuthorizedComponent,
+    loadChildren: () =>
+      import('./manager/manager.routes').then((mod) => mod.MANAGER_ROUTES),
   },
   {
     path: 'trip/:rideId',

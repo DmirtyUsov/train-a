@@ -98,7 +98,7 @@ export class HeaderComponent {
 
     router.events.forEach((e) => {
       if (e instanceof NavigationEnd) {
-        this.isCurrentRouteAdmin$.next(router.url === '/admin');
+        this.isCurrentRouteAdmin$.next(router.url.startsWith('/admin'));
       }
     });
     this.items = [
