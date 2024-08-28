@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SignInResponse } from '../models/signin-response.model';
 import { UserProfile } from '../models/user.models';
+import { Station } from '../models/station.models';
 
 const URL = '/api/';
 @Injectable({
@@ -40,5 +41,10 @@ export class BackendService {
   getProfile() {
     const url = BackendService.makeUrl('profile');
     return this.http.get<UserProfile>(url);
+  }
+
+  getStations() {
+    const url = BackendService.makeUrl('station');
+    return this.http.get<Station[]>(url);
   }
 }
