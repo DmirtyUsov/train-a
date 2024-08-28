@@ -14,11 +14,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import {
-  selectError,
-  selectIsLoading,
-} from '../../store/selectors/auth.selectors';
-import { AuthActions } from '../../store';
+import { AuthActions, AuthSelectors } from '../../store';
 
 @Component({
   selector: 'app-sign-in-form',
@@ -59,11 +55,11 @@ export class SignInFormComponent implements OnInit {
     });
   }
 
-  private signInError$ = this.store.select(selectError);
+  private signInError$ = this.store.select(AuthSelectors.selectError);
 
   public errorSignal = toSignal(this.signInError$);
 
-  public isLoading$ = this.store.select(selectIsLoading);
+  public isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
 
   onSignIn(): void {
     const { email, password } = this.signInForm.value;
