@@ -29,7 +29,7 @@ export const authReducer = createReducer(
   ),
   on(
     AuthActions.signInFailure,
-    (action): AuthState => ({
+    (state, action): AuthState => ({
       ...initialState,
       error: action.error,
     }),

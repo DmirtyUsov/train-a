@@ -29,6 +29,16 @@
       @if (email?.invalid && email?.hasError("pattern") && isSubmitted) {
         <small class="p-error block absolute">Invalid email</small>
       }
+      @if (
+        (errorSignal()?.reason === "invalidEmail" ||
+          errorSignal()?.reason === "userNotFound") &&
+        email?.pristine &&
+        (isLoading$ | async) === false
+      ) {
+        <small class="p-error block absolute"
+          >Incorrect email or password</small
+        >
+      }
     </div>
 
     <div class="mb-5">
@@ -46,6 +56,16 @@
       @if (password?.invalid && password?.hasError("required") && isSubmitted) {
         <small class="p-error block absolute">Required</small>
       }
+      @if (
+        (errorSignal()?.reason === "invalidEmail" ||
+          errorSignal()?.reason === "userNotFound") &&
+        password?.pristine &&
+        (isLoading$ | async) === false
+      ) {
+        <small class="p-error block absolute"
+          >Incorrect email or password</small
+        >
+      }
     </div>
 
     <!-- eslint-disable-next-line @angular-eslint/template/elements-content -->
@@ -55,6 +75,7 @@
       label="Sign In"
       icon="pi pi-user"
       class="flex w-full"
+      [loading]="!!(isLoading$ | async)"
       [disabled]="!signInForm.valid"
     ></button>
   </form>
