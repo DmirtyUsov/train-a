@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Route, Schedule } from '../../../../models/route.model';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { Observable, map } from 'rxjs';
-import { Station } from '../../../../models/station.models';
 import { Store } from '@ngrx/store';
 import { selectAllStations } from '../../../../store/selectors/stations.selectors';
+import { Station } from '../../../../models/station.models';
+import { Route, Schedule } from '../../../../models/route.model';
 import { RouteDetails } from '../../../../models/route-details.model';
 import { mapRouteToDetails } from '../../../../helpers/search-result.helpers';
 

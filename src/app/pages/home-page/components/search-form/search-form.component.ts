@@ -14,7 +14,10 @@ import {
   selectToStationSelected,
 } from '../../../../store/selectors/search.selectors';
 import { loadStations } from '../../../../store/actions/stations.actions';
-import { selectAllStations } from '../../../../store/selectors/stations.selectors';
+import {
+  selectAllStations,
+  selectTransformedStations,
+} from '../../../../store/selectors/stations.selectors';
 import { transformStations } from '../../../../helpers/search-result.helpers';
 import { loadSearchResults } from '../../../../store/actions/search-result.actions';
 import {
@@ -64,11 +67,7 @@ export class SearchFormComponent implements OnInit {
     this.store.dispatch(loadStations());
 
     this.store
-      .select(selectAllStations)
-      .pipe(
-        filter((stations) => stations.length > 0),
-        map((stations) => transformStations(stations)),
-      )
+      .select(selectTransformedStations)
       .subscribe((transformedStations) => {
         this.fromStations = transformedStations;
         this.toStations = transformedStations;

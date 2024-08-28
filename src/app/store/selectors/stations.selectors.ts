@@ -22,6 +22,6 @@ export const selectStationsError = createSelector(
 );
 
 export const selectTransformedStations = createSelector(
-  selectAllStations, // Assuming you already have this selector
+  selectAllStations,
   (stations: Station[]) => transformStations(stations),
 );
