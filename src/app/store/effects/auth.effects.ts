@@ -25,6 +25,7 @@ export class AuthEffects {
         this.backend.signIn(email, password).pipe(
           map((data) => AuthActions.signInSuccess(data)),
           tap(() => this.toastService.success('You are logged in!')),
+          tap(() => this.router.navigate(['/'])),
           catchError((error) => {
             return of(AuthActions.signInFailure({ error: error.error }));
           }),
