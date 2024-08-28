@@ -14,11 +14,7 @@ import {
   selectToStationSelected,
 } from '../../../../store/selectors/search.selectors';
 import { loadStations } from '../../../../store/actions/stations.actions';
-import {
-  selectAllStations,
-  selectTransformedStations,
-} from '../../../../store/selectors/stations.selectors';
-import { transformStations } from '../../../../helpers/search-result.helpers';
+import { selectTransformedStations } from '../../../../store/selectors/stations.selectors';
 import { loadSearchResults } from '../../../../store/actions/search-result.actions';
 import {
   selectDate,
@@ -42,6 +38,8 @@ import {
 export class SearchFormComponent implements OnInit {
   formGroup: FormGroup;
 
+  allStations$: Observable<SearchResponseStation[]>;
+
   fromStations: SearchResponseStation[] = [];
 
   toStations: SearchResponseStation[] = [];
@@ -58,6 +56,18 @@ export class SearchFormComponent implements OnInit {
       date: [null],
     });
 
+    this.allStations$ = this.store.select(selectTransformedStations);
+
+    this.allStations$
+      .pipe(
+        filter((stations) => stations.length > 0),
+        map((stations) => {
+          this.fromStations = stations;
+          this.toStations = stations;
+        }),
+      )
+      .subscribe();
+
     this.date$ = this.store
       .select(selectDateSelected)
       .pipe(map((dateString) => (dateString ? new Date(dateString) : null)));
@@ -66,12 +76,12 @@ export class SearchFormComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(loadStations());
 
-    this.store
-      .select(selectTransformedStations)
-      .subscribe((transformedStations) => {
-        this.fromStations = transformedStations;
-        this.toStations = transformedStations;
-      });
+    // this.store
+    //   .select(selectTransformedStations)
+    //   .subscribe((transformedStations) => {
+    //     this.fromStations = transformedStations;
+    //     this.toStations = transformedStations;
+    //   });
 
     this.store
       .select(selectFromStationSelected)
