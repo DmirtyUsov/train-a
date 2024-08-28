@@ -26,6 +26,12 @@ export class BackendService {
     return this.http.post<SignInResponse>(url, body);
   }
 
+  signUp(email: string, password: string): Observable<null> {
+    const url = BackendService.makeUrl('signup');
+    const body = { email, password };
+    return this.http.post<null>(url, body);
+  }
+
   signOut() {
     const url = BackendService.makeUrl('logout');
     return this.http.delete(url);

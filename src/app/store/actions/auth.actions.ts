@@ -20,6 +20,17 @@ export const signInFailure = createAction(
   props<{ error: ResponseError }>(),
 );
 
+export const signUp = createAction(
+  `${AUTH} SignUp`,
+  props<{ email: string; password: string }>(),
+);
+export const signUpSuccess = createAction(`${AUTH} SignUp ${SUCCESS}`);
+
+export const signUpFailure = createAction(
+  `${AUTH} SignUp ${FAILURE}`,
+  props<{ error: ResponseError }>(),
+);
+
 export const signOut = createAction(`${AUTH} SignOut`);
 export const signOutSuccess = createAction(`${AUTH} SignOut ${SUCCESS}`);
 
