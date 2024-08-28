@@ -1,20 +1,38 @@
+import { Store } from '@ngrx/store';
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { BackendService } from '../../services/backend.service';
+
+import { TOAST_KEY } from '../../services/toast.service';
+import { KeepAuthService } from '../../services/keep-auth.service';
+import { AuthActions } from '../../store';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ButtonModule, InputTextModule, FloatLabelModule],
+  imports: [
+    ButtonModule,
+    InputTextModule,
+    FloatLabelModule,
+    ToastModule,
+    RouterModule,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  constructor(private backendService: BackendService) {}
+  protected readonly toastKey = TOAST_KEY;
 
-  sendStation() {
-    this.backendService.logGETResponse('station');
+  constructor(
+    private keepAuth: KeepAuthService,
+    private store: Store,
+  ) {
+    const token = this.keepAuth.restore();
+    if (token) {
+      store.dispatch(AuthActions.signInSuccess({ token }));
+    }
   }
 }
