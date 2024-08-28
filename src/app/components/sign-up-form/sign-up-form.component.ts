@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AsyncPipe } from '@angular/common';
 import {
   AbstractControl,
   FormGroup,
@@ -8,12 +10,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { FieldsetModule } from 'primeng/fieldset';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { AuthActions, AuthSelectors } from '../../store';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -27,6 +31,7 @@ import { PasswordModule } from 'primeng/password';
     ReactiveFormsModule,
     PasswordModule,
     RouterLink,
+    AsyncPipe,
   ],
   templateUrl: './sign-up-form.component.html',
   styleUrl: './sign-up-form.component.scss',
@@ -36,7 +41,10 @@ export class SignUpFormComponent implements OnInit {
 
   public isSubmitted: boolean = false;
 
-  constructor(private formBuilder: NonNullableFormBuilder) {}
+  constructor(
+    private formBuilder: NonNullableFormBuilder,
+    private store: Store,
+  ) {}
 
   ngOnInit(): void {
     this.signUpForm = this.formBuilder.group(
@@ -55,8 +63,17 @@ export class SignUpFormComponent implements OnInit {
     );
   }
 
+  private signUpError$ = this.store.select(AuthSelectors.selectError);
+
+  public errorSignal = toSignal(this.signUpError$);
+
+  public isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
+
   onSignUp(): void {
+    const { email, password } = this.signUpForm.value;
     this.isSubmitted = true;
+    this.signUpForm.markAsPristine();
+    this.store.dispatch(AuthActions.signUp({ email, password }));
   }
 
   get email() {
