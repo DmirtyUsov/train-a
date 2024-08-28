@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SignInResponse } from '../models/signin-response.model';
+import { UserProfile } from '../models/user.models';
 
 const URL = '/api/';
 @Injectable({
@@ -28,5 +29,10 @@ export class BackendService {
   signOut() {
     const url = BackendService.makeUrl('logout');
     return this.http.delete(url);
+  }
+
+  getProfile() {
+    const url = BackendService.makeUrl('profile');
+    return this.http.get<UserProfile>(url);
   }
 }
