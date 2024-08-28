@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { Station } from '../../models/station.models';
+import { SearchResponseStation } from '../../models/station.models';
 import {
   selectDate,
   selectFromStation,
@@ -7,9 +7,9 @@ import {
 } from '../actions/search.actions';
 
 export interface SearchState {
-  fromStationSelected: Station | null;
-  toStationSelected: Station | null;
-  dateSelected: Date | null;
+  fromStationSelected: SearchResponseStation | null;
+  toStationSelected: SearchResponseStation | null;
+  dateSelected: string | null;
 }
 
 export const initialState: SearchState = {

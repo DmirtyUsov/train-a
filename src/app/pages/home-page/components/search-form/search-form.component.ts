@@ -1,27 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import { SearchResponseStation } from '../../../../models/station.models';
+import {
+  selectFromStationSelected,
+  selectMappedDate,
+  selectToStationSelected,
+} from '../../../../store/selectors/search.selectors';
 import { loadStations } from '../../../../store/actions/stations.actions';
-import { selectAllStations } from '../../../../store/selectors/stations.selectors';
-import { SearchService } from '../../../../services/search.service';
-import { Station } from '../../../../models/station.models';
+import { selectTransformedStations } from '../../../../store/selectors/stations.selectors';
+import { loadSearchResults } from '../../../../store/actions/search-result.actions';
 import {
   selectDate,
   selectFromStation,
   selectToStation,
 } from '../../../../store/actions/search.actions';
-import {
-  selectDateSelected,
-  selectFromStationSelected,
-  selectToStationSelected,
-} from '../../../../store/selectors/search.selectors';
-import { loadSearchResults } from '../../../../store/actions/search-result.actions';
 
 @Component({
   selector: 'app-search-form',
@@ -39,21 +38,20 @@ import { loadSearchResults } from '../../../../store/actions/search-result.actio
 export class SearchFormComponent implements OnInit {
   formGroup: FormGroup;
 
-  fromStations: Station[] = [];
+  allStations$: Observable<SearchResponseStation[]>;
 
-  toStations: Station[] = [];
+  fromStation$: Observable<SearchResponseStation | null>;
 
-  allStations$: Observable<Station[]>;
+  toStation$: Observable<SearchResponseStation | null>;
 
-  fromStation$: Observable<Station | null>;
+  fromStations: SearchResponseStation[] = [];
 
-  toStation$: Observable<Station | null>;
+  toStations: SearchResponseStation[] = [];
 
   date$: Observable<Date | null>;
 
   constructor(
     private fb: FormBuilder,
-    private searchService: SearchService,
     private store: Store,
   ) {
     this.formGroup = this.fb.group({
@@ -62,10 +60,10 @@ export class SearchFormComponent implements OnInit {
       date: [null],
     });
 
-    this.allStations$ = this.store.select(selectAllStations);
+    this.allStations$ = this.store.select(selectTransformedStations);
     this.fromStation$ = this.store.select(selectFromStationSelected);
     this.toStation$ = this.store.select(selectToStationSelected);
-    this.date$ = this.store.select(selectDateSelected);
+    this.date$ = this.store.select(selectMappedDate);
 
     this.allStations$
       .pipe(
@@ -80,43 +78,52 @@ export class SearchFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(loadStations());
+
+    this.fromStation$.pipe(
+      tap((selectedStation) => {
+        this.formGroup.patchValue({ selectedFromStation: selectedStation });
+      }),
+    );
+
+    this.toStation$.pipe(
+      tap((selectedStation) => {
+        this.formGroup.patchValue({ selectedToStation: selectedStation });
+      }),
+    );
+
+    this.date$.pipe(
+      tap((date) => {
+        if (date) {
+          this.formGroup.patchValue({ date });
+        }
+      }),
+    );
   }
 
   onSubmit(): void {
-    this.fromStation$
-      .pipe(
-        switchMap((fromStation) =>
-          this.toStation$.pipe(
-            switchMap((toStation) =>
-              this.date$.pipe(
-                map((date) => ({ fromStation, toStation, date })),
-              ),
-            ),
-          ),
-        ),
-      )
-      .subscribe(({ fromStation, toStation, date }) => {
-        console.log('Dispatching loadSearchResults:', {
-          fromStation,
-          toStation,
-          date,
-        });
-        if (fromStation && toStation) {
-          this.store.dispatch(
-            loadSearchResults({ fromStation, toStation, date }),
-          );
-        }
-      });
+    const { selectedFromStation, selectedToStation, date } =
+      this.formGroup.value;
+    const isoDate = date ? new Date(date).toISOString() : null;
+
+    if (selectedFromStation && selectedToStation) {
+      this.store.dispatch(
+        loadSearchResults({
+          fromStation: selectedFromStation,
+          toStation: selectedToStation,
+          date: isoDate,
+        }),
+      );
+    }
   }
 
-  onFromStationChange(event: { value: Station }): void {
+  onFromStationChange(event: { value: SearchResponseStation }): void {
     const selectedStation = event.value;
     if (selectedStation) {
       this.store.dispatch(selectFromStation({ station: selectedStation }));
     }
   }
 
-  onToStationChange(event: { value: Station }): void {
+  onToStationChange(event: { value: SearchResponseStation }): void {
     const selectedStation = event.value;
     if (selectedStation) {
       this.store.dispatch(selectToStation({ station: selectedStation }));
@@ -124,9 +131,9 @@ export class SearchFormComponent implements OnInit {
   }
 
   onDateChange(event: Date): void {
-    const selectedDate = event;
-    if (selectedDate) {
-      this.store.dispatch(selectDate({ date: selectedDate }));
+    const isoDate = event.toISOString();
+    if (event) {
+      this.store.dispatch(selectDate({ date: isoDate }));
     }
   }
 }

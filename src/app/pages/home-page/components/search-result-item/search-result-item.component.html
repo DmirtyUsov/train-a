@@ -1,0 +1,87 @@
+<div
+  class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3"
+  [ngClass]="{ 'border-top-1 surface-border': true }"
+>
+  <div
+    class="flex flex-column md:flex-row justify-content-between md:align-items-center flex-1 gap-4"
+  >
+    <div class="flex flex-row justify-content-between align-items-start gap-4">
+      <div class="flex flex-row gap-8">
+        <!-- From City Block -->
+        <div class="flex flex-col items-center">
+          <div class="text-lg font-medium text-900 mt-2">
+            From: {{ item.fromStation.city }}
+          </div>
+          <div class="text-sm text-gray-500">
+            {{ fromStationStartTime?.date }}
+          </div>
+          <div class="text-md text-gray-800">
+            {{ fromStationStartTime?.time }}
+          </div>
+        </div>
+
+        <!-- Time Difference Display -->
+        <div class="flex flex-col items-center mt-4">
+          <div class="text-sm text-gray-600">
+            <div *ngIf="weeks > 0">
+              {{ weeks }} Week{{ weeks > 1 ? "s" : "" }}
+            </div>
+            <div *ngIf="days > 0">{{ days }} Day{{ days > 1 ? "s" : "" }}</div>
+            <div *ngIf="hours > 0">
+              {{ hours }} Hour{{ hours > 1 ? "s" : "" }}
+            </div>
+            <div *ngIf="minutes >= 0">
+              {{ minutes }} Minute{{ minutes > 1 ? "s" : "" }}
+            </div>
+          </div>
+        </div>
+
+        <!-- To City Block -->
+        <div class="flex flex-col items-center">
+          <div class="text-lg font-medium text-900 mt-2">
+            To: {{ item.toStation.city }}
+          </div>
+          <div class="text-sm text-gray-600">
+            {{ toStationEndTime?.date }}
+          </div>
+          <div class="text-md text-gray-800">
+            {{ toStationEndTime?.time }}
+          </div>
+        </div>
+
+        <!-- Carriage Block -->
+        <div
+          *ngFor="let carriage of item.carriages"
+          class="flex flex-col items-center"
+        >
+          <div class="text-md font-medium text-600 mt-2">
+            Carriage type {{ carriage.type }}
+          </div>
+          <div class="text-lg text-gray-900">{{ carriage.price }} credits</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Route Info Block -->
+<div class="surface-100 p-1" style="border-radius: 30px">
+  <app-route-dialog
+    [route]="item.route"
+    [schedule]="item.schedule"
+  ></app-route-dialog>
+  <div
+    class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
+    style="
+      border-radius: 30px;
+      box-shadow:
+        0px 1px 2px 0px rgba(0, 0, 0, 0.04),
+        0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+    "
+  >
+    <span class="text-900 font-medium text-sm"
+      >City {{ item.route.path[0] }} -- City
+      {{ item.route.path[item.route.path.length - 1] }}</span
+    >
+  </div>
+</div>
