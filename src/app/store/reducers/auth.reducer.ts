@@ -15,6 +15,7 @@ export const authReducer = createReducer(
   initialState,
   on(
     AuthActions.signIn,
+    AuthActions.signUp,
     AuthActions.signOut,
     AuthActions.getUserProfile,
     (state): AuthState => ({ ...state, isLoading: true }),
@@ -31,6 +32,23 @@ export const authReducer = createReducer(
   ),
   on(
     AuthActions.signInFailure,
+    AuthActions.getUserProfileFailure,
+    (state, action): AuthState => ({
+      ...state,
+      isLoading: false,
+      error: action.error,
+    }),
+  ),
+  on(
+    AuthActions.signUpSuccess,
+    (state): AuthState => ({
+      ...state,
+      isLoading: false,
+      error: null,
+    }),
+  ),
+  on(
+    AuthActions.signUpFailure,
     AuthActions.getUserProfileFailure,
     (state, action): AuthState => ({
       ...state,

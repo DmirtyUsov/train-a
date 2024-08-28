@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AsyncPipe } from '@angular/common';
 import {
   AbstractControl,
   FormGroup,
@@ -29,6 +31,7 @@ import { AuthActions, AuthSelectors } from '../../store';
     ReactiveFormsModule,
     PasswordModule,
     RouterLink,
+    AsyncPipe,
   ],
   templateUrl: './sign-up-form.component.html',
   styleUrl: './sign-up-form.component.scss',
@@ -62,7 +65,7 @@ export class SignUpFormComponent implements OnInit {
 
   private signUpError$ = this.store.select(AuthSelectors.selectError);
 
-  // public errorSignal = toSignal(this.signInError$);
+  public errorSignal = toSignal(this.signUpError$);
 
   public isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
 

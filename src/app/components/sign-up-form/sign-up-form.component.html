@@ -31,6 +31,15 @@
       @if (email?.invalid && email?.hasError("pattern") && isSubmitted) {
         <small class="p-error block absolute">Invalid email</small>
       }
+      @if (
+        errorSignal()?.reason === "invalidUniqueKey" &&
+        email?.pristine &&
+        (isLoading$ | async) === false
+      ) {
+        <small class="p-error block absolute"
+          >Account with this email already exists</small
+        >
+      }
     </div>
 
     <div class="mb-5">
