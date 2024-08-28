@@ -68,15 +68,15 @@
       }
     </div>
 
-    <!-- eslint-disable-next-line @angular-eslint/template/elements-content -->
-    <button
-      pButton
-      pRipple
-      label="Sign In"
-      icon="pi pi-user"
-      class="flex w-full"
-      [loading]="!!(isLoading$ | async)"
-      [disabled]="!signInForm.valid"
-    ></button>
+    <div class="p-fluid">
+      <p-button
+        type="submit"
+        label="Sign In"
+        icon="pi pi-user"
+        class="flex w-full"
+        [loading]="!!(isLoading$ | async)"
+        [disabled]="!signInForm.valid"
+      ></p-button>
+    </div>
   </form>
 </div>
