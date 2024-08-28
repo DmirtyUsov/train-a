@@ -10,7 +10,7 @@ export const authenticatedUserGuard: CanActivateFn = () => {
   const isAuthenticated$ = store.select(AuthSelectors.selectIsAuthenticated);
 
   return isAuthenticated$.pipe(
-    // To prevent access when authenticated, so we invert the logic
+    // Prevent access when authenticated, so we invert the logic
     map((isAuthenticated) => !isAuthenticated),
   );
 };
