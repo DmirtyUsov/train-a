@@ -9,8 +9,8 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { SearchResponseStation } from '../../../../models/station.models';
 import {
-  selectDateSelected,
   selectFromStationSelected,
+  selectMappedDate,
   selectToStationSelected,
 } from '../../../../store/selectors/search.selectors';
 import { loadStations } from '../../../../store/actions/stations.actions';
@@ -63,6 +63,7 @@ export class SearchFormComponent implements OnInit {
     this.allStations$ = this.store.select(selectTransformedStations);
     this.fromStation$ = this.store.select(selectFromStationSelected);
     this.toStation$ = this.store.select(selectToStationSelected);
+    this.date$ = this.store.select(selectMappedDate);
 
     this.allStations$
       .pipe(
@@ -73,31 +74,10 @@ export class SearchFormComponent implements OnInit {
         }),
       )
       .subscribe();
-
-    this.date$ = this.store
-      .select(selectDateSelected)
-      .pipe(map((dateString) => (dateString ? new Date(dateString) : null)));
   }
 
   ngOnInit(): void {
     this.store.dispatch(loadStations());
-
-    // this.store
-    //   .select(selectTransformedStations)
-    //   .subscribe((transformedStations) => {
-    //     this.fromStations = transformedStations;
-    //     this.toStations = transformedStations;
-    //   });
-
-    // this.store
-    //   .select(selectFromStationSelected)
-    //   .subscribe((selectedStation) => {
-    //     this.formGroup.patchValue({ selectedFromStation: selectedStation });
-    //   });
-
-    // this.store.select(selectToStationSelected).subscribe((selectedStation) => {
-    //   this.formGroup.patchValue({ selectedToStation: selectedStation });
-    // });
 
     this.fromStation$.pipe(
       tap((selectedStation) => {
@@ -111,11 +91,13 @@ export class SearchFormComponent implements OnInit {
       }),
     );
 
-    this.date$.subscribe((date) => {
-      if (date) {
-        this.formGroup.patchValue({ date });
-      }
-    });
+    this.date$.pipe(
+      tap((date) => {
+        if (date) {
+          this.formGroup.patchValue({ date });
+        }
+      }),
+    );
   }
 
   onSubmit(): void {
