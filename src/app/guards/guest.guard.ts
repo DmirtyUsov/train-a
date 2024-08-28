@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
 import { AuthSelectors } from '../store';
 
-export const authenticatedUserGuard: CanActivateFn = () => {
+export const guestGuard: CanActivateFn = () => {
   const store = inject(Store);
 
   const isAuthenticated$ = store.select(AuthSelectors.selectIsAuthenticated);
