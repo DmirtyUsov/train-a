@@ -5,7 +5,7 @@ import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { NotAuthorizedComponent } from './pages/not-authorized/not-authorized.component';
-import { authenticatedUserGuard } from './guards/authenticated-user.guard';
+import { guestGuard } from './guards/guest.guard';
 import { managerGuard } from './guards/manager.guard';
 
 export const routes: Routes = [
@@ -20,12 +20,12 @@ export const routes: Routes = [
   {
     path: 'signin',
     component: SigninPageComponent,
-    canActivate: [authenticatedUserGuard],
+    canActivate: [guestGuard],
   },
   {
     path: 'signup',
     component: SignupPageComponent,
-    canActivate: [authenticatedUserGuard],
+    canActivate: [guestGuard],
   },
   {
     path: 'admin',
