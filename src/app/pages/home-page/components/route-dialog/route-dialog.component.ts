@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Route, Schedule } from '../../../../models/route.model';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -6,7 +7,6 @@ import { TableModule } from 'primeng/table';
 import { Observable, map } from 'rxjs';
 import { Station } from '../../../../models/station.models';
 import { Store } from '@ngrx/store';
-import { CommonModule, DatePipe } from '@angular/common';
 import { selectAllStations } from '../../../../store/selectors/stations.selectors';
 import { RouteDetails } from '../../../../models/route-details.model';
 import { mapRouteToDetails } from '../../../../helpers/search-result.helpers';
@@ -20,7 +20,9 @@ import { mapRouteToDetails } from '../../../../helpers/search-result.helpers';
 })
 export class RouteDialogComponent implements OnInit {
   @Input() route!: Route;
+
   @Input() schedule!: Schedule;
+
   routeDetails!: RouteDetails;
 
   allStations$: Observable<Station[]>;
