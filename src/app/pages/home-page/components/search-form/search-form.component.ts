@@ -1,26 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Observable } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { map, filter, tap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { CommonModule } from '@angular/common';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
-import { CommonModule } from '@angular/common';
 import { SearchResponseStation } from '../../../../models/station.models';
+import { selectTransformedStations } from '../../../../store/selectors/stations.selectors';
 import {
   selectFromStationSelected,
   selectMappedDate,
   selectToStationSelected,
 } from '../../../../store/selectors/search.selectors';
-import { loadStations } from '../../../../store/actions/stations.actions';
-import { selectTransformedStations } from '../../../../store/selectors/stations.selectors';
 import { loadSearchResults } from '../../../../store/actions/search-result.actions';
 import {
   selectDate,
   selectFromStation,
   selectToStation,
 } from '../../../../store/actions/search.actions';
+import { loadStations } from '../../../../store/actions/stations.actions';
 
 @Component({
   selector: 'app-search-form',
@@ -61,9 +66,9 @@ export class SearchFormComponent implements OnInit {
     private store: Store,
   ) {
     this.formGroup = this.fb.group({
-      selectedFromStation: [null],
-      selectedToStation: [null],
-      date: [null],
+      selectedFromStation: [null, Validators.required],
+      selectedToStation: [null, Validators.required],
+      date: [null, Validators.required],
     });
 
     this.allStations$ = this.store.select(selectTransformedStations);
