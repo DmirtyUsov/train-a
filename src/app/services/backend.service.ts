@@ -5,6 +5,9 @@ import { SignInResponse } from '../models/signin-response.model';
 import { UserProfile } from '../models/user.models';
 import { Station } from '../models/station.models';
 
+enum Endpoints {
+  'Station' = 'station',
+}
 const URL = '/api/';
 @Injectable({
   providedIn: 'root',
@@ -38,13 +41,18 @@ export class BackendService {
     return this.http.delete(url);
   }
 
-  getProfile() {
+  getProfile(): Observable<UserProfile> {
     const url = BackendService.makeUrl('profile');
     return this.http.get<UserProfile>(url);
   }
 
-  getStations() {
-    const url = BackendService.makeUrl('station');
+  getStations(): Observable<Station[]> {
+    const url = BackendService.makeUrl(Endpoints.Station);
     return this.http.get<Station[]>(url);
+  }
+
+  deleteStation(id: number) {
+    const url = `${BackendService.makeUrl(Endpoints.Station)}/${id}`;
+    return this.http.delete(url);
   }
 }
