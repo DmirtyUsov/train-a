@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import { AuthActions } from '..';
@@ -14,6 +15,7 @@ export class AuthEffects {
     private backend: BackendService,
     private toastService: ToastService,
     private keepAuth: KeepAuthService,
+    private router: Router,
   ) {}
 
   signIn$ = createEffect(() => {
@@ -40,6 +42,22 @@ export class AuthEffects {
     },
     { dispatch: false },
   );
+
+  signUp$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthActions.signUp),
+      mergeMap(({ email, password }) =>
+        this.backend.signUp(email, password).pipe(
+          map(() => AuthActions.signUpSuccess()),
+          tap(() => this.toastService.success('Successful registration!')),
+          tap(() => this.router.navigate(['/signin'])),
+          catchError((error) => {
+            return of(AuthActions.signUpFailure({ error: error.error }));
+          }),
+        ),
+      ),
+    );
+  });
 
   signOut$ = createEffect(() => {
     return this.actions$.pipe(

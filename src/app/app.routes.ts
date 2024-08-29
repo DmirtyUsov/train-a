@@ -3,6 +3,8 @@ import { HomePageComponent } from './pages/home-page/home-page/home-page.compone
 import { BackendTestComponent } from './components/backend-test/backend-test.component';
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { NotAuthorizedComponent } from './pages/not-authorized/not-authorized.component';
 
 export const routes: Routes = [
   {
@@ -21,4 +23,9 @@ export const routes: Routes = [
     path: 'signup',
     component: SignupPageComponent,
   },
+  {
+    path: 'admin',
+    component: NotAuthorizedComponent,
+  },
+  { path: '**', component: NotFoundComponent },
 ];

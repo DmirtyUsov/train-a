@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+<<<<<<< HEAD
 import {
   FormBuilder,
   FormGroup,
@@ -14,18 +15,37 @@ import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { SearchResponseStation } from '../../../../models/station.models';
 import { selectTransformedStations } from '../../../../store/selectors/stations.selectors';
+=======
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
+import { SearchResponseStation } from '../../../../models/station.models';
+>>>>>>> sprint3
 import {
   selectFromStationSelected,
   selectMappedDate,
   selectToStationSelected,
 } from '../../../../store/selectors/search.selectors';
+<<<<<<< HEAD
+=======
+import { loadStations } from '../../../../store/actions/stations.actions';
+import { selectTransformedStations } from '../../../../store/selectors/stations.selectors';
+>>>>>>> sprint3
 import { loadSearchResults } from '../../../../store/actions/search-result.actions';
 import {
   selectDate,
   selectFromStation,
   selectToStation,
 } from '../../../../store/actions/search.actions';
+<<<<<<< HEAD
 import { loadStations } from '../../../../store/actions/stations.actions';
+=======
+>>>>>>> sprint3
 
 @Component({
   selector: 'app-search-form',
@@ -48,6 +68,13 @@ export class SearchFormComponent implements OnInit {
   fromStation$: Observable<SearchResponseStation | null>;
 
   toStation$: Observable<SearchResponseStation | null>;
+<<<<<<< HEAD
+=======
+
+  fromStations: SearchResponseStation[] = [];
+
+  toStations: SearchResponseStation[] = [];
+>>>>>>> sprint3
 
   date$: Observable<Date | null>;
 
@@ -75,7 +102,10 @@ export class SearchFormComponent implements OnInit {
     this.fromStation$ = this.store.select(selectFromStationSelected);
     this.toStation$ = this.store.select(selectToStationSelected);
     this.date$ = this.store.select(selectMappedDate);
+<<<<<<< HEAD
     this.minDate = new Date();
+=======
+>>>>>>> sprint3
 
     this.allStations$
       .pipe(
@@ -93,6 +123,7 @@ export class SearchFormComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(loadStations());
 
+<<<<<<< HEAD
     this.fromStation$
       .pipe(
         tap((selectedStation) => {
@@ -118,6 +149,27 @@ export class SearchFormComponent implements OnInit {
         }),
       )
       .subscribe();
+=======
+    this.fromStation$.pipe(
+      tap((selectedStation) => {
+        this.formGroup.patchValue({ selectedFromStation: selectedStation });
+      }),
+    );
+
+    this.toStation$.pipe(
+      tap((selectedStation) => {
+        this.formGroup.patchValue({ selectedToStation: selectedStation });
+      }),
+    );
+
+    this.date$.pipe(
+      tap((date) => {
+        if (date) {
+          this.formGroup.patchValue({ date });
+        }
+      }),
+    );
+>>>>>>> sprint3
   }
 
   onSubmit(): void {
