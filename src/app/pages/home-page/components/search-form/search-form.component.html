@@ -1,24 +1,32 @@
-<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-  <p-dropdown
-    formControlName="selectedFromStation"
-    [options]="fromStations"
-    optionLabel="city"
-    placeholder="From"
-    (onChange)="onFromStationChange($event)"
-  ></p-dropdown>
+<div class="mt-5">
+  <!-- Tailwind class for 20px top margin -->
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <p-autoComplete
+      formControlName="selectedFromStation"
+      [suggestions]="filteredFromStations"
+      (completeMethod)="filterFromStation($event)"
+      field="city"
+      placeholder="From"
+    ></p-autoComplete>
 
-  <p-dropdown
-    formControlName="selectedToStation"
-    [options]="toStations"
-    optionLabel="city"
-    placeholder="To"
-    (onChange)="onToStationChange($event)"
-  ></p-dropdown>
+    <p-autoComplete
+      formControlName="selectedToStation"
+      [suggestions]="filteredToStations"
+      (completeMethod)="filterToStation($event)"
+      field="city"
+      placeholder="To"
+    ></p-autoComplete>
 
-  <p-calendar
-    formControlName="date"
-    (ngModelChange)="onDateChange($event)"
-  ></p-calendar>
+    <p-calendar
+      formControlName="date"
+      [minDate]="minDate"
+      (ngModelChange)="onDateChange($event)"
+    ></p-calendar>
 
-  <p-button type="submit" label="Search"></p-button>
-</form>
+    <p-button
+      type="submit"
+      label="Search"
+      [disabled]="formGroup.invalid"
+    ></p-button>
+  </form>
+</div>
