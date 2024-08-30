@@ -1,16 +1,23 @@
 import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs';
+import { map, take } from 'rxjs';
 import { AuthSelectors } from '../store';
 
 export const guestGuard: CanActivateFn = () => {
   const store = inject(Store);
+  const router = inject(Router);
 
   const isAuthenticated$ = store.select(AuthSelectors.selectIsAuthenticated);
 
   return isAuthenticated$.pipe(
-    // Prevent access when authenticated, so we invert the logic
-    map((isAuthenticated) => !isAuthenticated),
+    take(1),
+    map((isAuthenticated) => {
+      if (isAuthenticated) {
+        router.navigate(['/']);
+        return false;
+      }
+      return true;
+    }),
   );
 };
