@@ -21,18 +21,35 @@ export const routes: Routes = [
     path: 'signin',
     component: SigninPageComponent,
     canActivate: [guestGuard],
-    redirectTo: '/',
   },
   {
     path: 'signup',
     component: SignupPageComponent,
     canActivate: [guestGuard],
-    redirectTo: '/',
+  },
+  {
+    path: 'admin',
+    component: BackendTestComponent,
+    canMatch: [managerGuard],
+    children: [
+      {
+        path: 'stations',
+        component: BackendTestComponent,
+      },
+      {
+        path: 'routes',
+        component: BackendTestComponent,
+      },
+      {
+        path: 'carriages',
+        component: BackendTestComponent,
+      },
+    ],
   },
   {
     path: 'admin',
     component: NotAuthorizedComponent,
-    canActivate: [managerGuard],
+    children: [{ path: '**', component: NotAuthorizedComponent }],
   },
   { path: '**', component: NotFoundComponent },
 ];
