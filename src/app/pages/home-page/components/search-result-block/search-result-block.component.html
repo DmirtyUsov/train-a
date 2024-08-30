@@ -1,4 +1,4 @@
-<div *ngIf="searchResult$ | async as searchResult; else noResult">
+<div *ngIf="searchResult$ | async as searchResult">
   <p-tabView [(activeIndex)]="activeIndex" [scrollable]="true">
     <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
       <p-dataView [value]="tab.items">
@@ -12,7 +12,7 @@
       </p-dataView>
     </p-tabPanel>
   </p-tabView>
+  <div *ngIf="searchResult.routes.length == 0">
+    <p>no rides are avaliable</p>
+  </div>
 </div>
-<ng-template #noResult>
-  <p>No search result available.</p>
-</ng-template>
