@@ -31,7 +31,6 @@ export class SearchResultItemComponent implements OnInit {
   minutes = 0;
 
   ngOnInit() {
-    console.log('Item:', this.item);
     this.setStationTimes();
     this.calculateTimeDifference();
   }
@@ -60,14 +59,8 @@ export class SearchResultItemComponent implements OnInit {
         `${this.toStationEndTime.date}T${this.toStationEndTime.time}`,
       );
 
-      console.log('Start DateTime String:', startDateTimeStr);
-      console.log('End DateTime String:', endDateTimeStr);
-
       const startDateTime = new Date(startDateTimeStr);
       const endDateTime = new Date(endDateTimeStr);
-
-      console.log('Start DateTime Object:', startDateTime);
-      console.log('End DateTime Object:', endDateTime);
 
       if (
         !Number.isNaN(startDateTime.getTime()) &&

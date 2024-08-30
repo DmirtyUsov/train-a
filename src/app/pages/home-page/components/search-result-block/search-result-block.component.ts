@@ -9,18 +9,30 @@ import { selectSearchResult } from '../../../../store/selectors/search-result.se
 import { mapCarriages } from '../../../../helpers/search-result.helpers';
 import { SearchResponse } from '../../../../models/search-response.model';
 import { SearchItem } from '../../../../models/search-item.model';
+import { TabViewModule } from 'primeng/tabview';
+
+export interface Tab {
+  title: string;
+  items: SearchItem[];
+}
 
 @Component({
   selector: 'app-search-result-block',
   standalone: true,
-  imports: [CommonModule, DataViewModule, SearchResultItemComponent],
+  imports: [
+    CommonModule,
+    DataViewModule,
+    SearchResultItemComponent,
+    TabViewModule,
+  ],
   templateUrl: './search-result-block.component.html',
   styleUrls: ['./search-result-block.component.scss'],
 })
 export class SearchResultBlockComponent implements OnInit {
   searchResult$: Observable<SearchResponse | null>;
-
   searchItems: SearchItem[] = [];
+  tabs: Tab[] = [];
+  activeIndex = 0;
 
   constructor(private store: Store) {
     this.searchResult$ = this.store.select(selectSearchResult);
@@ -31,6 +43,7 @@ export class SearchResultBlockComponent implements OnInit {
       console.log('Search result data:', result);
       if (result != null) {
         this.parseSearchResponse(result);
+        this.groupSearchItemsByDay();
       }
     });
   }
@@ -62,5 +75,22 @@ export class SearchResultBlockComponent implements OnInit {
         this.searchItems.push(searchItem);
       });
     });
+  }
+
+  private groupSearchItemsByDay(): void {
+    const groupedItems = new Map<string, SearchItem[]>();
+
+    this.searchItems.forEach((item) => {
+      const day = item.deparchureTime.toDateString();
+      if (!groupedItems.has(day)) {
+        groupedItems.set(day, []);
+      }
+      groupedItems.get(day)?.push(item);
+    });
+
+    this.tabs = Array.from(groupedItems.entries()).map(([day, items]) => ({
+      title: day,
+      items,
+    }));
   }
 }

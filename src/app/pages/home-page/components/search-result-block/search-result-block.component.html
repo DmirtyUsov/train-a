@@ -1,13 +1,17 @@
 <div *ngIf="searchResult$ | async as searchResult; else noResult">
-  <p-dataView [value]="searchItems">
-    <ng-template let-route pTemplate="list">
-      <div class="grid grid-nogutter">
-        <div class="col-12" *ngFor="let item of searchItems" class="col-12">
-          <app-search-result-item [item]="item"></app-search-result-item>
-        </div>
-      </div>
-    </ng-template>
-  </p-dataView>
+  <p-tabView [(activeIndex)]="activeIndex" [scrollable]="true">
+    <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
+      <p-dataView [value]="tab.items">
+        <ng-template let-route pTemplate="list">
+          <div class="grid grid-nogutter">
+            <div class="col-12" *ngFor="let item of tab.items" class="col-12">
+              <app-search-result-item [item]="item"></app-search-result-item>
+            </div>
+          </div>
+        </ng-template>
+      </p-dataView>
+    </p-tabPanel>
+  </p-tabView>
 </div>
 <ng-template #noResult>
   <p>No search result available.</p>
