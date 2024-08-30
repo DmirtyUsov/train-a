@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SignInResponse } from '../models/signin-response.model';
 import { UserProfile } from '../models/user.models';
 import { Station } from '../models/station.models';
+import { NewStation } from '../manager/models';
 
 enum Endpoints {
   'Station' = 'station',
@@ -54,5 +55,10 @@ export class BackendService {
   deleteStation(id: number) {
     const url = `${BackendService.makeUrl(Endpoints.Station)}/${id}`;
     return this.http.delete(url);
+  }
+
+  addStation(newStation: NewStation): Observable<number> {
+    const url = BackendService.makeUrl(Endpoints.Station);
+    return this.http.post<number>(url, newStation);
   }
 }

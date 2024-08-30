@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { map, Observable, Subject, Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -10,11 +10,18 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 import { ManagerService } from '../manager.service';
 import { Station } from '../../models/station.models';
-import { Stations } from '../models';
+import { NewStation, Stations } from '../models';
 import { ToastService } from '../../services/toast.service';
+
+type BoundariesMinMax = {
+  min: number;
+  max: number;
+};
 
 @Component({
   selector: 'app-stations',
@@ -29,28 +36,44 @@ import { ToastService } from '../../services/toast.service';
     ConfirmPopupModule,
     ReactiveFormsModule,
     InputTextModule,
+    MultiSelectModule,
+    InputNumberModule,
   ],
   templateUrl: './stations.component.html',
   styleUrl: './stations.component.scss',
 })
-export class StationsComponent implements OnDestroy {
+export class StationsComponent {
+  readonly latitudeBound: BoundariesMinMax = { min: -90, max: 90 };
+
+  readonly longitudeBound: BoundariesMinMax = { min: -180, max: 180 };
+
   stationList$: Observable<Station[]>;
 
-  stationsObject$: Observable<Stations>;
-
-  stationsObject: Stations = {};
+  stationsObject: Stations = this.manager.stations;
 
   isLoading$: Observable<boolean>;
 
   private subscriptions: Subscription = new Subscription();
 
-  private refreshStations$: Subject<void> = new Subject();
-
   newStationForm = this.fb.group({
     city: ['', Validators.required],
-    latitude: ['', Validators.required],
-    longitude: ['', Validators.required],
-    connectedTo: ['', Validators.required],
+    latitude: [
+      null,
+      [
+        Validators.required,
+        Validators.min(this.latitudeBound.min),
+        Validators.max(this.latitudeBound.max),
+      ],
+    ],
+    longitude: [
+      null,
+      [
+        Validators.required,
+        Validators.min(this.longitudeBound.min),
+        Validators.max(this.longitudeBound.max),
+      ],
+    ],
+    connectedTo: [[], Validators.required],
   });
 
   constructor(
@@ -62,29 +85,12 @@ export class StationsComponent implements OnDestroy {
     this.isLoading$ = this.manager.isLoading$;
 
     this.stationList$ = this.manager.loadStations();
-
-    this.stationsObject$ = this.stationList$.pipe(
-      map((station) =>
-        station.reduce((stationsObject: Stations, data: Station) => {
-          // eslint-disable-next-line no-param-reassign
-          stationsObject[data.id] = data;
-          return stationsObject;
-        }, {}),
-      ),
-    );
-
-    this.subscriptions.add(
-      this.stationsObject$.subscribe((stations) => {
-        this.stationsObject = stations;
-      }),
-    );
   }
 
   private deleteStation(id: number): void {
     this.manager.deleteStation(id).subscribe({
       next: () => {
         this.toast.success(`Station id:${id} removed`);
-        this.refreshStations$.next();
       },
       error: (error) => {
         this.toast.error(error);
@@ -106,9 +112,22 @@ export class StationsComponent implements OnDestroy {
     });
   }
 
-  addStation() {}
+  addStation() {
+    const newStation: NewStation = {
+      city: this.newStationForm.value.city || 'Smth Wrong',
+      latitude: this.newStationForm.value.latitude || 0,
+      longitude: this.newStationForm.value.longitude || 0,
+      relations: this.newStationForm.value.connectedTo || [],
+    };
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this.manager.addStation(newStation).subscribe({
+      next: (id) => {
+        this.toast.success(`Station id:${id} added`);
+        this.newStationForm.reset();
+      },
+      error: (error) => {
+        this.toast.error(error);
+      },
+    });
   }
 }

@@ -1,66 +1,110 @@
-<form [formGroup]="newStationForm" (ngSubmit)="addStation()" novalidate>
-  <div class="field">
-    <label for="city" class="block">City</label>
-    <input id="city" type="text" pInputText formControlName="city" />
-    @if (
-      newStationForm.get("city")?.invalid && newStationForm.get("city")?.dirty
-    ) {
-      <small class="p-error block"> City name is required</small>
-    }
-  </div>
-  <div class="field">
-    <label for="lastName" class="block">Last Name</label>
-    <input
-      type="text"
-      pInputText
-      placeholder="Last Name"
-      formControlName="lastName"
-    />
-  </div>
-
-  <div formGroupName="address">
-    <h2>Address</h2>
-    <div class="field">
-      <label for="street" class="block">Street</label>
-      <input
-        type="text"
-        pInputText
-        placeholder="Street"
-        formControlName="street"
-      />
+<div class="">
+  <form
+    [formGroup]="newStationForm"
+    (ngSubmit)="addStation()"
+    class="m-2 items-center flex flex-col content-center flex-wrap gap-2"
+  >
+    <h2 class="text-lg font-bold">New Station</h2>
+    <div>
+      <label for="city" class="block">City</label>
+      <input id="city" type="text" pInputText formControlName="city" />
+      @if (
+        newStationForm.get("city")?.invalid && newStationForm.get("city")?.dirty
+      ) {
+        <small class="p-error block"> City name is required</small>
+      }
     </div>
-    <div class="field">
-      <label for="postCode" class="block">PostCode</label>
-      <input
-        type="text"
-        pInputText
-        placeholder="PostCode"
-        formControlName="postCode"
-      />
-      <small
-        class="p-error block"
-        *ngIf="
-          newStationForm.get('address')?.get('postCode')?.invalid &&
-          newStationForm.get('address')?.get('postCode')?.dirty
-        "
-      >
-        PostCode is required</small
-      >
+
+    <div>
+      <h2>Coordinates</h2>
+      <div class="flex flex-row flex-wrap gap-1">
+        <div>
+          <label for="latitude" class="block">Latitude</label>
+          <p-inputNumber
+            inputId="latitude"
+            formControlName="latitude"
+            mode="decimal"
+            [maxFractionDigits]="15"
+            #latitude
+          />
+          @if (newStationForm.get("latitude")?.invalid) {
+            @if (
+              newStationForm.get("latitude")?.dirty && latitude.value === null
+            ) {
+              <small class="p-error block"> Latitude is required</small>
+            }
+
+            @if (newStationForm.get("latitude")?.hasError("max")) {
+              <small class="p-error block">
+                Max value is {{ latitudeBound.max }}</small
+              >
+            }
+          }
+        </div>
+
+        <div>
+          <label for="longitude" class="block">Longitude</label>
+          <p-inputNumber
+            inputId="longitude"
+            formControlName="longitude"
+            mode="decimal"
+            [maxFractionDigits]="15"
+            #longitude
+          />
+          @if (newStationForm.get("longitude")?.invalid) {
+            @if (
+              newStationForm.get("longitude")?.dirty && longitude.value === null
+            ) {
+              <small class="p-error block"> Longitude is required</small>
+            }
+
+            @if (newStationForm.get("longitude")?.hasError("max")) {
+              <small class="p-error block">
+                Max value is {{ longitudeBound.max }}</small
+              >
+            }
+          }
+        </div>
+      </div>
     </div>
-  </div>
 
-  <button pButton type="submit" [disabled]="newStationForm.invalid">
-    Submit
-  </button>
-</form>
+    <div>
+      <label for="connectedTo" class="block">Connected To</label>
+      <p-multiSelect
+        [options]="(stationList$ | async)!"
+        formControlName="connectedTo"
+        placeholder="Select Cities"
+        optionLabel="city"
+        optionValue="id"
+        display="chip"
+        [showClear]="true"
+        [maxSelectedLabels]="100"
+      />
+      @if (
+        newStationForm.get("connectedTo")?.invalid &&
+        newStationForm.get("connectedTo")?.dirty
+      ) {
+        <small class="p-error block"> Connected stations are required</small>
+      }
+    </div>
 
+    <button
+      pButton
+      type="submit"
+      [disabled]="newStationForm.invalid"
+      class="w-fit"
+    >
+      Add Station
+    </button>
+  </form>
+</div>
 @if (isLoading$ | async) {
-  <div class="flex justify-center">
+  <div class="fixed top-0 left-0 right-0 z-30 flex justify-center">
     <p-progressSpinner ariaLabel="loading" />
   </div>
 }
 
-@if ((isLoading$ | async) === false) {
+@if (true) {
   <p-table
     [value]="(stationList$ | async)!"
     [tableStyle]="{ 'min-width': '25rem' }"
