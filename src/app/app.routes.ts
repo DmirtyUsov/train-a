@@ -21,11 +21,13 @@ export const routes: Routes = [
     path: 'signin',
     component: SigninPageComponent,
     canActivate: [guestGuard],
+    redirectTo: '/',
   },
   {
     path: 'signup',
     component: SignupPageComponent,
     canActivate: [guestGuard],
+    redirectTo: '/',
   },
   {
     path: 'admin',
