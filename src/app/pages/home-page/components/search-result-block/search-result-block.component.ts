@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { DataViewModule } from 'primeng/dataview';
 import { SearchResultItemComponent } from '../search-result-item/search-result-item.component';
-
 import { selectSearchResult } from '../../../../store/selectors/search-result.selectors';
 import { mapCarriages } from '../../../../helpers/search-result.helpers';
 import { SearchResponse } from '../../../../models/search-response.model';
@@ -27,14 +26,21 @@ export interface Tab {
   ],
   templateUrl: './search-result-block.component.html',
   styleUrls: ['./search-result-block.component.scss'],
+  providers: [DatePipe],
 })
 export class SearchResultBlockComponent implements OnInit {
   searchResult$: Observable<SearchResponse | null>;
+
   searchItems: SearchItem[] = [];
+
   tabs: Tab[] = [];
+
   activeIndex = 0;
 
-  constructor(private store: Store) {
+  constructor(
+    private store: Store,
+    private datePipe: DatePipe,
+  ) {
     this.searchResult$ = this.store.select(selectSearchResult);
   }
 
@@ -88,9 +94,22 @@ export class SearchResultBlockComponent implements OnInit {
       groupedItems.get(day)?.push(item);
     });
 
-    this.tabs = Array.from(groupedItems.entries()).map(([day, items]) => ({
-      title: day,
-      items,
-    }));
+    const sortedEntries = Array.from(groupedItems.entries()).sort(
+      ([dateA], [dateB]) => {
+        const dA = new Date(dateA);
+        const dB = new Date(dateB);
+        return dA.getTime() - dB.getTime();
+      },
+    );
+
+    this.tabs = sortedEntries.map(([day, items]) => {
+      const date = new Date(day);
+      const formattedDate = this.datePipe.transform(date, 'MMMM dd');
+      const dayName = this.datePipe.transform(date, 'EEEE');
+      return {
+        title: `${formattedDate} (${dayName})`,
+        items,
+      };
+    });
   }
 }
