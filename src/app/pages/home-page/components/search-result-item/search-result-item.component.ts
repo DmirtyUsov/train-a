@@ -7,11 +7,13 @@ import {
 } from '../../../../helpers/date-utils';
 import { RouteDialogComponent } from '../route-dialog/route-dialog.component';
 import { SearchItem } from '../../../../models/search-item.model';
+import { DividerModule } from 'primeng/divider';
+import { ChipModule } from 'primeng/chip';
 
 @Component({
   selector: 'app-search-result-item',
   standalone: true,
-  imports: [CommonModule, RouteDialogComponent],
+  imports: [CommonModule, RouteDialogComponent, DividerModule, ChipModule],
   templateUrl: './search-result-item.component.html',
   styleUrls: ['./search-result-item.component.scss'],
 })
