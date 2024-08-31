@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DividerModule } from 'primeng/divider';
+import { ChipModule } from 'primeng/chip';
 import {
   formatDate,
   formatTime,
@@ -11,7 +13,7 @@ import { SearchItem } from '../../../../models/search-item.model';
 @Component({
   selector: 'app-search-result-item',
   standalone: true,
-  imports: [CommonModule, RouteDialogComponent],
+  imports: [CommonModule, RouteDialogComponent, DividerModule, ChipModule],
   templateUrl: './search-result-item.component.html',
   styleUrls: ['./search-result-item.component.scss'],
 })
@@ -31,7 +33,6 @@ export class SearchResultItemComponent implements OnInit {
   minutes = 0;
 
   ngOnInit() {
-    console.log('Item:', this.item);
     this.setStationTimes();
     this.calculateTimeDifference();
   }
@@ -60,14 +61,8 @@ export class SearchResultItemComponent implements OnInit {
         `${this.toStationEndTime.date}T${this.toStationEndTime.time}`,
       );
 
-      console.log('Start DateTime String:', startDateTimeStr);
-      console.log('End DateTime String:', endDateTimeStr);
-
       const startDateTime = new Date(startDateTimeStr);
       const endDateTime = new Date(endDateTimeStr);
-
-      console.log('Start DateTime Object:', startDateTime);
-      console.log('End DateTime Object:', endDateTime);
 
       if (
         !Number.isNaN(startDateTime.getTime()) &&

@@ -1,7 +1,13 @@
-<p-button label="Route" [link]="true" (onClick)="onRouteButtonClick()" />
+<p-button
+  label="Route details"
+  [rounded]="true"
+  [outlined]="true"
+  (onClick)="onRouteButtonClick()"
+/>
 <p-dialog
   header="Route {{ route.id }}"
   [modal]="true"
+  [dismissableMask]="true"
   [(visible)]="isDialogVisible"
   [style]="{ width: '50rem' }"
   [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"

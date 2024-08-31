@@ -1,5 +1,5 @@
 <div
-  class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3"
+  class="flex flex-column sm:flex-row sm:align-items-center p-2 gap-3"
   [ngClass]="{ 'border-top-1 surface-border': true }"
 >
   <div
@@ -65,23 +65,16 @@
 </div>
 
 <!-- Route Info Block -->
-<div class="surface-100 p-1" style="border-radius: 30px">
+
+<div class="surface-100 p-1 space-x-4">
+  <p-chip
+    label="City {{ item.route.path[0] }} -- City
+    {{ item.route.path[item.route.path.length - 1] }}"
+  />
   <app-route-dialog
     [route]="item.route"
     [schedule]="item.schedule"
   ></app-route-dialog>
-  <div
-    class="surface-0 flex align-items-center gap-2 justify-content-center py-1 px-2"
-    style="
-      border-radius: 30px;
-      box-shadow:
-        0px 1px 2px 0px rgba(0, 0, 0, 0.04),
-        0px 1px 2px 0px rgba(0, 0, 0, 0.06);
-    "
-  >
-    <span class="text-900 font-medium text-sm"
-      >City {{ item.route.path[0] }} -- City
-      {{ item.route.path[item.route.path.length - 1] }}</span
-    >
-  </div>
 </div>
+
+<p-divider />
