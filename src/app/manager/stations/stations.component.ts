@@ -15,13 +15,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 
 import { ManagerService } from '../manager.service';
 import { Station } from '../../models/station.models';
-import { NewStation, Stations } from '../models';
+import { BoundariesMinMax, NewStation, Stations } from '../models';
 import { ToastService } from '../../services/toast.service';
-
-type BoundariesMinMax = {
-  min: number;
-  max: number;
-};
 
 @Component({
   selector: 'app-stations',
