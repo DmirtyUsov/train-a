@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CommonModule, DatePipe } from '@angular/common';
+import { TabViewModule } from 'primeng/tabview';
 import { DataViewModule } from 'primeng/dataview';
 import { SearchResultItemComponent } from '../search-result-item/search-result-item.component';
 import { selectSearchResult } from '../../../../store/selectors/search-result.selectors';
 import { mapCarriages } from '../../../../helpers/search-result.helpers';
 import { SearchResponse } from '../../../../models/search-response.model';
 import { SearchItem } from '../../../../models/search-item.model';
-import { TabViewModule } from 'primeng/tabview';
 
 export interface Tab {
   title: string;
