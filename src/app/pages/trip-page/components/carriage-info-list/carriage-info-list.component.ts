@@ -2,16 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TabViewModule } from 'primeng/tabview';
 import { Ride } from '../../../../models/ride.model';
-
-interface Carriage {
-  type: string;
-  index: number;
-}
-
-interface CarriageTab {
-  title: string;
-  carriages: Carriage[];
-}
+import { CarriageService } from '../../../../services/carriage.service';
+import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
+import { CarriageTab } from '../../../../models/tab.model';
+import { TripService } from '../../../../services/trip.service';
 
 @Component({
   selector: 'app-carriage-info-list',
@@ -25,25 +19,30 @@ export class CarriageInfoListComponent implements OnInit {
 
   tabs: CarriageTab[] = [];
 
+  private carriageClassPipe = new CarriageClassPipe();
+
+  constructor(
+    private carriageService: CarriageService,
+    private tripService: TripService,
+  ) {}
+
   ngOnInit(): void {
-    this.groupCarriagesByType(this.ride.carriages);
-  }
-
-  private groupCarriagesByType(carriages: string[]): void {
-    const groupedCarriages = new Map<string, Carriage[]>();
-
-    carriages.forEach((type, index) => {
-      if (!groupedCarriages.has(type)) {
-        groupedCarriages.set(type, []);
-      }
-      groupedCarriages.get(type)?.push({ type, index });
-    });
-
-    this.tabs = Array.from(groupedCarriages.entries()).map(
-      ([type, carriages]) => ({
-        title: `${type}`,
-        carriages,
-      }),
+    const startSegmentIndex = 3; // Example start index
+    const endSegmentIndex = 6; // Example end index
+    const prices = this.tripService.calculateCarriagePrices(
+      this.ride.schedule.segments,
+      startSegmentIndex,
+      endSegmentIndex,
     );
+
+    this.tabs = this.tripService.groupCarriagesByType(
+      this.ride.carriages,
+      prices,
+      this.carriageClassPipe,
+    );
+
+    this.carriageService.getCarriageTypes().subscribe((carriageTypes) => {
+      console.log('Carriage Types:', carriageTypes);
+    });
   }
 }
