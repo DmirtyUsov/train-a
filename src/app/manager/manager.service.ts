@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
+  catchError,
+  EMPTY,
   finalize,
   map,
   Observable,
@@ -11,7 +13,8 @@ import {
 } from 'rxjs';
 import { BackendService } from '../services/backend.service';
 import { Station } from '../models/station.models';
-import { NewStation, Stations } from './models';
+import { BackendResponse, NewStation, Stations } from './models';
+import { HttpStatusCode } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -27,30 +30,34 @@ export class ManagerService {
 
   constructor(private backend: BackendService) {}
 
-  loadStations(): Observable<Station[]> {
-    this.isLoading$$.next(true);
-    return this.refreshStations$.pipe(
-      startWith(undefined),
-      switchMap(() =>
-        this.backend.getStations().pipe(
-          tap((chunk) =>
-            chunk.reduce((stationsObject: Stations, station: Station) => {
-              this.stations[station.id] = station;
-              return stationsObject;
-            }, {}),
-          ),
-          map((data) => data),
-          finalize(() => this.isLoading$$.next(false)),
+  stations$: Observable<Station[]> = this.refreshStations$.pipe(
+    startWith(this.isLoading$$.next(true)),
+    switchMap(() =>
+      this.backend.getStations().pipe(
+        tap((chunk) =>
+          chunk.reduce((stationsObject: Stations, station: Station) => {
+            this.stations[station.id] = station;
+            return stationsObject;
+          }, {}),
         ),
+        map((data) => data),
+        finalize(() => this.isLoading$$.next(false)),
       ),
-    );
-  }
+    ),
+  );
 
-  deleteStation(id: number) {
+  deleteStation(id: number): Observable<BackendResponse<number>> {
     this.isLoading$$.next(true);
     return this.backend.deleteStation(id).pipe(
+      tap(console.log),
       map((data) => data),
-      finalize(() => this.refreshStations$.next()),
+      tap((data) => {
+        if (data.code === HttpStatusCode.Ok) {
+          this.refreshStations$.next();
+        } else {
+          this.isLoading$$.next(false);
+        }
+      }),
     );
   }
 
