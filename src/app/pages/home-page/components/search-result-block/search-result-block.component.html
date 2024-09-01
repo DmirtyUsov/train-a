@@ -5,7 +5,12 @@
         <ng-template let-route pTemplate="list">
           <div class="grid grid-nogutter">
             <div class="col-12" *ngFor="let item of tab.items" class="col-12">
-              <app-search-result-item [item]="item"></app-search-result-item>
+              <div
+                class="cursor-pointer hover:bg-gray-100"
+                (click)="onSearchItemClick(item)"
+              >
+                <app-search-result-item [item]="item"></app-search-result-item>
+              </div>
             </div>
           </div>
         </ng-template>

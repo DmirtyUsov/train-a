@@ -9,6 +9,7 @@ import { selectSearchResult } from '../../../../store/selectors/search-result.se
 import { mapCarriages } from '../../../../helpers/search-result.helpers';
 import { SearchResponse } from '../../../../models/search-response.model';
 import { SearchItem } from '../../../../models/search-item.model';
+import { Router } from '@angular/router';
 
 export interface Tab {
   title: string;
@@ -40,6 +41,7 @@ export class SearchResultBlockComponent implements OnInit {
   constructor(
     private store: Store,
     private datePipe: DatePipe,
+    private router: Router,
   ) {
     this.searchResult$ = this.store.select(selectSearchResult);
   }
@@ -110,6 +112,18 @@ export class SearchResultBlockComponent implements OnInit {
         title: `${formattedDate} (${dayName})`,
         items,
       };
+    });
+  }
+
+  onSearchItemClick(item: SearchItem) {
+    console.log('item selected', item.rideId);
+    const fromStationId = item.fromStation.stationId;
+    const toStationId = item.toStation.stationId;
+    this.router.navigate([`/trip/${item.rideId}`], {
+      queryParams: {
+        from: fromStationId,
+        to: toStationId,
+      },
     });
   }
 }
