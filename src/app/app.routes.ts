@@ -5,6 +5,7 @@ import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { TripPageComponent } from './pages/trip-page/trip-page/trip-page.component';
+import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,10 @@ export const routes: Routes = [
     component: SignupPageComponent,
   },
 
+  {
+    path: 'profile',
+    component: ProfilePageComponent,
+  },
   {
     path: 'admin',
     loadChildren: () =>
