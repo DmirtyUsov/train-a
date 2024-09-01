@@ -110,7 +110,7 @@ export class SearchResultItemComponent implements OnInit {
     }
   }
 
-  onSearchItemClick(event: MouseEvent, item: SearchItem): void {
+  onSearchItemClick(event: Event, item: SearchItem): void {
     const target = event.target as HTMLElement;
     const routeDialogElement = document.querySelector(
       'app-route-dialog',
