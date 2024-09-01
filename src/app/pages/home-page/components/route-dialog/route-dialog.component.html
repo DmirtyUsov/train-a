@@ -2,7 +2,7 @@
   label="Route details"
   [rounded]="true"
   [outlined]="true"
-  (onClick)="onRouteButtonClick()"
+  (onClick)="onRouteButtonClick($event)"
 />
 <p-dialog
   header="Route {{ route.id }}"

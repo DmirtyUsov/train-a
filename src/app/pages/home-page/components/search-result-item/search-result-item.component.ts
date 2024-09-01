@@ -9,6 +9,9 @@ import {
 } from '../../../../helpers/date-utils';
 import { RouteDialogComponent } from '../route-dialog/route-dialog.component';
 import { SearchItem } from '../../../../models/search-item.model';
+import { selectSearchItem } from '../../../../store/actions/search-result.actions';
+import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-result-item',
@@ -31,6 +34,11 @@ export class SearchResultItemComponent implements OnInit {
   hours = 0;
 
   minutes = 0;
+
+  constructor(
+    private store: Store,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.setStationTimes();
@@ -100,5 +108,26 @@ export class SearchResultItemComponent implements OnInit {
       this.hours = 0;
       this.minutes = 0;
     }
+  }
+
+  onSearchItemClick(event: MouseEvent, item: SearchItem): void {
+    const target = event.target as HTMLElement;
+    const routeDialogElement = document.querySelector(
+      'app-route-dialog',
+    ) as HTMLElement;
+
+    if (routeDialogElement && routeDialogElement.contains(target)) {
+      return;
+    }
+
+    const fromStationId = item.fromStation.stationId;
+    const toStationId = item.toStation.stationId;
+    this.store.dispatch(selectSearchItem({ selectedItem: item }));
+    this.router.navigate([`/trip/${item.rideId}`], {
+      queryParams: {
+        from: fromStationId,
+        to: toStationId,
+      },
+    });
   }
 }

@@ -1,14 +1,11 @@
-<div *ngIf="searchResult$ | async as searchResult">
+<div *ngIf="searchItems$ | async as searchItems">
   <p-tabView [(activeIndex)]="activeIndex" [scrollable]="true">
     <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
       <p-dataView [value]="tab.items">
         <ng-template let-route pTemplate="list">
           <div class="grid grid-nogutter">
             <div class="col-12" *ngFor="let item of tab.items" class="col-12">
-              <div
-                class="cursor-pointer hover:bg-gray-100"
-                (click)="onSearchItemClick(item)"
-              >
+              <div>
                 <app-search-result-item [item]="item"></app-search-result-item>
               </div>
             </div>
@@ -17,7 +14,7 @@
       </p-dataView>
     </p-tabPanel>
   </p-tabView>
-  <div *ngIf="searchResult.routes.length === 0">
+  <div *ngIf="searchItems.length === 0">
     <p>no rides are avaliable</p>
   </div>
 </div>

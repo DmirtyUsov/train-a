@@ -17,11 +17,13 @@ import { loadRide } from '../../../store/actions/ride.actions';
   standalone: true,
   imports: [CommonModule, TripHeaderComponent],
   templateUrl: './trip-page.component.html',
-  styleUrl: './trip-page.component.scss',
+  styleUrls: ['./trip-page.component.scss'],
 })
 export class TripPageComponent implements OnInit {
   ride$: Observable<Ride | null>;
+
   loading$: Observable<boolean>;
+
   error$: Observable<any>;
 
   constructor(
@@ -37,6 +39,10 @@ export class TripPageComponent implements OnInit {
     this.route.params.subscribe((params) => {
       const rideId = +params['rideId'];
       this.store.dispatch(loadRide({ rideId }));
+    });
+
+    this.ride$.subscribe((ride) => {
+      console.log('Selected ride:', ride);
     });
   }
 }
