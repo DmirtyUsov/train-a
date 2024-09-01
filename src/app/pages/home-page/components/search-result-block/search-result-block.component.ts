@@ -19,12 +19,7 @@ export interface Tab {
 @Component({
   selector: 'app-search-result-block',
   standalone: true,
-  imports: [
-    CommonModule,
-    DataViewModule,
-    SearchResultItemComponent,
-    TabViewModule,
-  ],
+  imports: [CommonModule, DataViewModule, SearchResultItemComponent],
   templateUrl: './search-result-block.component.html',
   styleUrls: ['./search-result-block.component.scss'],
   providers: [DatePipe],
