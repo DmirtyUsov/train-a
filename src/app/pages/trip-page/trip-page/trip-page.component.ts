@@ -12,11 +12,12 @@ import {
 import { loadRide } from '../../../store/actions/ride.actions';
 import { ResponseError } from '../../../models/error.model';
 import { TripHeaderComponent } from '../components/trip-header/trip-header.component';
+import { CarriageInfoListComponent } from '../components/carriage-info-list/carriage-info-list.component';
 
 @Component({
   selector: 'app-trip-page',
   standalone: true,
-  imports: [CommonModule, TripHeaderComponent],
+  imports: [CommonModule, TripHeaderComponent, CarriageInfoListComponent],
   templateUrl: './trip-page.component.html',
   styleUrls: ['./trip-page.component.scss'],
 })

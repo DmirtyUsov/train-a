@@ -1,0 +1,9 @@
+<p-tabView>
+  <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
+    <ul>
+      <li *ngFor="let carriage of tab.carriages">
+        Carriage Type: {{ carriage.type }}, Index: {{ carriage.index }}
+      </li>
+    </ul>
+  </p-tabPanel>
+</p-tabView>
