@@ -11,17 +11,21 @@ import {
 
 @Injectable()
 export class RideEffects {
-  loadRide$ = createEffect(() =>
-    this.actions$.pipe(
+  loadRide$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(loadRide),
       mergeMap((action) => {
         return this.rideService.getRide(action.rideId).pipe(
-          map((ride) => loadRideSuccess({ ride })),
-          catchError((error) => of(loadRideFailure({ error }))),
+          map((ride) => {
+            return loadRideSuccess({ ride });
+          }),
+          catchError((error) => {
+            return of(loadRideFailure({ error }));
+          }),
         );
       }),
-    ),
-  );
+    );
+  });
 
   constructor(
     private actions$: Actions,
