@@ -31,20 +31,6 @@ export const routes: Routes = [
     path: 'admin',
     component: BackendTestComponent,
     canMatch: [managerGuard],
-    children: [
-      {
-        path: 'stations',
-        component: BackendTestComponent,
-      },
-      {
-        path: 'routes',
-        component: BackendTestComponent,
-      },
-      {
-        path: 'carriages',
-        component: BackendTestComponent,
-      },
-    ],
   },
   {
     path: 'admin',
