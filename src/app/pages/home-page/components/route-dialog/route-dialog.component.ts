@@ -45,7 +45,8 @@ export class RouteDialogComponent implements OnInit {
       });
   }
 
-  onRouteButtonClick() {
+  onRouteButtonClick(event: MouseEvent) {
+    event.stopPropagation();
     this.isDialogVisible = !this.isDialogVisible;
   }
 }

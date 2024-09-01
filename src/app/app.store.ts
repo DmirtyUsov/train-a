@@ -7,6 +7,8 @@ import { searchResultReducer } from './store/reducers/search-result.reducer';
 import { SearchResultEffects } from './store/effects/search-result.effects';
 import { AuthEffects } from './store/effects/auth.effects';
 import { authReducer } from './store/reducers/auth.reducer';
+import { RideEffects } from './store/effects/ride.effects';
+import { rideReducer } from './store/reducers/ride.reducer';
 
 export const appStoreProviders = [
   provideStore({
@@ -14,6 +16,12 @@ export const appStoreProviders = [
     search: searchReducer,
     searchResult: searchResultReducer,
     auth: authReducer,
+    ride: rideReducer,
   }),
-  provideEffects([StationsEffects, SearchResultEffects, AuthEffects]),
+  provideEffects([
+    StationsEffects,
+    SearchResultEffects,
+    AuthEffects,
+    RideEffects,
+  ]),
 ];

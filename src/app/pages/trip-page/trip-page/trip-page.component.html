@@ -1,0 +1,11 @@
+<div *ngIf="loading$ | async; else content">
+  <p>Loading...</p>
+</div>
+<ng-template #content>
+  <div *ngIf="ride$ | async as ride; else errorTpl">
+    <app-trip-header></app-trip-header>
+  </div>
+  <ng-template #errorTpl>
+    <p *ngIf="error$ | async as error">Error: {{ error }}</p>
+  </ng-template>
+</ng-template>

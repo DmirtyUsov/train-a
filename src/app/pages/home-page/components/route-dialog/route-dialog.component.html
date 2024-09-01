@@ -2,11 +2,12 @@
   label="Route details"
   [rounded]="true"
   [outlined]="true"
-  (onClick)="onRouteButtonClick()"
+  (onClick)="onRouteButtonClick($event)"
 />
 <p-dialog
   header="Route {{ route.id }}"
   [modal]="true"
+  [dismissableMask]="true"
   [dismissableMask]="true"
   [(visible)]="isDialogVisible"
   [style]="{ width: '50rem' }"

@@ -4,10 +4,11 @@ import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import {
   loadSearchResults,
-  loadSearchResultsSuccess,
   loadSearchResultsFailure,
+  setSearchItems,
 } from '../actions/search-result.actions';
 import { SearchService } from '../../services/search.service';
+import { parseSearchResponse } from '../reducers/search-result.reducer';
 
 @Injectable()
 export class SearchResultEffects {
@@ -19,7 +20,8 @@ export class SearchResultEffects {
           .getSearchResult(fromStation, toStation, date)
           .pipe(
             map((searchResponse) => {
-              return loadSearchResultsSuccess({ searchResponse });
+              const searchItems = parseSearchResponse(searchResponse);
+              return setSearchItems({ searchItems });
             }),
             catchError((error) => {
               return of(loadSearchResultsFailure({ error }));

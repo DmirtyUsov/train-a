@@ -4,9 +4,14 @@ import { SearchResultState } from '../reducers/search-result.reducer';
 export const selectSearchResultState =
   createFeatureSelector<SearchResultState>('searchResult');
 
-export const selectSearchResult = createSelector(
+export const selectSearchItems = createSelector(
   selectSearchResultState,
-  (state: SearchResultState) => state.searchResponse,
+  (state: SearchResultState) => state.searchItems,
+);
+
+export const selectSelectedItem = createSelector(
+  selectSearchResultState,
+  (state: SearchResultState) => state.selectedItem,
 );
 
 export const selectSearchLoading = createSelector(

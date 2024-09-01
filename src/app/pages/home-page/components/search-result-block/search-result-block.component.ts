@@ -5,9 +5,10 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { TabViewModule } from 'primeng/tabview';
 import { DataViewModule } from 'primeng/dataview';
 import { SearchResultItemComponent } from '../search-result-item/search-result-item.component';
-import { selectSearchResult } from '../../../../store/selectors/search-result.selectors';
-import { mapCarriages } from '../../../../helpers/search-result.helpers';
-import { SearchResponse } from '../../../../models/search-response.model';
+import {
+  selectSearchItems,
+  selectSelectedItem,
+} from '../../../../store/selectors/search-result.selectors';
 import { SearchItem } from '../../../../models/search-item.model';
 
 export interface Tab {
@@ -29,9 +30,9 @@ export interface Tab {
   providers: [DatePipe],
 })
 export class SearchResultBlockComponent implements OnInit {
-  searchResult$: Observable<SearchResponse | null>;
+  searchItems$: Observable<SearchItem[]>;
 
-  searchItems: SearchItem[] = [];
+  selectedItem$: Observable<SearchItem | null>;
 
   tabs: Tab[] = [];
 
@@ -41,52 +42,22 @@ export class SearchResultBlockComponent implements OnInit {
     private store: Store,
     private datePipe: DatePipe,
   ) {
-    this.searchResult$ = this.store.select(selectSearchResult);
+    this.searchItems$ = this.store.select(selectSearchItems);
+    this.selectedItem$ = this.store.select(selectSelectedItem);
   }
 
   ngOnInit(): void {
-    this.searchResult$.subscribe((result) => {
-      console.log('Search result data:', result);
-      if (result != null) {
-        this.parseSearchResponse(result);
-        this.groupSearchItemsByDay();
+    this.searchItems$.subscribe((items) => {
+      if (items.length > 0) {
+        this.groupSearchItemsByDay(items);
       }
     });
   }
 
-  private parseSearchResponse(response: SearchResponse): void {
-    this.searchItems = [];
-
-    response.routes.forEach((route) => {
-      route.schedule.forEach((schedule) => {
-        const fromStationIndex = route.path.indexOf(response.from.stationId);
-        const segmentIndex = Math.min(
-          fromStationIndex,
-          schedule.segments.length - 1,
-        );
-
-        const searchItem: SearchItem = {
-          route,
-          schedule,
-          rideId: schedule.rideId,
-          fromStation: response.from,
-          toStation: response.to,
-          deparchureTime: new Date(schedule.segments[segmentIndex].time[0]),
-          arrivalTime: new Date(
-            schedule.segments[schedule.segments.length - 1].time[1],
-          ),
-          carriages: mapCarriages(route, schedule, segmentIndex),
-        };
-
-        this.searchItems.push(searchItem);
-      });
-    });
-  }
-
-  private groupSearchItemsByDay(): void {
+  private groupSearchItemsByDay(searchItems: SearchItem[]): void {
     const groupedItems = new Map<string, SearchItem[]>();
 
-    this.searchItems.forEach((item) => {
+    searchItems.forEach((item) => {
       const day = item.deparchureTime.toDateString();
       if (!groupedItems.has(day)) {
         groupedItems.set(day, []);
