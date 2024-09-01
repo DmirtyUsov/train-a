@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, RedirectCommand, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, take } from 'rxjs';
 import { AuthSelectors } from '../store';
@@ -14,8 +14,8 @@ export const guestGuard: CanActivateFn = () => {
     take(1),
     map((isAuthenticated) => {
       if (isAuthenticated) {
-        router.navigate(['/']);
-        return false;
+        const urlTree = router.parseUrl('/');
+        return new RedirectCommand(urlTree);
       }
       return true;
     }),
