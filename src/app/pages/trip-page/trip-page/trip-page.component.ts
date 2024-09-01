@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Ride } from '../../../models/ride.model';
 import { Store } from '@ngrx/store';
+import { Ride } from '../../../models/ride.model';
 import {
   selectRide,
   selectRideError,
