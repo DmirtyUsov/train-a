@@ -14,12 +14,12 @@ export class RideEffects {
   loadRide$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadRide),
-      mergeMap((action) =>
-        this.rideService.getRide(action.rideId).pipe(
+      mergeMap((action) => {
+        return this.rideService.getRide(action.rideId).pipe(
           map((ride) => loadRideSuccess({ ride })),
           catchError((error) => of(loadRideFailure({ error }))),
-        ),
-      ),
+        );
+      }),
     ),
   );
 

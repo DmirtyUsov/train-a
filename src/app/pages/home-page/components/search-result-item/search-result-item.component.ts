@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { ChipModule } from 'primeng/chip';
 import {
@@ -10,8 +12,6 @@ import {
 import { RouteDialogComponent } from '../route-dialog/route-dialog.component';
 import { SearchItem } from '../../../../models/search-item.model';
 import { selectSearchItem } from '../../../../store/actions/search-result.actions';
-import { Store } from '@ngrx/store';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-result-item',

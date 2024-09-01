@@ -1,15 +1,13 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DatePipe } from '@angular/common';
+import { Component } from '@angular/core';
+import { CommonModule, DatePipe, AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SearchItem } from '../../../../models/search-item.model';
-import { Store } from '@ngrx/store';
 import { selectSelectedItem } from '../../../../store/selectors/search-result.selectors';
 import { RouteDialogComponent } from '../../../home-page/components/route-dialog/route-dialog.component';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-trip-header',

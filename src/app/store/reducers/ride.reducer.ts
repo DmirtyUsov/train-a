@@ -5,11 +5,12 @@ import {
   loadRideFailure,
 } from '../actions/ride.actions';
 import { Ride } from '../../models/ride.model';
+import { ResponseError } from '../../models/error.model';
 
 export interface RideState {
   ride: Ride | null;
   loading: boolean;
-  error: any;
+  error: ResponseError | null;
 }
 
 export const initialState: RideState = {
@@ -20,19 +21,28 @@ export const initialState: RideState = {
 
 export const rideReducer = createReducer(
   initialState,
-  on(loadRide, (state) => ({
-    ...state,
-    loading: true,
-    error: null,
-  })),
-  on(loadRideSuccess, (state, { ride }) => ({
-    ...state,
-    loading: false,
-    ride,
-  })),
-  on(loadRideFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-  })),
+  on(
+    loadRide,
+    (state): RideState => ({
+      ...state,
+      loading: true,
+      error: null,
+    }),
+  ),
+  on(
+    loadRideSuccess,
+    (state, { ride }): RideState => ({
+      ...state,
+      loading: false,
+      ride,
+    }),
+  ),
+  on(
+    loadRideFailure,
+    (state, { error }): RideState => ({
+      ...state,
+      loading: false,
+      error,
+    }),
+  ),
 );

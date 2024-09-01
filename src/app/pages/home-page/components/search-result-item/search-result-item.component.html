@@ -1,6 +1,8 @@
 <div
   class="cursor-pointer hover:bg-gray-100"
   (click)="onSearchItemClick($event, item)"
+  (keydown.space)="onSearchItemClick($event, item)"
+  tabindex="0"
 >
   <div
     class="flex flex-column sm:flex-row sm:align-items-center p-2"
