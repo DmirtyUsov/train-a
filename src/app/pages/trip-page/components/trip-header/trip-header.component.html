@@ -1,4 +1,26 @@
-<div>
-  <h1>Trip Details</h1>
-  <p>Ride ID: {{ ride.rideId }}</p>
-</div>
+<p-panel>
+  <div>
+    <p-button
+      icon="pi pi-chevron-left"
+      (click)="navigateBack()"
+      severity="secondary"
+    />
+    <h1>Ride ID: {{ ride.rideId }}</h1>
+  </div>
+  <div>
+    <div
+      class="flex flex-wrap align-items-center justify-content-between gap-3"
+    >
+      <div class="flex align-items-center gap-2">
+        <p>some details here</p>
+      </div>
+    </div>
+  </div>
+  <div>
+    <p>route details</p>
+    <!-- <app-route-dialog
+      [route]="item.route"
+      [schedule]="item.schedule"
+    ></app-route-dialog> -->
+  </div>
+</p-panel>
