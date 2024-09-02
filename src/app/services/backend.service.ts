@@ -82,7 +82,7 @@ export class BackendService {
     );
   }
 
-  private static handleError(
+  static handleError(
     error: HttpErrorResponse,
   ): Observable<BackendResponse<null>> {
     const errorFoResponse: ResponseError = { message: '', reason: '' };
