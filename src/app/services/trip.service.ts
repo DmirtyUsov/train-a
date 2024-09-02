@@ -13,13 +13,13 @@ interface Carriage {
 })
 export class TripService {
   groupCarriagesByType(
-    carriages: string[],
+    carriagesList: string[],
     prices: Map<string, number>,
     carriageClassPipe: CarriageClassPipe,
   ): CarriageTab[] {
     const groupedCarriages = new Map<string, Carriage[]>();
 
-    carriages.forEach((type, index) => {
+    carriagesList.forEach((type, index) => {
       if (!groupedCarriages.has(type)) {
         groupedCarriages.set(type, []);
       }
@@ -57,15 +57,14 @@ export class TripService {
   ): Map<string, number> {
     const totalPrices = new Map<string, number>();
 
-    for (let i = start; i <= end; i += 1) {
-      const segment = segments[i];
+    segments.slice(start, end + 1).forEach((segment) => {
       if (segment && segment.price) {
-        for (const [carriageType, price] of Object.entries(segment.price)) {
+        Object.entries(segment.price).forEach(([carriageType, price]) => {
           const currentPrice = totalPrices.get(carriageType) || 0;
           totalPrices.set(carriageType, currentPrice + Number(price));
-        }
+        });
       }
-    }
+    });
 
     return totalPrices;
   }

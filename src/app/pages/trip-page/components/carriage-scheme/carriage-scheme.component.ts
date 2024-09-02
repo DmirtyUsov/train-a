@@ -28,6 +28,7 @@ export class CarriageSchemeComponent implements OnInit {
 
   selectedSeat$: Observable<number | null> =
     this.store.select(selectSelectedSeat);
+
   selectedCarriage$: Observable<number | null> = this.store.select(
     selectSelectedCarriage,
   );
