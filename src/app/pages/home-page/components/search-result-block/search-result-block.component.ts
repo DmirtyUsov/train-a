@@ -10,11 +10,7 @@ import {
   selectSelectedItem,
 } from '../../../../store/selectors/search-result.selectors';
 import { SearchItem } from '../../../../models/search-item.model';
-
-export interface Tab {
-  title: string;
-  items: SearchItem[];
-}
+import { Tab } from '../../../../models/tab.model';
 
 @Component({
   selector: 'app-search-result-block',

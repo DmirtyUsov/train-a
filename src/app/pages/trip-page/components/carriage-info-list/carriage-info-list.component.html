@@ -1,0 +1,13 @@
+<p-tabView (onChange)="onTabChange($event)">
+  <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
+    <ul>
+      <li *ngFor="let carriage of tab.carriages">
+        <app-carriage-scheme
+          [carriageIndex]="carriage.index"
+          [carriageInfo]="carriage.carriageInfo"
+        ></app-carriage-scheme>
+      </li>
+    </ul>
+  </p-tabPanel>
+</p-tabView>
+<app-carriage-legend></app-carriage-legend>

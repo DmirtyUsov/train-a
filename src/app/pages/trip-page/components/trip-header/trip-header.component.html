@@ -7,20 +7,18 @@
       severity="secondary"
     />
     <div>
-      <div>
-        <div
-          class="flex flex-wrap align-items-center justify-content-between gap-3"
-        >
-          <div class="flex align-items-center gap-2">
-            <ng-container *ngIf="selectedItem$ | async as item">
-              <p>From Station: {{ item.fromStation.city }}</p>
-              <p>To Station: {{ item.toStation.city }}</p>
-              <p>Departure Time: {{ item.deparchureTime | date: "short" }}</p>
-              <p>Arrival Time: {{ item.arrivalTime | date: "short" }}</p>
-            </ng-container>
-          </div>
+      <div
+        class="flex flex-wrap align-items-center justify-content-between gap-3"
+      >
+        <div class="flex align-items-center gap-2">
+          <ng-container *ngIf="selectedItem$ | async as item">
+            <p>From: {{ item.fromStation.city }}</p>
+            <p>To: {{ item.toStation.city }}</p>
+            <p>{{ item.deparchureTime | date: "MMMM dd HH:mm" }}</p>
+          </ng-container>
         </div>
       </div>
+
       <div class="flex space-x-4 p-4">
         <p>Ride ID: {{ (selectedItem$ | async)?.rideId }}</p>
         <app-route-dialog

@@ -16,3 +16,13 @@ export const loadRideFailure = createAction(
   '[Ride] Load Ride Failure',
   props<{ error: ResponseError }>(),
 );
+
+export const selectSeat = createAction(
+  '[Ride] Select Seat',
+  props<{ carriageIndex: number | null; seatNumber: number | null }>(),
+);
+
+export const updateRidePrice = createAction(
+  '[Ride] Update Ride Price',
+  props<{ price: number }>(),
+);

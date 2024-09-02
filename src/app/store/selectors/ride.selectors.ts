@@ -17,3 +17,18 @@ export const selectRideError = createSelector(
   selectRideState,
   (state: RideState) => state.error,
 );
+
+export const selectSelectedCarriage = createSelector(
+  selectRideState,
+  (state: RideState) => state.selectedCarriage,
+);
+
+export const selectSelectedSeat = createSelector(
+  selectRideState,
+  (state: RideState) => state.selectedSeat,
+);
+
+export const selectRidePrice = createSelector(
+  selectRideState,
+  (state: RideState) => state.ridePrice,
+);
