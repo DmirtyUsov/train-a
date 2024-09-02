@@ -1,3 +1,4 @@
+import { CarriageType } from './carriage.model';
 import { SearchItem } from './search-item.model';
 
 export interface Tab {
@@ -5,13 +6,14 @@ export interface Tab {
   items: SearchItem[];
 }
 
-interface Carriage {
+export interface tabCarriage {
   type: string;
   index: number;
+  carriageInfo?: CarriageType;
 }
 
 export interface CarriageTab {
   title: string;
   price: number;
-  carriages: Carriage[];
+  carriages: tabCarriage[];
 }

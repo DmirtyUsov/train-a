@@ -2,7 +2,10 @@
   <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
     <ul>
       <li *ngFor="let carriage of tab.carriages">
-        Car {{ carriage.index + 1 }}
+        <app-carriage-scheme
+          [carriageIndex]="carriage.index"
+          [carriageInfo]="carriage.carriageInfo"
+        ></app-carriage-scheme>
       </li>
     </ul>
   </p-tabPanel>

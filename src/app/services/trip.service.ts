@@ -70,4 +70,25 @@ export class TripService {
 
     return totalPrices;
   }
+
+  findStationIndices(
+    fromStationId: number,
+    toStationId: number,
+    routePath: number[],
+  ): number[] {
+    const result: number[] = [];
+
+    const fromIndex = routePath.indexOf(fromStationId);
+    const toIndex = routePath.indexOf(toStationId);
+
+    if (fromIndex !== -1) {
+      result.push(fromIndex);
+    }
+
+    if (toIndex !== -1) {
+      result.push(toIndex - 1);
+    }
+
+    return result;
+  }
 }

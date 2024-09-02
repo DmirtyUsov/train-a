@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-interface CarriageType {
-  code: string;
-  name: string;
-  rows: number;
-  leftSeats: number;
-  rightSeats: number;
-}
+import { CarriageType } from '../models/carriage.model';
 
 @Injectable({
   providedIn: 'root',
