@@ -12,13 +12,18 @@
         *ngFor="let seat of row"
         [ngClass]="{
           'bg-yellow-200 border-yellow-400':
-            seat === selectedSeat && carriageIndex + 1 === selectedCarriage,
+            seat === (selectedSeat$ | async) &&
+            carriageIndex + 1 === (selectedCarriage$ | async),
           'bg-blue-200 border-blue-400': !(
-            seat === selectedSeat && carriageIndex + 1 === selectedCarriage
+            seat === (selectedSeat$ | async) &&
+            carriageIndex + 1 === (selectedCarriage$ | async)
           ),
         }"
         class="seat text-center border rounded text-xs mb-2 p-2 w-8 h-8 cursor-pointer"
+        tabindex="0"
         (click)="selectSeat(seat)"
+        (keydown.enter)="selectSeat(seat)"
+        (keydown.space)="selectSeat(seat)"
       >
         {{ seat }}
       </div>
@@ -42,13 +47,18 @@
         *ngFor="let seat of row"
         [ngClass]="{
           'bg-yellow-200 border-yellow-400':
-            seat === selectedSeat && carriageIndex + 1 === selectedCarriage,
+            seat === (selectedSeat$ | async) &&
+            carriageIndex + 1 === (selectedCarriage$ | async),
           'bg-blue-200 border-blue-400': !(
-            seat === selectedSeat && carriageIndex + 1 === selectedCarriage
+            seat === (selectedSeat$ | async) &&
+            carriageIndex + 1 === (selectedCarriage$ | async)
           ),
         }"
         class="seat text-center border rounded text-xs mb-2 p-2 w-8 h-8 cursor-pointer"
+        tabindex="0"
         (click)="selectSeat(seat)"
+        (keydown.enter)="selectSeat(seat)"
+        (keydown.space)="selectSeat(seat)"
       >
         {{ seat }}
       </div>

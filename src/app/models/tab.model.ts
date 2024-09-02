@@ -6,7 +6,7 @@ export interface Tab {
   items: SearchItem[];
 }
 
-export interface tabCarriage {
+export interface TabCarriage {
   type: string;
   index: number;
   carriageInfo?: CarriageType;
@@ -15,5 +15,5 @@ export interface tabCarriage {
 export interface CarriageTab {
   title: string;
   price: number;
-  carriages: tabCarriage[];
+  carriages: TabCarriage[];
 }

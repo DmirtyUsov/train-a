@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { CarriageType } from '../../../../models/carriage.model';
 import {
   selectSelectedCarriage,
@@ -25,9 +26,11 @@ export class CarriageSchemeComponent implements OnInit {
 
   rightSeatNumbers: number[][] = [];
 
-  selectedSeat: number | null = null;
-
-  selectedCarriage: number | null = null;
+  selectedSeat$: Observable<number | null> =
+    this.store.select(selectSelectedSeat);
+  selectedCarriage$: Observable<number | null> = this.store.select(
+    selectSelectedCarriage,
+  );
 
   constructor(private store: Store) {}
 
@@ -35,14 +38,6 @@ export class CarriageSchemeComponent implements OnInit {
     if (this.carriageInfo) {
       this.generateSeatNumbers();
     }
-
-    this.store.select(selectSelectedSeat).subscribe((seat) => {
-      this.selectedSeat = seat;
-    });
-
-    this.store.select(selectSelectedCarriage).subscribe((carriage) => {
-      this.selectedCarriage = carriage;
-    });
   }
 
   generateSeatNumbers(): void {
