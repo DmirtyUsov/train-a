@@ -8,6 +8,11 @@ interface Carriage {
   index: number;
 }
 
+export function extractClassNumber(title: string): number {
+  const match = title.match(/(\d+)(?:st|nd|rd|th) class/);
+  return match ? parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
+}
+
 export function groupCarriagesByType(
   carriagesList: string[],
   prices: Map<string, number>,
@@ -39,11 +44,6 @@ export function groupCarriagesByType(
       if (classNumberB === 1) return 1;
       return classNumberA - classNumberB;
     });
-}
-
-export function extractClassNumber(title: string): number {
-  const match = title.match(/(\d+)(?:st|nd|rd|th) class/);
-  return match ? parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
 }
 
 export function calculateCarriagePrices(
