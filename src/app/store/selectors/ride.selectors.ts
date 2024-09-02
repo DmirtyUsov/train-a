@@ -27,3 +27,8 @@ export const selectSelectedSeat = createSelector(
   selectRideState,
   (state: RideState) => state.selectedSeat,
 );
+
+export const selectRidePrice = createSelector(
+  selectRideState,
+  (state: RideState) => state.ridePrice,
+);

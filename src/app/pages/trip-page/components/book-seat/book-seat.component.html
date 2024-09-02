@@ -1,0 +1,24 @@
+<div
+  class="sticky-seat-info bg-white shadow-lg p-4 rounded-lg fixed top-1/2 right-0 transform -translate-y-1/2 mr-4 w-[350px] border border-blue-200"
+  *ngIf="selectedSeatInfo$ | async as selectedSeatInfo"
+>
+  <p class="font-bold">Selected Seat</p>
+  <div class="flex justify-between items-center mb-4">
+    <div class="flex">
+      <p class="mr-2">Car {{ selectedSeatInfo.carNumber }},</p>
+      <p>Seat {{ selectedSeatInfo.seatNumber }}</p>
+    </div>
+    <p *ngIf="selectedPrice$ | async as selectedPrice" class="text-right">
+      {{ selectedPrice }} Credits
+    </p>
+  </div>
+  <div class="flex justify-between mb-2">
+    <p-button
+      label="Clear"
+      [rounded]="true"
+      [outlined]="true"
+      (click)="clearSelectedSeat()"
+    ></p-button>
+    <p-button label="Book seat" [rounded]="true" class="w-full ml-2"></p-button>
+  </div>
+</div>

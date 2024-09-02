@@ -13,6 +13,7 @@ import { Store } from '@ngrx/store';
 import { CarriageSchemeComponent } from '../carriage-scheme/carriage-scheme.component';
 import { CarriageType } from '../../../../models/carriage.model';
 import { CarriageLegendComponent } from '../carriage-legend/carriage-legend.component';
+import { updateRidePrice } from '../../../../store/actions/ride.actions';
 
 @Component({
   selector: 'app-carriage-info-list',
@@ -77,6 +78,13 @@ export class CarriageInfoListComponent implements OnInit {
               carriage.carriageInfo = this.getCarriageType(carriage.type);
             });
           });
+
+          // Dispatch price for the initially selected tab
+          if (this.tabs.length > 0) {
+            const defaultTabIndex = 0; // Assuming the first tab is the default
+            const selectedPrice = this.tabs[defaultTabIndex].price;
+            this.store.dispatch(updateRidePrice({ price: selectedPrice }));
+          }
         }
       });
     });
@@ -84,5 +92,10 @@ export class CarriageInfoListComponent implements OnInit {
 
   getCarriageType(carriageCode: string): CarriageType | undefined {
     return this.carriageTypes.find((type) => type.code === carriageCode);
+  }
+
+  onTabChange(event: any) {
+    const selectedPrice = this.tabs[event.index].price;
+    this.store.dispatch(updateRidePrice({ price: selectedPrice }));
   }
 }

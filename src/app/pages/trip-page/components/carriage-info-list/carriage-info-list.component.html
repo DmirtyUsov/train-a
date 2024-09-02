@@ -1,4 +1,4 @@
-<p-tabView>
+<p-tabView (onChange)="onTabChange($event)">
   <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
     <ul>
       <li *ngFor="let carriage of tab.carriages">

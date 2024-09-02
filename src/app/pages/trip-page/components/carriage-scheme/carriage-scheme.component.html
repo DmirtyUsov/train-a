@@ -12,9 +12,9 @@
         *ngFor="let seat of row"
         [ngClass]="{
           'bg-yellow-200 border-yellow-400':
-            seat === selectedSeat && carriageIndex === selectedCarriage,
+            seat === selectedSeat && carriageIndex + 1 === selectedCarriage,
           'bg-blue-200 border-blue-400': !(
-            seat === selectedSeat && carriageIndex === selectedCarriage
+            seat === selectedSeat && carriageIndex + 1 === selectedCarriage
           ),
         }"
         class="seat text-center border rounded text-xs mb-2 p-2 w-8 h-8 cursor-pointer"
@@ -42,9 +42,9 @@
         *ngFor="let seat of row"
         [ngClass]="{
           'bg-yellow-200 border-yellow-400':
-            seat === selectedSeat && carriageIndex === selectedCarriage,
+            seat === selectedSeat && carriageIndex + 1 === selectedCarriage,
           'bg-blue-200 border-blue-400': !(
-            seat === selectedSeat && carriageIndex === selectedCarriage
+            seat === selectedSeat && carriageIndex + 1 === selectedCarriage
           ),
         }"
         class="seat text-center border rounded text-xs mb-2 p-2 w-8 h-8 cursor-pointer"

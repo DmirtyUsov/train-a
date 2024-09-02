@@ -1,23 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest, map } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Ride } from '../../../models/ride.model';
 import {
   selectRide,
   selectRideError,
   selectRideLoading,
+  selectSelectedCarriage,
+  selectSelectedSeat,
 } from '../../../store/selectors/ride.selectors';
 import { loadRide } from '../../../store/actions/ride.actions';
 import { ResponseError } from '../../../models/error.model';
 import { TripHeaderComponent } from '../components/trip-header/trip-header.component';
 import { CarriageInfoListComponent } from '../components/carriage-info-list/carriage-info-list.component';
+import { BookSeatComponent } from '../components/book-seat/book-seat.component';
 
 @Component({
   selector: 'app-trip-page',
   standalone: true,
-  imports: [CommonModule, TripHeaderComponent, CarriageInfoListComponent],
+  imports: [
+    CommonModule,
+    TripHeaderComponent,
+    CarriageInfoListComponent,
+    BookSeatComponent,
+  ],
   templateUrl: './trip-page.component.html',
   styleUrls: ['./trip-page.component.scss'],
 })
