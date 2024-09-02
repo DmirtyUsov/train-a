@@ -7,6 +7,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isManager: false,
   isLoading: false,
+  profile: null,
   token: null,
   error: null,
 };
@@ -72,6 +73,7 @@ export const authReducer = createReducer(
       ...state,
       isLoading: false,
       isManager: action.profile.role === UserRole.Manager,
+      profile: action.profile,
     }),
   ),
 );

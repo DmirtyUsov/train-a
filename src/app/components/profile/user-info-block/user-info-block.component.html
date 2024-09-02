@@ -1,1 +1,47 @@
-<p>user-info-block works!</p>
+<p-card class="" header="Profile">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div class="flex flex-col">
+      <label class="mb-2 font-semibold text-2xl" for="name">Name:</label>
+      @if (!isEditingName) {
+        <div class="flex items-center">
+          <p class="flex-grow" id="name">{{ (user$ | async)?.name }}</p>
+          <p-button icon="pi pi-pencil" (click)="editName()"></p-button>
+        </div>
+      } @else {
+        <p-inputGroup>
+          <p-inputGroupAddon>
+            <i class="pi pi-user"></i>
+          </p-inputGroupAddon>
+          <input
+            pInputText
+            placeholder="{{ (user$ | async)?.name }}"
+            [(ngModel)]="newName"
+          />
+          <p-button icon="pi pi-save" (click)="saveName()"></p-button>
+        </p-inputGroup>
+      }
+    </div>
+
+    <div class="flex flex-col">
+      <label class="mb-2 font-semibold text-2xl" for="email">Email:</label>
+      @if (!isEditingEmail) {
+        <div class="flex items-center">
+          <p class="flex-grow" id="email">{{ (user$ | async)?.email }}</p>
+          <p-button icon="pi pi-pencil" (click)="editEmail()"></p-button>
+        </div>
+      } @else {
+        <p-inputGroup>
+          <p-inputGroupAddon>
+            <i class="pi pi-envelope"></i>
+          </p-inputGroupAddon>
+          <input
+            pInputText
+            placeholder="{{ (user$ | async)?.email }}"
+            [(ngModel)]="newEmail"
+          />
+          <p-button icon="pi pi-save" (click)="saveEmail()"></p-button>
+        </p-inputGroup>
+      }
+    </div>
+  </div>
+</p-card>
