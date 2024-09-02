@@ -48,3 +48,16 @@ export const getUserProfileFailure = createAction(
   `${AUTH} Get User Profile ${FAILURE}`,
   props<{ error: ResponseError }>(),
 );
+
+export const updateUserProfile = createAction(
+  `${AUTH} Update User Profile `,
+  props<{ profile: Pick<UserProfile, 'email' | 'name'> }>(),
+);
+export const updateUserProfileSuccess = createAction(
+  `${AUTH} Update User Profile ${SUCCESS}`,
+  props<{ profile: UserProfile }>(),
+);
+export const updateUserProfileFailure = createAction(
+  `${AUTH} Update User Profile ${FAILURE}`,
+  props<{ error: ResponseError }>(),
+);

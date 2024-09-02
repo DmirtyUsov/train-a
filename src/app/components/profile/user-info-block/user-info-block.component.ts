@@ -7,8 +7,9 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
+import { DividerModule } from 'primeng/divider';
 import { Store } from '@ngrx/store';
-import { AuthSelectors } from '../../../store';
+import { AuthActions, AuthSelectors } from '../../../store';
 
 @Component({
   selector: 'app-user-info-block',
@@ -21,6 +22,7 @@ import { AuthSelectors } from '../../../store';
     InputTextModule,
     FormsModule,
     CardModule,
+    DividerModule,
   ],
   templateUrl: './user-info-block.component.html',
   styleUrl: './user-info-block.component.scss',
@@ -40,6 +42,8 @@ export class UserInfoBlockComponent implements OnInit, OnDestroy {
 
   user$ = this.store.select(AuthSelectors.selectProfile);
 
+  isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
+
   ngOnInit() {
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.newName = user?.name ?? '';
@@ -56,12 +60,20 @@ export class UserInfoBlockComponent implements OnInit, OnDestroy {
   }
 
   saveName() {
-    console.log(this.newName);
+    this.store.dispatch(
+      AuthActions.updateUserProfile({
+        profile: { email: this.newEmail, name: this.newName },
+      }),
+    );
     this.isEditingName = false;
   }
 
   saveEmail() {
-    console.log(this.newEmail);
+    this.store.dispatch(
+      AuthActions.updateUserProfile({
+        profile: { email: this.newEmail, name: this.newName },
+      }),
+    );
     this.isEditingEmail = false;
   }
 

@@ -76,4 +76,12 @@ export const authReducer = createReducer(
       profile: action.profile,
     }),
   ),
+
+  on(
+    AuthActions.updateUserProfile,
+    (state): AuthState => ({
+      ...state,
+      isLoading: true,
+    }),
+  ),
 );

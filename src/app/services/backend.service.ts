@@ -103,4 +103,9 @@ export class BackendService {
     }
     return of(response);
   }
+
+  updateProfile(profile: Pick<UserProfile, 'email' | 'name'>) {
+    const url = BackendService.makeUrl('profile');
+    return this.http.put<UserProfile>(url, profile);
+  }
 }

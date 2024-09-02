@@ -107,4 +107,21 @@ export class AuthEffects {
       map(() => AuthActions.getUserProfile()),
     );
   });
+
+  updateUserProfile$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthActions.updateUserProfile),
+      mergeMap((action) =>
+        this.backend.updateProfile(action.profile).pipe(
+          map((data) => AuthActions.getUserProfileSuccess({ profile: data })),
+          tap(() => this.toastService.success('Successful update!')),
+          catchError((error) => {
+            return of(
+              AuthActions.getUserProfileFailure({ error: error.error }),
+            );
+          }),
+        ),
+      ),
+    );
+  });
 }
