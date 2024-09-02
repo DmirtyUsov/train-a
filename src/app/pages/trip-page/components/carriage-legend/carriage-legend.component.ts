@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './carriage-legend.component.html',
-  styleUrl: './carriage-legend.component.scss'
+  styleUrl: './carriage-legend.component.scss',
 })
-export class CarriageLegendComponent {
-
-}
+export class CarriageLegendComponent {}

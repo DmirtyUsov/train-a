@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
-import { DividerModule } from 'primeng/divider';
 import { Store } from '@ngrx/store';
-import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
+import { DividerModule } from 'primeng/divider';
+import { selectSeat } from '../../../../store/actions/ride.actions';
 import {
   selectRidePrice,
   selectSelectedCarriage,
   selectSelectedSeat,
 } from '../../../../store/selectors/ride.selectors';
-import { selectSeat } from '../../../../store/actions/ride.actions';
 
 @Component({
   selector: 'app-book-seat',
@@ -20,26 +19,15 @@ import { selectSeat } from '../../../../store/actions/ride.actions';
   styleUrls: ['./book-seat.component.scss'],
 })
 export class BookSeatComponent {
-  selectedSeatInfo$: Observable<{
-    carNumber: number;
-    seatNumber: number;
-  } | null>;
+  selectedCarriage$: Observable<number | null>;
+
+  selectedSeat$: Observable<number | null>;
 
   selectedPrice$: Observable<number | null>;
 
   constructor(private store: Store) {
-    this.selectedSeatInfo$ = combineLatest([
-      this.store.select(selectSelectedCarriage),
-      this.store.select(selectSelectedSeat),
-    ]).pipe(
-      map(([carNumber, seatNumber]) => {
-        if (carNumber !== null && seatNumber !== null) {
-          return { carNumber, seatNumber };
-        }
-        return null;
-      }),
-    );
-
+    this.selectedCarriage$ = this.store.select(selectSelectedCarriage);
+    this.selectedSeat$ = this.store.select(selectSelectedSeat);
     this.selectedPrice$ = this.store.select(selectRidePrice);
   }
 

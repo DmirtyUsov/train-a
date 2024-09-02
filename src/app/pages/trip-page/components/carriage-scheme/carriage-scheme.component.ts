@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
-import { CarriageType } from '../../../../models/carriage.model';
 import { Store } from '@ngrx/store';
+import { CarriageType } from '../../../../models/carriage.model';
 import {
   selectSelectedCarriage,
   selectSelectedSeat,
@@ -48,9 +48,7 @@ export class CarriageSchemeComponent implements OnInit {
   generateSeatNumbers(): void {
     if (!this.carriageInfo) return;
 
-    const leftSeats = this.carriageInfo.leftSeats;
-    const rightSeats = this.carriageInfo.rightSeats;
-    const rows = this.carriageInfo.rows;
+    const { leftSeats, rightSeats, rows } = this.carriageInfo;
 
     const totalSeats = (leftSeats + rightSeats) * rows;
     const seatNumbers = Array.from({ length: totalSeats }, (_, i) => i + 1);
@@ -67,7 +65,7 @@ export class CarriageSchemeComponent implements OnInit {
         }
       }
 
-      for (let col = 0; col < rightSeats; col++) {
+      for (let col = 0; col < rightSeats; col += 1) {
         if (seatIndex < seatNumbers.length) {
           this.rightSeatNumbers[row].push(seatNumbers[(seatIndex += 1)]);
         }

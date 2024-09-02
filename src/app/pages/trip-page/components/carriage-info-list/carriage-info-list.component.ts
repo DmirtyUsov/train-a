@@ -32,7 +32,9 @@ export class CarriageInfoListComponent implements OnInit {
 
   selectedItem$: Observable<SearchItem | null> =
     this.store.select(selectSelectedItem);
+
   tabs: CarriageTab[] = [];
+
   carriageTypes: CarriageType[] = [];
 
   private carriageClassPipe = new CarriageClassPipe();
@@ -73,11 +75,13 @@ export class CarriageInfoListComponent implements OnInit {
           );
 
           // Precompute carriageInfo for each carriage
-          this.tabs.forEach((tab) => {
-            tab.carriages.forEach((carriage) => {
-              carriage.carriageInfo = this.getCarriageType(carriage.type);
-            });
-          });
+          this.tabs = this.tabs.map((tab) => ({
+            ...tab,
+            carriages: tab.carriages.map((carriage) => ({
+              ...carriage,
+              carriageInfo: this.getCarriageType(carriage.type),
+            })),
+          }));
 
           // Dispatch price for the initially selected tab
           if (this.tabs.length > 0) {
