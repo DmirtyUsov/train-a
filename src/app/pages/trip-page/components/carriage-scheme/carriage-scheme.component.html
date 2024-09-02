@@ -1,1 +1,43 @@
 <p>Car {{ carriageIndex + 1 }}</p>
+<div class="flex flex-col items-center">
+  <!-- Right side seats -->
+  <div
+    class="grid gap-2"
+    [ngStyle]="{
+      'grid-template-columns': 'repeat(' + carriageInfo?.rows + ', 35px)',
+    }"
+  >
+    <div *ngFor="let row of rightSeatNumbers">
+      <div
+        *ngFor="let seat of row"
+        class="seat bg-gray-200 text-center rounded text-xs mb-2 p-2 w-8 h-8"
+      >
+        {{ seat }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Space between seats -->
+  <div class="my-4">
+    <div class="h-2"></div>
+  </div>
+
+  <!-- Left side seats -->
+  <div
+    class="grid gap-2"
+    [ngStyle]="{
+      'grid-template-columns': 'repeat(' + carriageInfo?.rows + ', 35px)',
+    }"
+  >
+    <div *ngFor="let row of leftSeatNumbers">
+      <div
+        *ngFor="let seat of row"
+        class="seat bg-gray-200 text-center rounded text-xs mb-2 p-2 w-8 h-8"
+      >
+        {{ seat }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-divider />
