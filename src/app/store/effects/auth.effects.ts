@@ -66,6 +66,7 @@ export class AuthEffects {
         this.backend.signOut().pipe(
           map(() => AuthActions.signOutSuccess()),
           tap(() => this.toastService.warn('You are logged out!')),
+          tap(() => this.router.navigate(['/'])),
           catchError((error) => {
             this.toastService.error((error.error as ResponseError).message);
             return of(AuthActions.signOutFailure({ error: error.error }));

@@ -1,4 +1,10 @@
 <p-card class="" header="Profile">
+  <ng-template pTemplate="subtitle">
+    @if (isManager$ | async) {
+      <p class="font-semibold text-right text-2xl">Manager</p>
+    }
+  </ng-template>
+
   <div class="flex flex-col md:flex-row gap-4">
     <div class="flex flex-col flex-1">
       <label class="mb-2 font-semibold text-2xl" for="name">Name:</label>
@@ -20,7 +26,7 @@
           <p-button
             icon="pi pi-save"
             [loading]="isLoading$ | async"
-            (click)="saveName()"
+            (onClick)="saveName()"
           ></p-button>
         </p-inputGroup>
       }
@@ -48,10 +54,14 @@
           <p-button
             icon="pi pi-save"
             [loading]="isLoading$ | async"
-            (click)="saveEmail()"
+            (onClick)="saveEmail()"
           ></p-button>
         </p-inputGroup>
       }
     </div>
   </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="LogOut" severity="danger" (click)="logout()"></p-button>
+  </ng-template>
 </p-card>

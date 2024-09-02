@@ -44,6 +44,8 @@ export class UserInfoBlockComponent implements OnInit, OnDestroy {
 
   isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
 
+  isManager$ = this.store.select(AuthSelectors.selectIsManager);
+
   ngOnInit() {
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.newName = user?.name ?? '';
@@ -75,6 +77,10 @@ export class UserInfoBlockComponent implements OnInit, OnDestroy {
       }),
     );
     this.isEditingEmail = false;
+  }
+
+  logout() {
+    this.store.dispatch(AuthActions.signOut());
   }
 
   ngOnDestroy() {
