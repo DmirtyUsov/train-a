@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { ResponseError } from '../../models/error.model';
+import { ResponseError } from './error.model';
 
 export type BackendResponse<T> = {
   payload: T;
