@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CarriageTab } from '../models/tab.model';
 import { CarriageClassPipe } from '../pipes/carriage-class.pipe';
+import { ScheduleSegment } from '../models/order.model';
 
 interface Carriage {
   type: string;
@@ -11,8 +12,6 @@ interface Carriage {
   providedIn: 'root',
 })
 export class TripService {
-  constructor() {}
-
   groupCarriagesByType(
     carriages: string[],
     prices: Map<string, number>,
@@ -52,13 +51,13 @@ export class TripService {
   }
 
   calculateCarriagePrices(
-    segments: any[],
+    segments: ScheduleSegment[],
     start: number,
     end: number,
   ): Map<string, number> {
     const totalPrices = new Map<string, number>();
 
-    for (let i = start; i <= end; i++) {
+    for (let i = start; i <= end; i += 1) {
       const segment = segments[i];
       if (segment && segment.price) {
         for (const [carriageType, price] of Object.entries(segment.price)) {

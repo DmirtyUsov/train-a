@@ -18,11 +18,15 @@ import { selectSeat } from '../../../../store/actions/ride.actions';
 })
 export class CarriageSchemeComponent implements OnInit {
   @Input() carriageIndex!: number;
+
   @Input() carriageInfo!: CarriageType | undefined;
 
   leftSeatNumbers: number[][] = [];
+
   rightSeatNumbers: number[][] = [];
+
   selectedSeat: number | null = null;
+
   selectedCarriage: number | null = null;
 
   constructor(private store: Store) {}
@@ -56,16 +60,16 @@ export class CarriageSchemeComponent implements OnInit {
 
     let seatIndex = 0;
 
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < leftSeats; col++) {
+    for (let row = 0; row < rows; row += 1) {
+      for (let col = 0; col < leftSeats; col += 1) {
         if (seatIndex < seatNumbers.length) {
-          this.leftSeatNumbers[row].push(seatNumbers[seatIndex++]);
+          this.leftSeatNumbers[row].push(seatNumbers[(seatIndex += 1)]);
         }
       }
 
       for (let col = 0; col < rightSeats; col++) {
         if (seatIndex < seatNumbers.length) {
-          this.rightSeatNumbers[row].push(seatNumbers[seatIndex++]);
+          this.rightSeatNumbers[row].push(seatNumbers[(seatIndex += 1)]);
         }
       }
     }
