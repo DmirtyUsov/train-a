@@ -12,11 +12,17 @@ import { selectSelectedItem } from '../../../../store/selectors/search-result.se
 import { Store } from '@ngrx/store';
 import { CarriageSchemeComponent } from '../carriage-scheme/carriage-scheme.component';
 import { CarriageType } from '../../../../models/carriage.model';
+import { CarriageLegendComponent } from '../carriage-legend/carriage-legend.component';
 
 @Component({
   selector: 'app-carriage-info-list',
   standalone: true,
-  imports: [CommonModule, TabViewModule, CarriageSchemeComponent],
+  imports: [
+    CommonModule,
+    TabViewModule,
+    CarriageSchemeComponent,
+    CarriageLegendComponent,
+  ],
   templateUrl: './carriage-info-list.component.html',
   styleUrls: ['./carriage-info-list.component.scss'],
 })
