@@ -14,12 +14,30 @@
       <h2 class="text-lg font-bold">New Station</h2>
       <div>
         <label for="city" class="block">City</label>
-        <input id="city" type="text" pInputText formControlName="city" />
+        <p-iconField iconPosition="right">
+          @if (isFindingCity | async) {
+            <p-inputIcon styleClass="pi pi-spinner pi-spin" />
+          } @else {
+            <p-inputIcon styleClass="pi pi-search" />
+          }
+          <input
+            id="city"
+            type="text"
+            placeholder="Start typing"
+            pInputText
+            formControlName="city"
+            (keyup)="setCity($event)"
+          />
+        </p-iconField>
+
         @if (
           newStationForm.get("city")?.invalid &&
           newStationForm.get("city")?.dirty
         ) {
           <small class="p-error block"> City name is required</small>
+        }
+        @if (newStationForm.get("city")?.hasError("minlength")) {
+          <small class="p-error block"> Min 2 chars {{ cityBound.min }}</small>
         }
       </div>
 
@@ -47,6 +65,11 @@
                   Max value is {{ latitudeBound.max }}</small
                 >
               }
+              @if (newStationForm.get("latitude")?.hasError("min")) {
+                <small class="p-error block">
+                  Min value is {{ latitudeBound.min }}</small
+                >
+              }
             }
           </div>
 
@@ -70,6 +93,11 @@
               @if (newStationForm.get("longitude")?.hasError("max")) {
                 <small class="p-error block">
                   Max value is {{ longitudeBound.max }}</small
+                >
+              }
+              @if (newStationForm.get("longitude")?.hasError("min")) {
+                <small class="p-error block">
+                  Min value is {{ longitude.min }}</small
                 >
               }
             }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpStatusCode } from '@angular/common/http';
@@ -13,10 +13,12 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 import { ManagerService } from '../manager.service';
 import { Station } from '../../models/station.models';
-import { BoundariesMinMax, NewStation, Stations } from '../models';
+import { BoundariesMinMax, City, NewStation, Stations } from '../models';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
@@ -34,6 +36,8 @@ import { ToastService } from '../../services/toast.service';
     InputTextModule,
     MultiSelectModule,
     InputNumberModule,
+    IconFieldModule,
+    InputIconModule,
   ],
   templateUrl: './stations.component.html',
   styleUrl: './stations.component.scss',
@@ -43,18 +47,24 @@ export class StationsComponent implements OnInit, OnDestroy {
 
   readonly longitudeBound: BoundariesMinMax = { min: -180, max: 180 };
 
-  stationList$: Observable<Station[]>;
+  readonly cityBound: BoundariesMinMax = { min: 2, max: 255 };
+
+  stationList$: Observable<Station[]> = this.manager.stations$;
 
   stationsObject: Stations = this.manager.stations;
 
-  isLoading$: Observable<boolean>;
+  isLoading$: Observable<boolean> = this.manager.isLoading$;
+
+  isFindingCity: Observable<boolean> = this.manager.isFindingCity$;
+
+  cityInput$ = new Subject<string>();
 
   private subscriptions: Subscription = new Subscription();
 
   newStationForm = this.fb.group({
-    city: ['', Validators.required],
+    city: ['', [Validators.required, Validators.minLength(this.cityBound.min)]],
     latitude: [
-      null,
+      0,
       [
         Validators.required,
         Validators.min(this.latitudeBound.min),
@@ -62,7 +72,7 @@ export class StationsComponent implements OnInit, OnDestroy {
       ],
     ],
     longitude: [
-      null,
+      0,
       [
         Validators.required,
         Validators.min(this.longitudeBound.min),
@@ -77,12 +87,7 @@ export class StationsComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private toast: ToastService,
     private fb: FormBuilder,
-  ) {
-    this.isLoading$ = this.manager.isLoading$;
-
-    this.stationList$ = this.manager.stations$;
-    this.manager.refreshStations$.next('constructor');
-  }
+  ) {}
 
   ngOnInit(): void {
     this.subscriptions.add(
@@ -109,6 +114,30 @@ export class StationsComponent implements OnInit, OnDestroy {
         }
       }),
     );
+
+    this.subscriptions.add(
+      this.manager.afterCityInputAction$.subscribe((response) => {
+        if (
+          response.code === HttpStatusCode.Ok &&
+          response.payload!.length > 0
+        ) {
+          const city: City = response.payload![0];
+          this.newStationForm.controls.city.setValue(city.name);
+          this.newStationForm.controls.latitude.setValue(city.latitude);
+          this.newStationForm.controls.longitude.setValue(city.longitude);
+        }
+        if (response.error) {
+          this.toast.error(response.error!.message);
+        }
+      }),
+    );
+  }
+
+  setCity(event: Event): void {
+    const { value } = event.target as HTMLInputElement;
+    if (value.length >= this.cityBound.min) {
+      this.manager.inputCityAction$.next(value);
+    }
   }
 
   private deleteStation(id: number): void {

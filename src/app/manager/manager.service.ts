@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   debounceTime,
+  distinctUntilChanged,
+  filter,
   finalize,
   map,
   Observable,
@@ -13,7 +15,10 @@ import {
 
 import { BackendService } from '../services/backend.service';
 import { Station } from '../models/station.models';
-import { BackendResponse, NewStation, Stations } from './models';
+import { BackendResponse, City, NewStation, Stations } from './models';
+import { ApiNinjasService } from '../services/api-ninjas.service';
+
+export const INPUT_DEBOUNCE_MS = 700;
 
 @Injectable({
   providedIn: 'root',
@@ -23,18 +28,28 @@ export class ManagerService {
 
   public isLoading$: Observable<boolean> = this.isLoading$$.asObservable();
 
+  private isFindingCity$$ = new BehaviorSubject<boolean>(false);
+
+  public isFindingCity$: Observable<boolean> =
+    this.isFindingCity$$.asObservable();
+
   refreshStations$: Subject<string> = new Subject();
 
   deleteStationAction$: Subject<number> = new Subject();
 
   addStationAction$: Subject<NewStation> = new Subject();
 
+  inputCityAction$: Subject<string> = new Subject();
+
   public stations: Stations = {};
 
-  constructor(private backend: BackendService) {}
+  constructor(
+    private backend: BackendService,
+    private apiNinjas: ApiNinjasService,
+  ) {}
 
   stations$: Observable<Station[]> = this.refreshStations$.pipe(
-    debounceTime(700),
+    debounceTime(INPUT_DEBOUNCE_MS),
     startWith(this.isLoading$$.next(true)),
     tap(() => this.isLoading$$.next(true)),
     switchMap(() =>
@@ -73,6 +88,19 @@ export class ManagerService {
         this.backend
           .addStation(newStation)
           .pipe(finalize(() => this.isLoading$$.next(false))),
+      ),
+    );
+
+  afterCityInputAction$: Observable<BackendResponse<City[] | null>> =
+    this.inputCityAction$.pipe(
+      debounceTime(INPUT_DEBOUNCE_MS),
+      distinctUntilChanged(),
+      filter((value) => value.trim().length > 0),
+      tap(() => this.isFindingCity$$.next(true)),
+      switchMap((city) =>
+        this.apiNinjas
+          .getCoordinatesByCity(city)
+          .pipe(finalize(() => this.isFindingCity$$.next(false))),
       ),
     );
 }

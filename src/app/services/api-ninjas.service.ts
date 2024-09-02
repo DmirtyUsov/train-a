@@ -16,8 +16,7 @@ export class ApiNinjasService {
   getCoordinatesByCity(
     city: string,
   ): Observable<BackendResponse<City[] | null>> {
-    const resultLimit = 3;
-    const url = `https://api.api-ninjas.com/v1/city?name=${city},limit=${resultLimit}`;
+    const url = `https://api.api-ninjas.com/v1/city?name=${city}`;
     const headers = { 'X-Api-Key': API_KEY };
 
     return this.http.get<City[]>(url, { headers }).pipe(
