@@ -7,13 +7,17 @@ import { Ride } from '../../../../models/ride.model';
 import { CarriageService } from '../../../../services/carriage.service';
 import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
 import { CarriageTab } from '../../../../models/tab.model';
-import { TripService } from '../../../../services/trip.service';
 import { SearchItem } from '../../../../models/search-item.model';
 import { selectSelectedItem } from '../../../../store/selectors/search-result.selectors';
 import { CarriageSchemeComponent } from '../carriage-scheme/carriage-scheme.component';
 import { CarriageType } from '../../../../models/carriage.model';
 import { CarriageLegendComponent } from '../carriage-legend/carriage-legend.component';
 import { updateRidePrice } from '../../../../store/actions/ride.actions';
+import {
+  groupCarriagesByType,
+  calculateCarriagePrices,
+  findStationIndices,
+} from '../../../../helpers/trip.helpers';
 
 @Component({
   selector: 'app-carriage-info-list',
@@ -42,7 +46,6 @@ export class CarriageInfoListComponent implements OnInit {
   constructor(
     private store: Store,
     private carriageService: CarriageService,
-    private tripService: TripService,
   ) {}
 
   ngOnInit(): void {
@@ -55,20 +58,19 @@ export class CarriageInfoListComponent implements OnInit {
           const fromStationId = item.fromStation.stationId;
           const toStationId = item.toStation.stationId;
 
-          const [startSegmentIndex, endSegmentIndex] =
-            this.tripService.findStationIndices(
-              fromStationId,
-              toStationId,
-              routePath,
-            );
+          const [startSegmentIndex, endSegmentIndex] = findStationIndices(
+            fromStationId,
+            toStationId,
+            routePath,
+          );
 
-          const prices = this.tripService.calculateCarriagePrices(
+          const prices = calculateCarriagePrices(
             this.ride.schedule.segments,
             startSegmentIndex,
             endSegmentIndex,
           );
 
-          this.tabs = this.tripService.groupCarriagesByType(
+          this.tabs = groupCarriagesByType(
             this.ride.carriages,
             prices,
             this.carriageClassPipe,
