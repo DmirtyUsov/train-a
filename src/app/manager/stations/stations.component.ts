@@ -129,14 +129,24 @@ export class StationsComponent implements OnInit, OnDestroy {
     });
   }
 
-  addStation() {
+  addStation(): void {
     const newStation: NewStation = {
       city: this.newStationForm.value.city || 'Smth Wrong',
       latitude: this.newStationForm.value.latitude || 0,
       longitude: this.newStationForm.value.longitude || 0,
       relations: this.newStationForm.value.connectedTo || [],
     };
-    this.manager.addStationAction$.next(newStation);
+    const newCityLower = newStation.city.toLowerCase();
+    const isCityInList = Object.values(this.stationsObject).some(
+      (station) => station.city.toLowerCase() === newCityLower,
+    );
+    if (isCityInList) {
+      this.toast.error(
+        `Station "${newStation.city.toUpperCase()}" already in list.`,
+      );
+    } else {
+      this.manager.addStationAction$.next(newStation);
+    }
   }
 
   ngOnDestroy(): void {
