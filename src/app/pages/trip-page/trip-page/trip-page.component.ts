@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, combineLatest, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Ride } from '../../../models/ride.model';
 import {
   selectRide,
   selectRideError,
   selectRideLoading,
-  selectSelectedCarriage,
-  selectSelectedSeat,
 } from '../../../store/selectors/ride.selectors';
 import { loadRide } from '../../../store/actions/ride.actions';
 import { ResponseError } from '../../../models/error.model';

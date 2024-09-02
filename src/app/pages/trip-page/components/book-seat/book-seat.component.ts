@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
@@ -19,7 +19,7 @@ import { selectSeat } from '../../../../store/actions/ride.actions';
   templateUrl: './book-seat.component.html',
   styleUrls: ['./book-seat.component.scss'],
 })
-export class BookSeatComponent implements OnInit {
+export class BookSeatComponent {
   selectedSeatInfo$: Observable<{
     carNumber: number;
     seatNumber: number;
@@ -42,8 +42,6 @@ export class BookSeatComponent implements OnInit {
 
     this.selectedPrice$ = this.store.select(selectRidePrice);
   }
-
-  ngOnInit(): void {}
 
   clearSelectedSeat(): void {
     this.store.dispatch(selectSeat({ carriageIndex: null, seatNumber: null }));

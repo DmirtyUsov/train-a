@@ -1,15 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TabViewModule } from 'primeng/tabview';
+import { TabViewChangeEvent, TabViewModule } from 'primeng/tabview';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { Ride } from '../../../../models/ride.model';
 import { CarriageService } from '../../../../services/carriage.service';
 import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
 import { CarriageTab } from '../../../../models/tab.model';
 import { TripService } from '../../../../services/trip.service';
-import { Observable } from 'rxjs';
 import { SearchItem } from '../../../../models/search-item.model';
 import { selectSelectedItem } from '../../../../store/selectors/search-result.selectors';
-import { Store } from '@ngrx/store';
 import { CarriageSchemeComponent } from '../carriage-scheme/carriage-scheme.component';
 import { CarriageType } from '../../../../models/carriage.model';
 import { CarriageLegendComponent } from '../carriage-legend/carriage-legend.component';
@@ -94,7 +94,7 @@ export class CarriageInfoListComponent implements OnInit {
     return this.carriageTypes.find((type) => type.code === carriageCode);
   }
 
-  onTabChange(event: any) {
+  onTabChange(event: TabViewChangeEvent) {
     const selectedPrice = this.tabs[event.index].price;
     this.store.dispatch(updateRidePrice({ price: selectedPrice }));
   }
