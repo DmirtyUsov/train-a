@@ -2,6 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
 import { CarriageType } from '../../../../models/carriage.model';
+import { Store } from '@ngrx/store';
+import {
+  selectSelectedCarriage,
+  selectSelectedSeat,
+} from '../../../../store/selectors/ride.selectors';
+import { selectSeat } from '../../../../store/actions/ride.actions';
 
 @Component({
   selector: 'app-carriage-scheme',
@@ -16,12 +22,23 @@ export class CarriageSchemeComponent implements OnInit {
 
   leftSeatNumbers: number[][] = [];
   rightSeatNumbers: number[][] = [];
+  selectedSeat: number | null = null;
+  selectedCarriage: number | null = null;
+
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     if (this.carriageInfo) {
-      console.log('carriageInfo', this.carriageInfo);
       this.generateSeatNumbers();
     }
+
+    this.store.select(selectSelectedSeat).subscribe((seat) => {
+      this.selectedSeat = seat;
+    });
+
+    this.store.select(selectSelectedCarriage).subscribe((carriage) => {
+      this.selectedCarriage = carriage;
+    });
   }
 
   generateSeatNumbers(): void {
@@ -55,5 +72,12 @@ export class CarriageSchemeComponent implements OnInit {
 
     this.leftSeatNumbers = this.leftSeatNumbers.map((row) => row.reverse());
     this.rightSeatNumbers = this.rightSeatNumbers.map((row) => row.reverse());
+  }
+
+  selectSeat(seat: number): void {
+    this.store.dispatch(
+      selectSeat({ carriageIndex: this.carriageIndex, seatNumber: seat }),
+    );
+    console.log(`Selected seat: Car ${this.carriageIndex + 1}, Seat ${seat}`);
   }
 }

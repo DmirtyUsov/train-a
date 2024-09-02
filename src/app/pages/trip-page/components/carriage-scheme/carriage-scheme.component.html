@@ -10,7 +10,15 @@
     <div *ngFor="let row of rightSeatNumbers">
       <div
         *ngFor="let seat of row"
-        class="seat bg-blue-200 text-center border border-blue-400 rounded text-xs mb-2 p-2 w-8 h-8"
+        [ngClass]="{
+          'bg-yellow-200 border-yellow-400':
+            seat === selectedSeat && carriageIndex === selectedCarriage,
+          'bg-blue-200 border-blue-400': !(
+            seat === selectedSeat && carriageIndex === selectedCarriage
+          ),
+        }"
+        class="seat text-center border rounded text-xs mb-2 p-2 w-8 h-8 cursor-pointer"
+        (click)="selectSeat(seat)"
       >
         {{ seat }}
       </div>
@@ -32,7 +40,15 @@
     <div *ngFor="let row of leftSeatNumbers">
       <div
         *ngFor="let seat of row"
-        class="seat bg-blue-200 text-center border border-blue-400 rounded text-xs mb-2 p-2 w-8 h-8"
+        [ngClass]="{
+          'bg-yellow-200 border-yellow-400':
+            seat === selectedSeat && carriageIndex === selectedCarriage,
+          'bg-blue-200 border-blue-400': !(
+            seat === selectedSeat && carriageIndex === selectedCarriage
+          ),
+        }"
+        class="seat text-center border rounded text-xs mb-2 p-2 w-8 h-8 cursor-pointer"
+        (click)="selectSeat(seat)"
       >
         {{ seat }}
       </div>
