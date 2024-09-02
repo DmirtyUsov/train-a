@@ -8,7 +8,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { SignInResponse } from '../models/signin-response.model';
 import { UserProfile } from '../models/user.models';
 import { Station } from '../models/station.models';
-import { BackendResponse, NewStation } from '../manager/models';
+import { BackendResponse, NewStation, ObjectWithId } from '../manager/models';
 import { ResponseError } from '../models/error.model';
 
 enum Endpoints {
@@ -62,8 +62,12 @@ export class BackendService {
 
   deleteStation(id: number): Observable<BackendResponse<number | null>> {
     const url = `${BackendService.makeUrl(Endpoints.Station)}/${id}`;
-    return this.http.delete<number>(url).pipe(
-      map((payload) => ({ payload, code: HttpStatusCode.Ok, error: null })),
+    return this.http.delete<void>(url).pipe(
+      map(() => ({
+        payload: null,
+        code: HttpStatusCode.Ok,
+        error: null,
+      })),
       catchError(BackendService.handleError),
     );
   }
@@ -72,8 +76,8 @@ export class BackendService {
     newStation: NewStation,
   ): Observable<BackendResponse<number | null>> {
     const url = BackendService.makeUrl(Endpoints.Station);
-    return this.http.post<number>(url, newStation).pipe(
-      map((payload) => ({ payload, code: HttpStatusCode.Ok, error: null })),
+    return this.http.post<ObjectWithId<number>>(url, newStation).pipe(
+      map(({ id }) => ({ payload: id, code: HttpStatusCode.Ok, error: null })),
       catchError(BackendService.handleError),
     );
   }

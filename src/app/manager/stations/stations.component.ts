@@ -88,7 +88,7 @@ export class StationsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.manager.afterDeleteStationAction$.subscribe((response) => {
         if (response.code === HttpStatusCode.Ok) {
-          this.toast.success(`Station id:${response.payload} removed`);
+          this.toast.success(`Station removed`);
           this.manager.refreshStations$.next(
             `after delete ${response.payload}`,
           );
