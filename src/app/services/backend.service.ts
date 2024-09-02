@@ -87,7 +87,6 @@ export class BackendService {
       code: HttpStatusCode.InternalServerError,
       error: errorFoResponse,
     };
-
     if (error.error instanceof Error) {
       // A client-side or network error occurred.
       errorFoResponse.message = error.message;

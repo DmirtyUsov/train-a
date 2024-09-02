@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpStatusCode } from '@angular/common/http';
 
 import { ConfirmationService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
@@ -37,7 +38,7 @@ import { ToastService } from '../../services/toast.service';
   templateUrl: './stations.component.html',
   styleUrl: './stations.component.scss',
 })
-export class StationsComponent {
+export class StationsComponent implements OnInit, OnDestroy {
   readonly latitudeBound: BoundariesMinMax = { min: -90, max: 90 };
 
   readonly longitudeBound: BoundariesMinMax = { min: -180, max: 180 };
@@ -79,18 +80,39 @@ export class StationsComponent {
   ) {
     this.isLoading$ = this.manager.isLoading$;
 
-    this.stationList$ = this.manager.loadStations();
+    this.stationList$ = this.manager.stations$;
+    this.manager.refreshStations$.next('constructor');
+  }
+
+  ngOnInit(): void {
+    this.subscriptions.add(
+      this.manager.afterDeleteStationAction$.subscribe((response) => {
+        if (response.code === HttpStatusCode.Ok) {
+          this.toast.success(`Station id:${response.payload} removed`);
+          this.manager.refreshStations$.next(
+            `after delete ${response.payload}`,
+          );
+        } else {
+          this.toast.error(response.error!.message);
+        }
+      }),
+    );
+
+    this.subscriptions.add(
+      this.manager.afterAddStationAction$.subscribe((response) => {
+        if (response.code === HttpStatusCode.Ok) {
+          this.toast.success(`New Station id:${response.payload} added`);
+          this.manager.refreshStations$.next(`after add ${response.payload}`);
+          this.newStationForm.reset();
+        } else {
+          this.toast.error(response.error!.message);
+        }
+      }),
+    );
   }
 
   private deleteStation(id: number): void {
-    this.manager.deleteStation(id).subscribe({
-      next: () => {
-        this.toast.success(`Station id:${id} removed`);
-      },
-      error: (error) => {
-        this.toast.error(error);
-      },
-    });
+    this.manager.deleteStationAction$.next(id);
   }
 
   confirmDelete(event: Event, id: number) {
@@ -114,15 +136,10 @@ export class StationsComponent {
       longitude: this.newStationForm.value.longitude || 0,
       relations: this.newStationForm.value.connectedTo || [],
     };
+    this.manager.addStationAction$.next(newStation);
+  }
 
-    this.manager.addStation(newStation).subscribe({
-      next: (id) => {
-        this.toast.success(`Station id:${id} added`);
-        this.newStationForm.reset();
-      },
-      error: (error) => {
-        this.toast.error(error);
-      },
-    });
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }
