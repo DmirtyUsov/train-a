@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { catchError, Subject, takeUntil, tap, throwError } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -12,6 +12,9 @@ import { DialogModule } from 'primeng/dialog';
 import { PasswordModule } from 'primeng/password';
 import { Store } from '@ngrx/store';
 import { AuthActions, AuthSelectors } from '../../../store';
+import { BackendService } from '../../../services/backend.service';
+import { ToastService } from '../../../services/toast.service';
+import { ResponseError } from '../../../models/error.model';
 
 @Component({
   selector: 'app-user-info-block',
@@ -46,7 +49,11 @@ export class UserInfoBlockComponent implements OnInit, OnDestroy {
 
   passwordDialogVisible: boolean = false;
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private backend: BackendService,
+    private toast: ToastService,
+  ) {}
 
   user$ = this.store.select(AuthSelectors.selectProfile);
 
@@ -87,9 +94,19 @@ export class UserInfoBlockComponent implements OnInit, OnDestroy {
     this.isEditingEmail = false;
   }
 
-  savePassword() {
-    console.log(this.newPassword);
-    this.passwordDialogVisible = false;
+  updatePassword() {
+    this.backend
+      .updatePassword(this.newPassword)
+      .pipe(
+        tap(() => this.toast.success('Successful update!')),
+        catchError((error) => {
+          this.toast.error((error as ResponseError).message);
+          return throwError(() => new Error(error));
+        }),
+      )
+      .subscribe(() => {
+        this.passwordDialogVisible = false;
+      });
   }
 
   logout() {
