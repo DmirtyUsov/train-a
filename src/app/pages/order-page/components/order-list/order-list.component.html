@@ -1,1 +1,28 @@
-<p>order-list works!</p>
+<div *ngIf="loading$ | async; else content">
+  <p>Loading...</p>
+  <!-- Replace the above text with a spinner or any loading indicator -->
+</div>
+<ng-template #content>
+  <div *ngIf="orders$ | async as orders">
+    <p-dataView #dv [value]="orders">
+      <ng-template pTemplate="list" let-products>
+        <div class="grid grid-nogutter">
+          <div
+            class="col-12"
+            *ngFor="let order of orders; let first = first"
+            class="col-12"
+          >
+            <div
+              class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3"
+              [ngClass]="{ 'border-top-1 surface-border': !first }"
+            >
+              <div class="md:w-10rem relative">
+                <p>Ride {{ order.rideId }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+  </div>
+</ng-template>

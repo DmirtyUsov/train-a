@@ -48,6 +48,7 @@ export class CarriageSchemeComponent implements OnInit {
 
     const totalSeats = (leftSeats + rightSeats) * rows;
     const seatNumbers = Array.from({ length: totalSeats }, (_, i) => i + 1);
+    console.log(seatNumbers);
 
     this.leftSeatNumbers = Array.from({ length: rows }, () => []);
     this.rightSeatNumbers = Array.from({ length: rows }, () => []);
@@ -57,13 +58,15 @@ export class CarriageSchemeComponent implements OnInit {
     for (let row = 0; row < rows; row += 1) {
       for (let col = 0; col < leftSeats; col += 1) {
         if (seatIndex < seatNumbers.length) {
-          this.leftSeatNumbers[row].push(seatNumbers[(seatIndex += 1)]);
+          this.leftSeatNumbers[row].push(seatNumbers[seatIndex]);
+          seatIndex += 1;
         }
       }
 
       for (let col = 0; col < rightSeats; col += 1) {
         if (seatIndex < seatNumbers.length) {
-          this.rightSeatNumbers[row].push(seatNumbers[(seatIndex += 1)]);
+          this.rightSeatNumbers[row].push(seatNumbers[seatIndex]);
+          seatIndex += 1;
         }
       }
     }

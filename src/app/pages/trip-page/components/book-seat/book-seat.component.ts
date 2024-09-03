@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { EMPTY, Observable, combineLatest } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { OrderService } from '../../../../services/order.service';
 import {
@@ -48,6 +48,7 @@ export class BookSeatComponent {
       this.store.select(selectSelectedItem),
     ])
       .pipe(
+        take(1),
         map(([ride, seat, selectedItem]) => {
           if (ride && seat && selectedItem) {
             const rideId = ride.rideId;
