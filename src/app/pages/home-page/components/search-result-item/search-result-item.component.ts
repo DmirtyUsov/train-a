@@ -92,11 +92,6 @@ export class SearchResultItemComponent implements OnInit {
         this.hours = diffInHours % 24;
         this.minutes = diffInMinutes % 60;
       } else {
-        console.error(
-          'Invalid date values or end time is not later than start time:',
-          startDateTime,
-          endDateTime,
-        );
         this.weeks = 0;
         this.days = 0;
         this.hours = 0;
