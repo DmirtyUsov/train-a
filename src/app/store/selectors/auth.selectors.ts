@@ -17,6 +17,11 @@ export const selectIsManager = createSelector(
   (state) => state.isManager,
 );
 
+export const selectProfile = createSelector(
+  selectFeature,
+  (state) => state.profile,
+);
+
 export const selectToken = createSelector(
   selectFeature,
   (state) => state.token,
