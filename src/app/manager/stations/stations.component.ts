@@ -18,7 +18,7 @@ import { InputIconModule } from 'primeng/inputicon';
 
 import { ManagerService } from '../manager.service';
 import { Station } from '../../models/station.models';
-import { BoundariesMinMax, City, NewStation, Stations } from '../models';
+import { BoundariesMinMax, NewStation, Stations } from '../models';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
@@ -49,13 +49,13 @@ export class StationsComponent implements OnInit, OnDestroy {
 
   readonly cityBound: BoundariesMinMax = { min: 2, max: 255 };
 
-  stationList$: Observable<Station[]> = this.manager.stations$;
+  stationList$: Observable<Station[]>;
 
-  stationsObject: Stations = this.manager.stations;
+  stationsObject: Stations;
 
-  isLoading$: Observable<boolean> = this.manager.isLoading$;
+  isLoading$: Observable<boolean>;
 
-  isFindingCity: Observable<boolean> = this.manager.isFindingCity$;
+  isFindingCity$: Observable<boolean>;
 
   cityInput$ = new Subject<string>();
 
@@ -87,7 +87,12 @@ export class StationsComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private toast: ToastService,
     private fb: FormBuilder,
-  ) {}
+  ) {
+    this.stationsObject = this.manager.stations;
+    this.stationList$ = this.manager.stations$;
+    this.isLoading$ = this.manager.isLoading$;
+    this.isFindingCity$ = this.manager.isFindingCity$;
+  }
 
   ngOnInit(): void {
     this.subscriptions.add(
@@ -117,14 +122,16 @@ export class StationsComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(
       this.manager.afterCityInputAction$.subscribe((response) => {
-        if (
-          response.code === HttpStatusCode.Ok &&
-          response.payload!.length > 0
-        ) {
-          const city: City = response.payload![0];
-          this.newStationForm.controls.city.setValue(city.name);
-          this.newStationForm.controls.latitude.setValue(city.latitude);
-          this.newStationForm.controls.longitude.setValue(city.longitude);
+        if (response.code === HttpStatusCode.Ok) {
+          const {
+            name = this.newStationForm.value.city || '',
+            latitude = null,
+            longitude = null,
+          } = response.payload![0] || {};
+
+          this.newStationForm.controls.city.setValue(name);
+          this.newStationForm.controls.latitude.setValue(latitude);
+          this.newStationForm.controls.longitude.setValue(longitude);
         }
         if (response.error) {
           this.toast.error(response.error!.message);

@@ -25,11 +25,6 @@ export class BackendService {
     return `${URL}${endpoint}`;
   }
 
-  logGETResponse(endpoint: string) {
-    const url = BackendService.makeUrl(endpoint);
-    return this.http.get(url).subscribe((response) => console.log(response));
-  }
-
   signIn(email: string, password: string): Observable<SignInResponse> {
     const url = BackendService.makeUrl('signin');
     const body = { email, password };
