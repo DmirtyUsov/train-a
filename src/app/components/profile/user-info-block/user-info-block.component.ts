@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
+import { DialogModule } from 'primeng/dialog';
+import { PasswordModule } from 'primeng/password';
 import { Store } from '@ngrx/store';
 import { AuthActions, AuthSelectors } from '../../../store';
 
@@ -20,9 +22,11 @@ import { AuthActions, AuthSelectors } from '../../../store';
     InputGroupModule,
     InputGroupAddonModule,
     InputTextModule,
+    PasswordModule,
     FormsModule,
     CardModule,
     DividerModule,
+    DialogModule,
   ],
   templateUrl: './user-info-block.component.html',
   styleUrl: './user-info-block.component.scss',
@@ -32,11 +36,15 @@ export class UserInfoBlockComponent implements OnInit, OnDestroy {
 
   public newEmail: string = '';
 
+  public newPassword: string = '';
+
   private destroy$ = new Subject();
 
   isEditingName = false;
 
   isEditingEmail = false;
+
+  passwordDialogVisible: boolean = false;
 
   constructor(private store: Store) {}
 
@@ -79,8 +87,17 @@ export class UserInfoBlockComponent implements OnInit, OnDestroy {
     this.isEditingEmail = false;
   }
 
+  savePassword() {
+    console.log(this.newPassword);
+    this.passwordDialogVisible = false;
+  }
+
   logout() {
     this.store.dispatch(AuthActions.signOut());
+  }
+
+  showDialog() {
+    this.passwordDialogVisible = true;
   }
 
   ngOnDestroy() {

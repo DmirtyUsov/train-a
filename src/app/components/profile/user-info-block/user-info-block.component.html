@@ -5,6 +5,53 @@
     }
   </ng-template>
 
+  <div class="flex justify-end mb-4">
+    <p-button
+      (onClick)="showDialog()"
+      label="Change Password"
+      severity="info"
+    ></p-button>
+  </div>
+
+  <p-dialog
+    header="Change Password"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [(visible)]="passwordDialogVisible"
+  >
+    <div class="mb-12 p-fluid">
+      <label for="new-password" class="font-semibold w-6rem"
+        >New Password</label
+      >
+      <p-password
+        class="w-full"
+        id="new-password"
+        #newPasswordInput="ngModel"
+        [toggleMask]="true"
+        [(ngModel)]="newPassword"
+        [minlength]="8"
+        [required]="true"
+        styleClass="w-full p-password p-component p-inputwrapper p-input-icon-right"
+      ></p-password>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancel"
+        [text]="true"
+        severity="primary"
+        (onClick)="passwordDialogVisible = false"
+      />
+      <p-button
+        label="Save"
+        [outlined]="true"
+        severity="secondary"
+        [disabled]="!newPasswordInput.valid"
+        (onClick)="savePassword()"
+      />
+    </ng-template>
+  </p-dialog>
+
   <div class="flex flex-col md:flex-row gap-4">
     <div class="flex flex-col flex-1">
       <label class="mb-2 font-semibold text-2xl" for="name">Name:</label>
