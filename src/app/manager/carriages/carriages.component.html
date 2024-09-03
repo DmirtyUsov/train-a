@@ -6,6 +6,8 @@
 
 @if (carriages$ | async; as carriages) {
   @for (carriage of carriages; track $index) {
-    <app-seating-scheme [carriage]="carriage"></app-seating-scheme>
+    <p-card>
+      <app-seating-scheme [seats]="getSeats(carriage)"></app-seating-scheme>
+    </p-card>
   }
 }

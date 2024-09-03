@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { CardModule } from 'primeng/card';
 
 import { ManagerService } from '../manager.service';
 import { CarriageType } from '../../models/carriage.model';
@@ -19,6 +20,7 @@ import { SeatingSchemeComponent } from './components/seating-scheme/seating-sche
     CarriageSchemeComponent,
     JsonPipe,
     SeatingSchemeComponent,
+    CardModule,
   ],
   templateUrl: './carriages.component.html',
   styleUrl: './carriages.component.scss',
@@ -33,9 +35,7 @@ export class CarriagesComponent implements OnInit {
     this.carriages$ = this.manager.carriages$;
   }
 
-  ngOnInit(): void {
-    this.manager.refreshCarriages$.next('after view init');
-  }
+  ngOnInit(): void {}
 
   getSeats(carriage: CarriageType) {
     return SeatsGeneratorService.get(carriage);

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CarriageType } from '../models/carriage.model';
+import { Seats } from '../manager/models';
 
-export type Seats = { leftSide: number[][]; rightSide: number[][] };
 @Injectable({
   providedIn: 'root',
 })
@@ -38,6 +38,10 @@ export class SeatsGeneratorService {
     }
 
     const result: Seats = {
+      rows,
+      leftCols,
+      rightCols,
+      totalSeats,
       leftSide: leftSeats.map((row) => row.reverse()),
       rightSide: rightSeats.map((row) => row.reverse()),
     };
