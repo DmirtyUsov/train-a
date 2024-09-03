@@ -10,12 +10,14 @@ import { guestGuard } from './guards/guest.guard';
 import { managerGuard } from './guards/manager.guard';
 import { userGuard } from './guards/user.guard';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
+import { BackendTestComponent } from './components/backend-test/backend-test.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: HomePageComponent,
   },
+  { path: 'test', component: BackendTestComponent },
   {
     path: 'signin',
     component: SigninPageComponent,

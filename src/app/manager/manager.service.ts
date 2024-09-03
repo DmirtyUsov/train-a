@@ -44,6 +44,12 @@ export class ManagerService {
 
   refreshCarriages$: Subject<string> = new Subject();
 
+  deleteCarriageAction$: Subject<string> = new Subject();
+
+  addCarriageAction$: Subject<CarriageType> = new Subject();
+
+  updateCarriageAction$: Subject<CarriageType> = new Subject();
+
   public stations: Stations = {};
 
   constructor(
@@ -117,4 +123,34 @@ export class ManagerService {
       ),
     ),
   );
+
+  afterDeleteCarriageAction$: Observable<BackendResponse<null>> =
+    this.deleteCarriageAction$.pipe(
+      tap(() => this.isLoading$$.next(true)),
+      switchMap((code) =>
+        this.backend
+          .deleteCarriage(code)
+          .pipe(finalize(() => this.isLoading$$.next(false))),
+      ),
+    );
+
+  afterAddCarriageAction$: Observable<BackendResponse<string | null>> =
+    this.addCarriageAction$.pipe(
+      tap(() => this.isLoading$$.next(true)),
+      switchMap((carriage) =>
+        this.backend
+          .addCarriage(carriage)
+          .pipe(finalize(() => this.isLoading$$.next(false))),
+      ),
+    );
+
+  afterUpdateCarriageAction$: Observable<BackendResponse<string | null>> =
+    this.updateCarriageAction$.pipe(
+      tap(() => this.isLoading$$.next(true)),
+      switchMap((carriage) =>
+        this.backend
+          .updateCarriage(carriage)
+          .pipe(finalize(() => this.isLoading$$.next(false))),
+      ),
+    );
 }

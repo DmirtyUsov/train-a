@@ -1,0 +1,36 @@
+<p-dialog
+  [header]="header"
+  [(visible)]="display"
+  [modal]="true"
+  closable="false"
+>
+  <app-seating-scheme [seats]="getSeats(updateCarriage)"></app-seating-scheme>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onConfirm()"
+    class="m-2 items-center flex content-center flex-wrap gap-2"
+  >
+    <div class="flex flex-col gap-1">
+      <label for="name">Name</label>
+      <input pInputText type="text" inputId="name" formControlName="name" />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="rows">Rows</label>
+      <p-inputNumber inputId="rows" formControlName="rows" />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="leftSeats">Left Seats</label>
+      <p-inputNumber inputId="leftSeats" formControlName="leftSeats" />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="rightSeats">Right Seats</label>
+      <p-inputNumber inputId="rightSeats" formControlName="rightSeats" />
+    </div>
+    <p-button
+      type="submit"
+      [label]="confirmButtonText"
+      [disabled]="!form.valid"
+    ></p-button>
+    <p-button type="cancel" (onClick)="onCancel()" label="Cancel"></p-button>
+  </form>
+</p-dialog>

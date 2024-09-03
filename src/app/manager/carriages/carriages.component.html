@@ -3,11 +3,53 @@
     <p-progressSpinner ariaLabel="loading" />
   </div>
 }
+<button type="button" pButton icon="pi pi-plus" (click)="toggleCreatePopup()">
+  Create
+</button>
 
 @if (carriages$ | async; as carriages) {
   @for (carriage of carriages; track $index) {
-    <p-card>
-      <app-seating-scheme [seats]="getSeats(carriage)"></app-seating-scheme>
-    </p-card>
+    @if (getSeats(carriage); as seats) {
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="flex flex-row gap-2">
+            <div class="text-lg">{{ carriage.name }}</div>
+            <div class="text-lg">{{ seats.totalSeats }} seats</div>
+            <p-confirmPopup [key]="'popupConfirmDelete-' + carriage.code" />
+            <p-button
+              icon="pi pi-pen-to-square"
+              [rounded]="true"
+              [text]="true"
+              severity="info"
+              (click)="toggleEditPopup(carriage)"
+              title="Update Carriage"
+            />
+            <p-button
+              icon="pi pi-trash"
+              [rounded]="true"
+              [text]="true"
+              severity="warning"
+              (click)="confirmDelete($event, carriage.code)"
+              title="Delete Carriage"
+            />
+          </div>
+        </ng-template>
+        <app-seating-scheme [seats]="seats"></app-seating-scheme>
+      </p-card>
+    }
   }
 }
+<app-edit-carriage-popup
+  [carriage]="selectedCarriage"
+  [(display)]="displayUpdatePopup"
+  (confirm)="onConfirmUpdate($event)"
+  header="Edit Carriage"
+  confirmButtonText="Update"
+></app-edit-carriage-popup>
+
+<app-edit-carriage-popup
+  [(display)]="displayCreatePopup"
+  (confirm)="onConfirmCreate($event)"
+  header="Add Carriage"
+  confirmButtonText="Save"
+></app-edit-carriage-popup>

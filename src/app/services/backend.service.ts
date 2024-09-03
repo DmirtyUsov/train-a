@@ -14,7 +14,7 @@ import { CarriageType } from '../models/carriage.model';
 
 enum Endpoints {
   'Station' = 'station',
-  'Carriages' = 'carriage',
+  'Carriage' = 'carriage',
 }
 const URL = '/api/';
 @Injectable({
@@ -80,9 +80,49 @@ export class BackendService {
   }
 
   getCarriages(): Observable<BackendResponse<CarriageType[] | null>> {
-    const url = BackendService.makeUrl(Endpoints.Carriages);
+    const url = BackendService.makeUrl(Endpoints.Carriage);
     return this.http.get<CarriageType[]>(url).pipe(
       map((payload) => ({ payload, code: HttpStatusCode.Ok, error: null })),
+      catchError(BackendService.handleError),
+    );
+  }
+
+  addCarriage(
+    newCarriage: CarriageType,
+  ): Observable<BackendResponse<string | null>> {
+    const url = BackendService.makeUrl(Endpoints.Carriage);
+    return this.http.post<ObjectWithId<string>>(url, newCarriage).pipe(
+      map(({ id }) => ({
+        payload: id,
+        code: HttpStatusCode.Ok,
+        error: null,
+      })),
+      catchError(BackendService.handleError),
+    );
+  }
+
+  updateCarriage(
+    carriage: CarriageType,
+  ): Observable<BackendResponse<string | null>> {
+    const url = `${BackendService.makeUrl(Endpoints.Carriage)}/${carriage.code}`;
+    return this.http.put<ObjectWithId<string>>(url, carriage).pipe(
+      map(({ id }) => ({
+        payload: id,
+        code: HttpStatusCode.Ok,
+        error: null,
+      })),
+      catchError(BackendService.handleError),
+    );
+  }
+
+  deleteCarriage(code: string): Observable<BackendResponse<null>> {
+    const url = `${BackendService.makeUrl(Endpoints.Carriage)}/${code}`;
+    return this.http.delete<void>(url).pipe(
+      map(() => ({
+        payload: null,
+        code: HttpStatusCode.Ok,
+        error: null,
+      })),
       catchError(BackendService.handleError),
     );
   }
@@ -90,8 +130,6 @@ export class BackendService {
   static handleError(
     error: HttpErrorResponse,
   ): Observable<BackendResponse<null>> {
-    console.log(error);
-
     const errorFromResponse: ResponseError = { message: '', reason: '' };
     const newResponse: BackendResponse<null> = {
       payload: null,
