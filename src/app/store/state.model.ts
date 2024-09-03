@@ -1,4 +1,5 @@
 import { AuthState } from './models/auth-state.model';
+import { OrderState } from './reducers/order.reducer';
 import { RideState } from './reducers/ride.reducer';
 import { SearchResultState } from './reducers/search-result.reducer';
 import { SearchState } from './reducers/search.reducer';
@@ -10,4 +11,5 @@ export interface AppState {
   searchResult: SearchResultState;
   auth: AuthState;
   ride: RideState;
+  order: OrderState;
 }

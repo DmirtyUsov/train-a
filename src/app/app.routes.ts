@@ -6,6 +6,7 @@ import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { NotAuthorizedComponent } from './pages/not-authorized/not-authorized.component';
 import { TripPageComponent } from './pages/trip-page/trip-page/trip-page.component';
+import { OrderPageComponent } from './pages/order-page/order-page/order-page.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,10 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: NotAuthorizedComponent,
+  },
+  {
+    path: 'orders',
+    component: OrderPageComponent,
   },
   {
     path: 'trip/:rideId',

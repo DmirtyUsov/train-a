@@ -1,15 +1,20 @@
 import { Component } from '@angular/core';
+import { EMPTY, Observable, combineLatest } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { OrderService } from '../../../../services/order.service';
+import {
+  selectRide,
+  selectSelectedCarriage,
+  selectSelectedSeat,
+  selectRidePrice,
+} from '../../../../store/selectors/ride.selectors';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
 import { selectSeat } from '../../../../store/actions/ride.actions';
-import {
-  selectRidePrice,
-  selectSelectedCarriage,
-  selectSelectedSeat,
-} from '../../../../store/selectors/ride.selectors';
+import { selectSelectedItem } from '../../../../store/selectors/search-result.selectors';
+import { makeOrder } from '../../../../store/actions/order.actions';
 
 @Component({
   selector: 'app-book-seat',
@@ -20,12 +25,13 @@ import {
 })
 export class BookSeatComponent {
   selectedCarriage$: Observable<number | null>;
-
   selectedSeat$: Observable<number | null>;
-
   selectedPrice$: Observable<number | null>;
 
-  constructor(private store: Store) {
+  constructor(
+    private store: Store,
+    private orderService: OrderService,
+  ) {
     this.selectedCarriage$ = this.store.select(selectSelectedCarriage);
     this.selectedSeat$ = this.store.select(selectSelectedSeat);
     this.selectedPrice$ = this.store.select(selectRidePrice);
@@ -33,5 +39,43 @@ export class BookSeatComponent {
 
   clearSelectedSeat(): void {
     this.store.dispatch(selectSeat({ carriageIndex: null, seatNumber: null }));
+  }
+
+  onBookButtonClicked(): void {
+    combineLatest([
+      this.store.select(selectRide),
+      this.store.select(selectSelectedSeat),
+      this.store.select(selectSelectedItem),
+    ])
+      .pipe(
+        map(([ride, seat, selectedItem]) => {
+          if (ride && seat && selectedItem) {
+            const rideId = ride.rideId;
+            const seatNumber = seat;
+            const fromStationId = selectedItem.fromStation.stationId;
+            const toStationId = selectedItem.toStation.stationId;
+            return { rideId, seatNumber, fromStationId, toStationId };
+          }
+          return null;
+        }),
+        filter((orderData) => !!orderData),
+        switchMap((orderData) => {
+          if (orderData) {
+            const { rideId, seatNumber, fromStationId, toStationId } =
+              orderData;
+            this.store.dispatch(
+              makeOrder({
+                rideId,
+                seat: seatNumber,
+                stationStart: fromStationId,
+                stationEnd: toStationId,
+              }),
+            );
+            return EMPTY;
+          }
+          return EMPTY;
+        }),
+      )
+      .subscribe();
   }
 }

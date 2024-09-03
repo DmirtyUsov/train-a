@@ -24,3 +24,10 @@ export interface Order {
     segments: ScheduleSegment[];
   };
 }
+
+export interface OrederRequest {
+  rideId: number;
+  seat: number;
+  stationStart: number;
+  stationEnd: number;
+}
