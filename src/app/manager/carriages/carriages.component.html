@@ -1,1 +1,11 @@
-<p class="text-xl">CARRIAGES Please check this page later</p>
+@if (isLoading$ | async) {
+  <div class="fixed top-0 left-0 right-0 z-30 flex justify-center">
+    <p-progressSpinner ariaLabel="loading" />
+  </div>
+}
+
+@if (carriages$ | async; as carriages) {
+  @for (carriage of carriages; track $index) {
+    <app-seating-scheme [carriage]="carriage"></app-seating-scheme>
+  }
+}

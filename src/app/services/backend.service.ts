@@ -10,9 +10,11 @@ import { UserProfile } from '../models/user.models';
 import { Station } from '../models/station.models';
 import { BackendResponse, NewStation, ObjectWithId } from '../manager/models';
 import { ResponseError } from '../models/error.model';
+import { CarriageType } from '../models/carriage.model';
 
 enum Endpoints {
   'Station' = 'station',
+  'Carriages' = 'carriage',
 }
 const URL = '/api/';
 @Injectable({
@@ -77,26 +79,37 @@ export class BackendService {
     );
   }
 
+  getCarriages(): Observable<BackendResponse<CarriageType[] | null>> {
+    const url = BackendService.makeUrl(Endpoints.Carriages);
+    return this.http.get<CarriageType[]>(url).pipe(
+      map((payload) => ({ payload, code: HttpStatusCode.Ok, error: null })),
+      catchError(BackendService.handleError),
+    );
+  }
+
   static handleError(
     error: HttpErrorResponse,
   ): Observable<BackendResponse<null>> {
-    const errorFoResponse: ResponseError = { message: '', reason: '' };
-    const response: BackendResponse<null> = {
+    console.log(error);
+
+    const errorFromResponse: ResponseError = { message: '', reason: '' };
+    const newResponse: BackendResponse<null> = {
       payload: null,
       code: HttpStatusCode.InternalServerError,
-      error: errorFoResponse,
+      error: errorFromResponse,
     };
-    if (error.error instanceof Error) {
+
+    if (error instanceof Error) {
       // A client-side or network error occurred.
-      errorFoResponse.message = error.message;
-      errorFoResponse.reason = 'A client-side or network error occurred';
+      errorFromResponse.message = error.message;
+      errorFromResponse.reason = 'A client-side or network error occurred';
     } else {
       // The backend returned an unsuccessful response code.
-      errorFoResponse.message = error.error.message;
-      errorFoResponse.reason = error.error.reason;
-      response.code = error.status;
+      errorFromResponse.message = error.error.message;
+      errorFromResponse.reason = error.error.reason;
+      newResponse.code = error.status;
     }
-    return of(response);
+    return of(newResponse);
   }
 
   updateProfile(profile: Pick<UserProfile, 'email' | 'name'>) {
