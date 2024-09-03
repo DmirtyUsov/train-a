@@ -8,6 +8,7 @@ import {
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { FieldsetModule } from 'primeng/fieldset';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -27,6 +28,7 @@ import { AuthActions, AuthSelectors } from '../../store';
     InputTextModule,
     ReactiveFormsModule,
     PasswordModule,
+    RouterLink,
     AsyncPipe,
   ],
   templateUrl: './sign-in-form.component.html',

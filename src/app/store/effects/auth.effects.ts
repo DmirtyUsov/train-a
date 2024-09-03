@@ -67,6 +67,7 @@ export class AuthEffects {
         this.backend.signOut().pipe(
           map(() => AuthActions.signOutSuccess()),
           tap(() => this.toastService.warn('You are logged out!')),
+          tap(() => this.router.navigate(['/'])),
           catchError((error) => {
             this.toastService.error((error.error as ResponseError).message);
             return of(AuthActions.signOutFailure({ error: error.error }));
@@ -106,6 +107,23 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(AuthActions.signInSuccess),
       map(() => AuthActions.getUserProfile()),
+    );
+  });
+
+  updateUserProfile$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthActions.updateUserProfile),
+      mergeMap((action) =>
+        this.backend.updateProfile(action.profile).pipe(
+          map((data) => AuthActions.getUserProfileSuccess({ profile: data })),
+          tap(() => this.toastService.success('Successful update!')),
+          catchError((error) => {
+            return of(
+              AuthActions.getUserProfileFailure({ error: error.error }),
+            );
+          }),
+        ),
+      ),
     );
   });
 }

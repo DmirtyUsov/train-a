@@ -1,0 +1,114 @@
+<p-card class="" header="Profile">
+  <ng-template pTemplate="subtitle">
+    @if (isManager$ | async) {
+      <p class="font-semibold text-right text-2xl">Manager</p>
+    }
+  </ng-template>
+
+  <div class="flex justify-end mb-4">
+    <p-button
+      (onClick)="showDialog()"
+      label="Change Password"
+      severity="info"
+    ></p-button>
+  </div>
+
+  <p-dialog
+    header="Change Password"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [(visible)]="passwordDialogVisible"
+  >
+    <div class="mb-12 p-fluid">
+      <label for="new-password" class="font-semibold w-6rem"
+        >New Password</label
+      >
+      <p-password
+        class="w-full"
+        id="new-password"
+        #newPasswordInput="ngModel"
+        [toggleMask]="true"
+        [(ngModel)]="newPassword"
+        [minlength]="8"
+        [required]="true"
+        styleClass="w-full p-password p-component p-inputwrapper p-input-icon-right"
+      ></p-password>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancel"
+        [text]="true"
+        severity="primary"
+        (onClick)="passwordDialogVisible = false"
+      />
+      <p-button
+        label="Save"
+        [outlined]="true"
+        severity="secondary"
+        [disabled]="!newPasswordInput.valid"
+        (onClick)="updatePassword()"
+      />
+    </ng-template>
+  </p-dialog>
+
+  <div class="flex flex-col md:flex-row gap-4">
+    <div class="flex flex-col flex-1">
+      <label class="mb-2 font-semibold text-2xl" for="name">Name:</label>
+      @if (!isEditingName) {
+        <div class="flex items-center">
+          <p class="flex-grow" id="name">{{ (user$ | async)?.name }}</p>
+          <p-button icon="pi pi-pencil" (click)="editName()"></p-button>
+        </div>
+      } @else {
+        <p-inputGroup>
+          <p-inputGroupAddon>
+            <i class="pi pi-user"></i>
+          </p-inputGroupAddon>
+          <input
+            pInputText
+            placeholder="{{ (user$ | async)?.name }}"
+            [(ngModel)]="newName"
+          />
+          <p-button
+            icon="pi pi-save"
+            [loading]="isLoading$ | async"
+            (onClick)="saveName()"
+          ></p-button>
+        </p-inputGroup>
+      }
+    </div>
+
+    <p-divider class="hidden md:inline-flex" layout="vertical" />
+
+    <div class="flex flex-col flex-1">
+      <label class="mb-2 font-semibold text-2xl" for="email">Email:</label>
+      @if (!isEditingEmail) {
+        <div class="flex items-center">
+          <p class="flex-grow" id="email">{{ (user$ | async)?.email }}</p>
+          <p-button icon="pi pi-pencil" (click)="editEmail()"></p-button>
+        </div>
+      } @else {
+        <p-inputGroup>
+          <p-inputGroupAddon>
+            <i class="pi pi-envelope"></i>
+          </p-inputGroupAddon>
+          <input
+            pInputText
+            placeholder="{{ (user$ | async)?.email }}"
+            [(ngModel)]="newEmail"
+          />
+          <p-button
+            icon="pi pi-save"
+            [loading]="isLoading$ | async"
+            (onClick)="saveEmail()"
+          ></p-button>
+        </p-inputGroup>
+      }
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="LogOut" severity="danger" (click)="logout()"></p-button>
+  </ng-template>
+</p-card>

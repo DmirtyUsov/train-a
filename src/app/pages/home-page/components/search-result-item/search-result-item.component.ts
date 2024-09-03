@@ -1,5 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+import { DividerModule } from 'primeng/divider';
+import { ChipModule } from 'primeng/chip';
 import {
   formatDate,
   formatTime,
@@ -7,11 +11,12 @@ import {
 } from '../../../../helpers/date-utils';
 import { RouteDialogComponent } from '../route-dialog/route-dialog.component';
 import { SearchItem } from '../../../../models/search-item.model';
+import { selectSearchItem } from '../../../../store/actions/search-result.actions';
 
 @Component({
   selector: 'app-search-result-item',
   standalone: true,
-  imports: [CommonModule, RouteDialogComponent],
+  imports: [CommonModule, RouteDialogComponent, DividerModule, ChipModule],
   templateUrl: './search-result-item.component.html',
   styleUrls: ['./search-result-item.component.scss'],
 })
@@ -30,8 +35,12 @@ export class SearchResultItemComponent implements OnInit {
 
   minutes = 0;
 
+  constructor(
+    private store: Store,
+    private router: Router,
+  ) {}
+
   ngOnInit() {
-    console.log('Item:', this.item);
     this.setStationTimes();
     this.calculateTimeDifference();
   }
@@ -60,14 +69,8 @@ export class SearchResultItemComponent implements OnInit {
         `${this.toStationEndTime.date}T${this.toStationEndTime.time}`,
       );
 
-      console.log('Start DateTime String:', startDateTimeStr);
-      console.log('End DateTime String:', endDateTimeStr);
-
       const startDateTime = new Date(startDateTimeStr);
       const endDateTime = new Date(endDateTimeStr);
-
-      console.log('Start DateTime Object:', startDateTime);
-      console.log('End DateTime Object:', endDateTime);
 
       if (
         !Number.isNaN(startDateTime.getTime()) &&
@@ -105,5 +108,26 @@ export class SearchResultItemComponent implements OnInit {
       this.hours = 0;
       this.minutes = 0;
     }
+  }
+
+  onSearchItemClick(event: Event, item: SearchItem): void {
+    const target = event.target as HTMLElement;
+    const routeDialogElement = document.querySelector(
+      'app-route-dialog',
+    ) as HTMLElement;
+
+    if (routeDialogElement && routeDialogElement.contains(target)) {
+      return;
+    }
+
+    const fromStationId = item.fromStation.stationId;
+    const toStationId = item.toStation.stationId;
+    this.store.dispatch(selectSearchItem({ selectedItem: item }));
+    this.router.navigate([`/trip/${item.rideId}`], {
+      queryParams: {
+        from: fromStationId,
+        to: toStationId,
+      },
+    });
   }
 }
