@@ -158,13 +158,6 @@ export class HeaderComponent {
         routerLinkActiveOptions: {},
         accessLevel: AccessLevels.Manager,
       },
-      {
-        label: 'Test',
-        icon: 'pi pi-cog',
-        route: '/test',
-        routerLinkActiveOptions: {},
-        accessLevel: AccessLevels.Permanent,
-      },
     ];
 
     this.itemsAdmin = [

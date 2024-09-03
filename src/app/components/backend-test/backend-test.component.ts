@@ -34,7 +34,7 @@ export class BackendTestComponent {
   ) {}
 
   onGet(endpoint: string) {
-    this.backendService.logGETResponse(endpoint);
+    this.toastService.warn(`Test Removed ${endpoint}`);
   }
 
   showSuccess() {
