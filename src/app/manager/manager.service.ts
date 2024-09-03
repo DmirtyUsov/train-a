@@ -17,6 +17,7 @@ import { BackendService } from '../services/backend.service';
 import { Station } from '../models/station.models';
 import { BackendResponse, City, NewStation, Stations } from './models';
 import { ApiNinjasService } from '../services/api-ninjas.service';
+import { CarriageType } from '../models/carriage.model';
 
 export const INPUT_DEBOUNCE_MS = 700;
 
@@ -41,6 +42,14 @@ export class ManagerService {
 
   inputCityAction$: Subject<string> = new Subject();
 
+  refreshCarriages$: Subject<string> = new Subject();
+
+  deleteCarriageAction$: Subject<string> = new Subject();
+
+  addCarriageAction$: Subject<CarriageType> = new Subject();
+
+  updateCarriageAction$: Subject<CarriageType> = new Subject();
+
   public stations: Stations = {};
 
   constructor(
@@ -50,7 +59,7 @@ export class ManagerService {
 
   stations$: Observable<Station[]> = this.refreshStations$.pipe(
     debounceTime(INPUT_DEBOUNCE_MS),
-    startWith(this.isLoading$$.next(true)),
+    startWith(undefined),
     tap(() => this.isLoading$$.next(true)),
     switchMap(() =>
       this.backend.getStations().pipe(
@@ -101,6 +110,47 @@ export class ManagerService {
         this.apiNinjas
           .getCoordinatesByCity(city)
           .pipe(finalize(() => this.isFindingCity$$.next(false))),
+      ),
+    );
+
+  carriages$: Observable<CarriageType[]> = this.refreshCarriages$.pipe(
+    startWith(undefined),
+    tap(() => this.isLoading$$.next(true)),
+    switchMap(() =>
+      this.backend.getCarriages().pipe(
+        map((data) => (data.payload ? data.payload : [])),
+        finalize(() => this.isLoading$$.next(false)),
+      ),
+    ),
+  );
+
+  afterDeleteCarriageAction$: Observable<BackendResponse<null>> =
+    this.deleteCarriageAction$.pipe(
+      tap(() => this.isLoading$$.next(true)),
+      switchMap((code) =>
+        this.backend
+          .deleteCarriage(code)
+          .pipe(finalize(() => this.isLoading$$.next(false))),
+      ),
+    );
+
+  afterAddCarriageAction$: Observable<BackendResponse<string | null>> =
+    this.addCarriageAction$.pipe(
+      tap(() => this.isLoading$$.next(true)),
+      switchMap((carriage) =>
+        this.backend
+          .addCarriage(carriage)
+          .pipe(finalize(() => this.isLoading$$.next(false))),
+      ),
+    );
+
+  afterUpdateCarriageAction$: Observable<BackendResponse<string | null>> =
+    this.updateCarriageAction$.pipe(
+      tap(() => this.isLoading$$.next(true)),
+      switchMap((carriage) =>
+        this.backend
+          .updateCarriage(carriage)
+          .pipe(finalize(() => this.isLoading$$.next(false))),
       ),
     );
 }

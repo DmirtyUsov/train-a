@@ -48,9 +48,5 @@ export class TripPageComponent implements OnInit {
       const rideId = +params['rideId'];
       this.store.dispatch(loadRide({ rideId }));
     });
-
-    this.ride$.subscribe((ride) => {
-      console.log('Selected ride:', ride);
-    });
   }
 }

@@ -76,6 +76,5 @@ export class CarriageSchemeComponent implements OnInit {
     this.store.dispatch(
       selectSeat({ carriageIndex: this.carriageIndex + 1, seatNumber: seat }),
     );
-    console.log(`Selected seat: Car ${this.carriageIndex + 1}, Seat ${seat}`);
   }
 }
