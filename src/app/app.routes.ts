@@ -9,6 +9,7 @@ import { NotAuthorizedComponent } from './pages/not-authorized/not-authorized.co
 import { guestGuard } from './guards/guest.guard';
 import { managerGuard } from './guards/manager.guard';
 import { userGuard } from './guards/user.guard';
+import { OrderPageComponent } from './pages/order-page/order-page.component';
 
 export const routes: Routes = [
   {
@@ -52,6 +53,11 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: ProfilePageComponent,
+    canActivate: [userGuard],
+  },
+  {
+    path: 'orders',
+    component: OrderPageComponent,
     canActivate: [userGuard],
   },
   {
