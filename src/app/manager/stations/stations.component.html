@@ -15,7 +15,7 @@
       <div>
         <label for="city" class="block">City</label>
         <p-iconField iconPosition="right">
-          @if (isFindingCity | async) {
+          @if (isFindingCity$ | async) {
             <p-inputIcon styleClass="pi pi-spinner pi-spin" />
           } @else {
             <p-inputIcon styleClass="pi pi-search" />
