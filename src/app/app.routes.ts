@@ -39,18 +39,6 @@ export const routes: Routes = [
     children: [{ path: '**', component: NotAuthorizedComponent }],
   },
   {
-    path: 'admin/stations',
-    component: NotAuthorizedComponent,
-  },
-  {
-    path: 'admin/carriages',
-    component: NotAuthorizedComponent,
-  },
-  {
-    path: 'admin/routes',
-    component: NotAuthorizedComponent,
-  },
-  {
     path: 'profile',
     component: ProfilePageComponent,
     canActivate: [userGuard],
