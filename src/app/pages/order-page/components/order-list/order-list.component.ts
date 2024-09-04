@@ -20,6 +20,7 @@ import { loadStations } from '../../../../store/actions/stations.actions';
 })
 export class OrderListComponent implements OnInit {
   orders$: Observable<Order[]>;
+
   loading$: Observable<boolean>;
 
   constructor(private store: Store) {

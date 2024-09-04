@@ -2,21 +2,20 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
-import { EMPTY, Observable, combineLatest } from 'rxjs';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
+import { filter, switchMap, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import {
-  selectRide,
   selectSelectedCarriage,
   selectSelectedSeat,
   selectRidePrice,
+  selectOrderData,
 } from '../../../../store/selectors/ride.selectors';
 
 import {
   clearSelection,
   selectSeat,
 } from '../../../../store/actions/ride.actions';
-import { selectSelectedItem } from '../../../../store/selectors/search-result.selectors';
 import { makeOrder } from '../../../../store/actions/order.actions';
 
 @Component({
@@ -44,23 +43,10 @@ export class BookSeatComponent {
   }
 
   onBookButtonClicked(): void {
-    combineLatest([
-      this.store.select(selectRide),
-      this.store.select(selectSelectedSeat),
-      this.store.select(selectSelectedItem),
-    ])
+    this.store
+      .select(selectOrderData)
       .pipe(
         take(1),
-        map(([ride, seat, selectedItem]) => {
-          if (ride && seat && selectedItem) {
-            const { rideId } = ride;
-            const seatNumber = seat;
-            const { stationId: fromStationId } = selectedItem.fromStation;
-            const { stationId: toStationId } = selectedItem.toStation;
-            return { rideId, seatNumber, fromStationId, toStationId };
-          }
-          return null;
-        }),
         filter(
           (
             orderData,
@@ -80,10 +66,10 @@ export class BookSeatComponent {
               stationEnd: toStationId,
             }),
           );
-          this.store.dispatch(clearSelection());
           return EMPTY;
         }),
       )
       .subscribe();
+    this.store.dispatch(clearSelection());
   }
 }
