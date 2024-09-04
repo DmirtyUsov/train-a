@@ -10,6 +10,7 @@ import {
 import { OrderItemComponent } from '../order-item/order-item.component';
 import { Order } from '../../../../models/order.model';
 import { loadStations } from '../../../../store/actions/stations.actions';
+import { loadOrders } from '../../../../store/actions/order.actions';
 
 @Component({
   selector: 'app-order-list',
@@ -30,6 +31,6 @@ export class OrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(loadStations());
+    this.store.dispatch(loadOrders({ all: true }));
   }
 }

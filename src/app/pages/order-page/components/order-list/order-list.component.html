@@ -4,19 +4,20 @@
 </div>
 <ng-template #content>
   <div *ngIf="orders$ | async as orders">
-    <p-dataView #dv [value]="orders">
+    <p-dataView #dv [value]="orders" class="w-full">
       <ng-template pTemplate="list" let-products>
-        <div class="grid grid-nogutter">
+        <div class="grid grid-nogutter w-full">
           <div
-            class="col-12"
+            class="col-12 w-full"
             *ngFor="let order of orders; let first = first"
-            class="col-12"
           >
             <div
-              class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3"
+              class="flex flex-col sm:flex-row sm:items-center p-4 gap-3 w-full"
               [ngClass]="{ 'border-top-1 surface-border': !first }"
             >
-              <app-order-item [order]="order"></app-order-item>
+              <div class="w-full">
+                <app-order-item [order]="order" class="w-full"></app-order-item>
+              </div>
             </div>
           </div>
         </div>
