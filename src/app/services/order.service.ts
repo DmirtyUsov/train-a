@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { Order, OrederRequest } from '../models/order.model';
+import { MakeOrderResponse, Order, OrederRequest } from '../models/order.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,14 +16,14 @@ export class OrderService {
     seat: number,
     stationStart: number,
     stationEnd: number,
-  ): Observable<OrederRequest> {
+  ): Observable<MakeOrderResponse> {
     const orderPayload = {
       rideId,
       seat,
       stationStart,
       stationEnd,
     };
-    return this.http.post<OrederRequest>(this.apiUrl, orderPayload).pipe(
+    return this.http.post<MakeOrderResponse>(this.apiUrl, orderPayload).pipe(
       catchError((error) => {
         return throwError(error);
       }),

@@ -2,12 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
-import { Order } from '../../../../models/order.model';
 import { DividerModule } from 'primeng/divider';
 import { CardModule } from 'primeng/card';
+import { Order } from '../../../../models/order.model';
 import { selectAllStations } from '../../../../store/selectors/stations.selectors';
 import { Station } from '../../../../models/station.models';
 import {
+  buildTrainScheme,
   calculateCarriagePrices,
   findStationIndices,
 } from '../../../../helpers/trip.helpers';
@@ -17,7 +18,6 @@ import {
   formatTime,
 } from '../../../../helpers/date-utils';
 import { CarriageService } from '../../../../services/carriage.service';
-import { CarriageType } from '../../../../models/carriage.model';
 import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
 
 @Component({
@@ -75,7 +75,7 @@ export class OrderItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.carriageService.getCarriageTypes().subscribe((carriageTypes) => {
-      const seatInfo = this.buildTrainScheme(
+      const seatInfo = buildTrainScheme(
         carriageTypes,
         this.order.carriages,
         this.order.seatId,
@@ -106,40 +106,6 @@ export class OrderItemComponent implements OnInit {
 
     this.setStationTimes();
     this.calculateTimeDifference();
-  }
-
-  buildTrainScheme(
-    carriageTypes: CarriageType[],
-    carriages: string[],
-    seatId: number,
-  ): { carIndex: number; carType: string; seatNumberInCar: number } | null {
-    let currentSeatCount = 0;
-
-    for (let carIndex = 0; carIndex < carriages.length; carIndex += 1) {
-      const carriageCode = carriages[carIndex];
-      const carriageType = carriageTypes.find(
-        (type) => type.code === carriageCode,
-      );
-
-      if (carriageType) {
-        const seatsInCarriage =
-          carriageType.rows *
-          (carriageType.leftSeats + carriageType.rightSeats);
-
-        if (seatId <= currentSeatCount + seatsInCarriage) {
-          const seatNumberInCar = seatId - currentSeatCount;
-          return {
-            carIndex,
-            carType: carriageType.name,
-            seatNumberInCar,
-          };
-        }
-
-        currentSeatCount += seatsInCarriage;
-      }
-    }
-
-    return null;
   }
 
   private setStationCities(): void {
@@ -232,10 +198,6 @@ export class OrderItemComponent implements OnInit {
 
     const priceForCarriageType = calculatedPrice.get(this.carriageType);
 
-    if (priceForCarriageType !== undefined) {
-      this.price = priceForCarriageType;
-    } else {
-      this.price = 0;
-    }
+    this.price = priceForCarriageType !== undefined ? priceForCarriageType : 0;
   }
 }

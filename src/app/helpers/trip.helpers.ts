@@ -1,7 +1,7 @@
-// src/app/helpers/trip.helpers.ts
 import { CarriageTab } from '../models/tab.model';
 import { CarriageClassPipe } from '../pipes/carriage-class.pipe';
 import { ScheduleSegment } from '../models/order.model';
+import { CarriageType } from '../models/carriage.model';
 
 interface Carriage {
   type: string;
@@ -84,4 +84,37 @@ export function findStationIndices(
   }
 
   return result;
+}
+
+export function buildTrainScheme(
+  carriageTypes: CarriageType[],
+  carriages: string[],
+  seatId: number,
+): { carIndex: number; carType: string; seatNumberInCar: number } | null {
+  let currentSeatCount = 0;
+
+  for (let carIndex = 0; carIndex < carriages.length; carIndex += 1) {
+    const carriageCode = carriages[carIndex];
+    const carriageType = carriageTypes.find(
+      (type) => type.code === carriageCode,
+    );
+
+    if (carriageType) {
+      const seatsInCarriage =
+        carriageType.rows * (carriageType.leftSeats + carriageType.rightSeats);
+
+      if (seatId <= currentSeatCount + seatsInCarriage) {
+        const seatNumberInCar = seatId - currentSeatCount;
+        return {
+          carIndex,
+          carType: carriageType.name,
+          seatNumberInCar,
+        };
+      }
+
+      currentSeatCount += seatsInCarriage;
+    }
+  }
+
+  return null; // If the seatId is out of bounds
 }
