@@ -9,7 +9,6 @@ import {
 } from '../../../../store/selectors/order.selectors';
 import { OrderItemComponent } from '../order-item/order-item.component';
 import { Order } from '../../../../models/order.model';
-import { loadStations } from '../../../../store/actions/stations.actions';
 import { loadOrders } from '../../../../store/actions/order.actions';
 
 @Component({
