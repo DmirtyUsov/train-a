@@ -26,7 +26,7 @@ import { Tab } from '../../../../models/tab.model';
   providers: [DatePipe],
 })
 export class SearchResultBlockComponent implements OnInit {
-  searchItems$: Observable<SearchItem[]>;
+  searchItems$: Observable<SearchItem[] | null>;
 
   selectedItem$: Observable<SearchItem | null>;
 
@@ -43,8 +43,8 @@ export class SearchResultBlockComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.searchItems$.subscribe((items) => {
-      if (items.length > 0) {
+    this.searchItems$?.subscribe((items) => {
+      if (items !== null && items.length > 0) {
         this.groupSearchItemsByDay(items);
       }
     });

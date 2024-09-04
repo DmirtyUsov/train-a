@@ -12,7 +12,7 @@ import { SearchItem } from '../../models/search-item.model';
 import { mapCarriages } from '../../helpers/search-result.helpers';
 
 export interface SearchResultState {
-  searchItems: SearchItem[];
+  searchItems: SearchItem[] | null;
   selectedItem: SearchItem | null;
   searchResponse: SearchResponse | null;
   loading: boolean;
@@ -20,7 +20,7 @@ export interface SearchResultState {
 }
 
 export const initialSearchResultState: SearchResultState = {
-  searchItems: [],
+  searchItems: null,
   selectedItem: null,
   searchResponse: null,
   loading: false,

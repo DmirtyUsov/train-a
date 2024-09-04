@@ -18,7 +18,7 @@
           <!-- From City Block -->
           <div class="flex flex-col items-center">
             <div class="text-lg font-medium text-900 mt-2">
-              From: {{ item.fromStation.city }}
+              From: {{ item.fromStation.city | uppercase }}
             </div>
             <div class="text-sm text-gray-500">
               {{ fromStationStartTime?.date }}
@@ -30,6 +30,7 @@
 
           <!-- Time Difference Display -->
           <div class="flex flex-col items-center mt-4">
+            <div class="text-lg font-medium text-900 mt-2">Duration</div>
             <div class="text-sm text-gray-600">
               <div *ngIf="weeks > 0">
                 {{ weeks }} Week{{ weeks > 1 ? "s" : "" }}
@@ -37,11 +38,9 @@
               <div *ngIf="days > 0">
                 {{ days }} Day{{ days > 1 ? "s" : "" }}
               </div>
-              <div *ngIf="hours > 0">
-                {{ hours }} Hour{{ hours > 1 ? "s" : "" }}
-              </div>
-              <div *ngIf="minutes >= 0">
-                {{ minutes }} Minute{{ minutes > 1 ? "s" : "" }}
+              <div class="text-lg flex gap-2">
+                <div *ngIf="hours > 0">{{ hours }}h</div>
+                <div *ngIf="minutes >= 0">{{ minutes }}m</div>
               </div>
             </div>
           </div>
@@ -49,7 +48,7 @@
           <!-- To City Block -->
           <div class="flex flex-col items-center">
             <div class="text-lg font-medium text-900 mt-2">
-              To: {{ item.toStation.city }}
+              To: {{ item.toStation.city | uppercase }}
             </div>
             <div class="text-sm text-gray-600">
               {{ toStationEndTime?.date }}
@@ -59,16 +58,22 @@
             </div>
           </div>
 
+          <p-divider layout="vertical" />
+
           <!-- Carriage Block -->
-          <div
-            *ngFor="let carriage of item.carriages"
-            class="flex flex-col items-center"
-          >
-            <div class="text-md font-medium text-600 mt-2">
-              Carriage type {{ carriage.type }}
-            </div>
-            <div class="text-lg text-gray-900">
-              {{ carriage.price }} credits
+          <div class="flex gap-4">
+            <div
+              *ngFor="let carriage of item.carriages"
+              class="flex flex-col items-center"
+              style="flex-basis: 50%; max-width: 50%"
+            >
+              <div class="text-md font-medium text-600 mt-2">Carriage type</div>
+              <p>{{ carriage.type | carriageClass }}</p>
+              <div class="text-lg text-gray-900">
+                {{
+                  getCarriagePrice(carriage.type) | currency: "USD" : "symbol"
+                }}
+              </div>
             </div>
           </div>
         </div>
