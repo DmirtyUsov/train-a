@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
@@ -35,7 +35,7 @@ import { EditCarriagePopupComponent } from './components/edit-carriage-popup/edi
   templateUrl: './carriages.component.html',
   styleUrl: './carriages.component.scss',
 })
-export class CarriagesComponent implements OnInit {
+export class CarriagesComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
 
   carriages$: Observable<CarriageType[]>;
@@ -142,5 +142,9 @@ export class CarriagesComponent implements OnInit {
 
   onConfirmCreate(newCarriage: CarriageType) {
     this.manager.addCarriageAction$.next(newCarriage);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

@@ -1,9 +1,9 @@
 <div class="flex flex-col items-center">
   <!-- Right side seats -->
   <div
-    class="grid gap-2 grid-cols-"
+    class="grid gap-2 grid-flow-col"
     [ngStyle]="{
-      'grid-template-columns': 'repeat(' + seats.rows + ', 35px)',
+      'grid-template-rows': 'repeat(' + seats.rightCols + ', 35px)',
     }"
   >
     @for (row of seats.rightSide; track $index) {
@@ -25,9 +25,9 @@
 
   <!-- Left side seats -->
   <div
-    class="grid gap-2"
+    class="grid gap-2 grid-flow-col"
     [ngStyle]="{
-      'grid-template-columns': 'repeat(' + seats.rows + ', 35px)',
+      'grid-template-rows': 'repeat(' + seats.leftCols + ', 35px)',
     }"
   >
     @for (row of seats.leftSide; track $index) {
