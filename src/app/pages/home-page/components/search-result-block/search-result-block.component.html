@@ -1,24 +1,27 @@
 <div *ngIf="searchItems$ | async as searchItems">
-  <p-tabView [(activeIndex)]="activeIndex" [scrollable]="true">
-    <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
-      <p-dataView [value]="tab.items">
-        <ng-template let-route pTemplate="list">
-          <div class="grid grid-nogutter">
-            <div class="col-12" *ngFor="let item of tab.items" class="col-12">
-              <div>
-                <app-search-result-item [item]="item"></app-search-result-item>
+  <div *ngIf="searchItems.length > 0; else noRidesAvailable">
+    <p-tabView [(activeIndex)]="activeIndex" [scrollable]="true">
+      <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
+        <p-dataView [value]="tab.items">
+          <ng-template let-route pTemplate="list">
+            <div class="grid grid-nogutter">
+              <div class="col-12" *ngFor="let item of tab.items" class="col-12">
+                <div>
+                  <app-search-result-item
+                    [item]="item"
+                  ></app-search-result-item>
+                </div>
               </div>
             </div>
-          </div>
-        </ng-template>
-      </p-dataView>
-    </p-tabPanel>
-  </p-tabView>
-  <div *ngIf="searchItems.length === 0">
-    <p class="bg-yellow-100 p-4 rounded">
-      <b>We are sorry.</b> Please try to pick up stations or date until you get
-      the result. Facing with getting no response from the server to display
-      proper "no rides are avaliable" message.
-    </p>
+          </ng-template>
+        </p-dataView>
+      </p-tabPanel>
+    </p-tabView>
   </div>
 </div>
+
+<ng-template #noRidesAvailable>
+  <p class="bg-yellow-100 p-4 mt-4 rounded">
+    <b>We are sorry!</b> No rides are available.
+  </p>
+</ng-template>

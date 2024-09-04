@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
@@ -12,11 +12,23 @@ import {
 import { RouteDialogComponent } from '../route-dialog/route-dialog.component';
 import { SearchItem } from '../../../../models/search-item.model';
 import { selectSearchItem } from '../../../../store/actions/search-result.actions';
+import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
+import {
+  calculateCarriagePrices,
+  findStationIndices,
+} from '../../../../helpers/trip.helpers';
 
 @Component({
   selector: 'app-search-result-item',
   standalone: true,
-  imports: [CommonModule, RouteDialogComponent, DividerModule, ChipModule],
+  imports: [
+    CommonModule,
+    RouteDialogComponent,
+    DividerModule,
+    ChipModule,
+    CurrencyPipe,
+    CarriageClassPipe,
+  ],
   templateUrl: './search-result-item.component.html',
   styleUrls: ['./search-result-item.component.scss'],
 })
@@ -124,5 +136,23 @@ export class SearchResultItemComponent implements OnInit {
         to: toStationId,
       },
     });
+  }
+
+  getCarriagePrice(carriageType: string): number {
+    const [startSegmentIndex, endSegmentIndex] = findStationIndices(
+      this.item.fromStation.stationId,
+      this.item.toStation.stationId,
+      this.item.route.path,
+    );
+
+    const calculatedPrice = calculateCarriagePrices(
+      this.item.schedule.segments,
+      startSegmentIndex,
+      endSegmentIndex,
+    );
+
+    const priceForCarriageType = calculatedPrice.get(carriageType);
+
+    return priceForCarriageType !== undefined ? priceForCarriageType : 0;
   }
 }
