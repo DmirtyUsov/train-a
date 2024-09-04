@@ -10,7 +10,7 @@ import {
 import { loadOrders } from '../../../../store/actions/order.actions';
 import { OrderItemComponent } from '../order-item/order-item.component';
 import { loadStations } from '../../../../store/actions/stations.actions';
-import { findStationIndices } from '../../../../helpers/trip.helpers';
+import { getDepartureTime } from '../../../../helpers/trip.helpers';
 import { Order } from '../../../../models/order.model';
 
 @Component({
@@ -29,8 +29,8 @@ export class OrderListComponent implements OnInit {
     this.orders$ = this.store.select(selectAllOrders).pipe(
       map((orders: Order[]) => {
         return [...orders].sort((a, b) => {
-          const departureTimeA = this.getDepartureTime(a);
-          const departureTimeB = this.getDepartureTime(b);
+          const departureTimeA = getDepartureTime(a);
+          const departureTimeB = getDepartureTime(b);
           return departureTimeA.getTime() - departureTimeB.getTime();
         });
       }),
@@ -40,18 +40,8 @@ export class OrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(loadStations());
     this.store.dispatch(loadOrders({ all: true }));
 
     this.orders$.subscribe();
-  }
-
-  getDepartureTime(order: Order): Date {
-    const [startSegmentIndex] = findStationIndices(
-      order.stationStart,
-      order.stationEnd,
-      order.path,
-    );
-    return new Date(order.schedule.segments[startSegmentIndex].time[0]);
   }
 }

@@ -1,6 +1,6 @@
 import { CarriageTab } from '../models/tab.model';
 import { CarriageClassPipe } from '../pipes/carriage-class.pipe';
-import { ScheduleSegment } from '../models/order.model';
+import { Order, ScheduleSegment } from '../models/order.model';
 import { CarriageType } from '../models/carriage.model';
 
 interface Carriage {
@@ -84,6 +84,15 @@ export function findStationIndices(
   }
 
   return result;
+}
+
+export function getDepartureTime(order: Order): Date {
+  const [startSegmentIndex] = findStationIndices(
+    order.stationStart,
+    order.stationEnd,
+    order.path,
+  );
+  return new Date(order.schedule.segments[startSegmentIndex].time[0]);
 }
 
 export function buildTrainScheme(
