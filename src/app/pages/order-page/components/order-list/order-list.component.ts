@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, map } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { DataViewModule } from 'primeng/dataview';
 import {
   selectAllOrders,
   selectOrderLoading,
 } from '../../../../store/selectors/order.selectors';
 import { loadOrders } from '../../../../store/actions/order.actions';
-import { DataViewModule } from 'primeng/dataview';
 import { OrderItemComponent } from '../order-item/order-item.component';
 import { loadStations } from '../../../../store/actions/stations.actions';
 import { findStationIndices } from '../../../../helpers/trip.helpers';

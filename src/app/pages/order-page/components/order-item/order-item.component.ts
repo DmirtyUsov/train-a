@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
 import { Order } from '../../../../models/order.model';
 import { DividerModule } from 'primeng/divider';
 import { CardModule } from 'primeng/card';
-import { Store } from '@ngrx/store';
 import { selectAllStations } from '../../../../store/selectors/stations.selectors';
-
 import { Station } from '../../../../models/station.models';
 import {
   calculateCarriagePrices,
@@ -82,25 +81,28 @@ export class OrderItemComponent implements OnInit {
         this.order.seatId,
       );
       if (seatInfo) {
-        this.carriageType = seatInfo.carType;
-        this.carNumber = seatInfo.carIndex + 1;
-        this.seatNumber = seatInfo.seatNumberInCar;
+        const { carType, carIndex, seatNumberInCar } = seatInfo;
+        this.carriageType = carType;
+        this.carNumber = carIndex + 1;
+        this.seatNumber = seatNumberInCar;
         this.getOrderPrice();
-      } else {
-        return;
       }
     });
 
     this.setStationCities();
+
     const [startSegmentIndex, endSegmentIndex] = findStationIndices(
       this.order.stationStart,
       this.order.stationEnd,
       this.order.path,
     );
 
-    this.departureTime =
-      this.order.schedule.segments[startSegmentIndex].time[0];
-    this.arrivalTime = this.order.schedule.segments[endSegmentIndex].time[1];
+    const { segments } = this.order.schedule;
+    const [departureTime] = segments[startSegmentIndex].time;
+    const [, arrivalTime] = segments[endSegmentIndex].time;
+
+    this.departureTime = departureTime;
+    this.arrivalTime = arrivalTime;
 
     this.setStationTimes();
     this.calculateTimeDifference();
@@ -119,24 +121,25 @@ export class OrderItemComponent implements OnInit {
         (type) => type.code === carriageCode,
       );
 
-      if (!carriageType) continue;
+      if (carriageType) {
+        const seatsInCarriage =
+          carriageType.rows *
+          (carriageType.leftSeats + carriageType.rightSeats);
 
-      const seatsInCarriage =
-        carriageType.rows * (carriageType.leftSeats + carriageType.rightSeats);
+        if (seatId <= currentSeatCount + seatsInCarriage) {
+          const seatNumberInCar = seatId - currentSeatCount;
+          return {
+            carIndex,
+            carType: carriageType.name,
+            seatNumberInCar,
+          };
+        }
 
-      if (seatId <= currentSeatCount + seatsInCarriage) {
-        const seatNumberInCar = seatId - currentSeatCount;
-        return {
-          carIndex,
-          carType: carriageType.name,
-          seatNumberInCar,
-        };
+        currentSeatCount += seatsInCarriage;
       }
-
-      currentSeatCount += seatsInCarriage;
     }
 
-    return null; // If the seatId is out of bounds
+    return null;
   }
 
   private setStationCities(): void {

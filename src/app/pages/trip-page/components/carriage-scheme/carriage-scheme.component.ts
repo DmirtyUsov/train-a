@@ -48,7 +48,6 @@ export class CarriageSchemeComponent implements OnInit {
 
     const totalSeats = (leftSeats + rightSeats) * rows;
     const seatNumbers = Array.from({ length: totalSeats }, (_, i) => i + 1);
-    console.log(seatNumbers);
 
     this.leftSeatNumbers = Array.from({ length: rows }, () => []);
     this.rightSeatNumbers = Array.from({ length: rows }, () => []);
@@ -79,6 +78,5 @@ export class CarriageSchemeComponent implements OnInit {
     this.store.dispatch(
       selectSeat({ carriageIndex: this.carriageIndex + 1, seatNumber: seat }),
     );
-    console.log(`Selected seat: Car ${this.carriageIndex + 1}, Seat ${seat}`);
   }
 }
