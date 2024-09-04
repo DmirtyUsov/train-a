@@ -9,10 +9,11 @@ import {
   loadOrders,
 } from '../actions/order.actions';
 import { Order } from '../../models/order.model';
+import { ResponseError } from '../../models/error.model';
 
 export interface OrderState {
   orders: Order[];
-  error: any;
+  error: ResponseError | null;
   loading: boolean;
 }
 
@@ -26,32 +27,32 @@ export const orderReducer = createReducer(
   initialState,
   on(loadOrders, (state) => ({
     ...state,
-    loading: true, // Set loading to true when starting to load orders
+    loading: true,
     error: null,
   })),
   on(loadOrdersSuccess, (state, { orders }) => ({
     ...state,
     orders,
-    loading: false, // Set loading to false when orders are successfully loaded
+    loading: false,
     error: null,
   })),
   on(loadOrdersFailure, (state, { error }) => ({
     ...state,
-    loading: false, // Set loading to false when loading fails
+    loading: false,
     error,
   })),
   on(makeOrder, (state) => ({
     ...state,
-    loading: true, // Optionally set loading to true when starting to make an order
+    loading: true,
   })),
   on(makeOrderSuccess, (state, { response }) => ({
     ...state,
-    loading: false, // Set loading to false when the order is successfully made
+    loading: false,
     error: null,
   })),
   on(makeOrderFailure, (state, { error }) => ({
     ...state,
-    loading: false, // Set loading to false when making an order fails
+    loading: false,
     error,
   })),
 );

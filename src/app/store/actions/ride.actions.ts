@@ -26,3 +26,5 @@ export const updateRidePrice = createAction(
   '[Ride] Update Ride Price',
   props<{ price: number }>(),
 );
+
+export const clearSelection = createAction('[Ride] Clear Selection');

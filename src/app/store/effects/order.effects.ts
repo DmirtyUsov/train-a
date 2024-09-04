@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
   loadOrders,
@@ -11,6 +11,9 @@ import {
   makeOrderSuccess,
 } from '../actions/order.actions';
 import { OrderService } from '../../services/order.service';
+import { ToastService } from '../../services/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ResponseError } from '../../models/error.model';
 
 @Injectable()
 export class OrderEffects {
@@ -34,14 +37,43 @@ export class OrderEffects {
           .makeOrder(rideId, seat, stationStart, stationEnd)
           .pipe(
             map((response) => makeOrderSuccess({ response })),
-            catchError((error) => of(makeOrderFailure({ error }))),
+            catchError((error: HttpErrorResponse) => {
+              const responseError: ResponseError = error.error || {
+                message: 'Unknown error occurred',
+                reason: 'unknown',
+              };
+              return of(makeOrderFailure({ error: responseError }));
+            }),
           ),
       ),
     ),
   );
 
+  showOrderSuccessToast$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(makeOrderSuccess),
+        tap(() => {
+          this.toastService.success('Order successfully placed!');
+        }),
+      ),
+    { dispatch: false },
+  );
+
+  showOrderFailureToast$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(makeOrderFailure),
+        tap(({ error }) => {
+          this.toastService.error(error.message || 'Error occurred!');
+        }),
+      ),
+    { dispatch: false },
+  );
+
   constructor(
     private actions$: Actions,
     private orderService: OrderService,
+    private toastService: ToastService,
   ) {}
 }

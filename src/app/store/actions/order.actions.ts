@@ -1,6 +1,7 @@
 // order.actions.ts
 import { createAction, props } from '@ngrx/store';
 import { Order } from '../../models/order.model';
+import { ResponseError } from '../../models/error.model';
 
 // Actions for GET orders
 export const loadOrders = createAction(
@@ -18,7 +19,6 @@ export const loadOrdersFailure = createAction(
   props<{ error: any }>(),
 );
 
-// Actions for POST order
 export const makeOrder = createAction(
   '[Order] Make Order',
   props<{
@@ -36,5 +36,5 @@ export const makeOrderSuccess = createAction(
 
 export const makeOrderFailure = createAction(
   '[Order] Make Order Failure',
-  props<{ error: any }>(),
+  props<{ error: ResponseError }>(),
 );

@@ -12,9 +12,13 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
-import { selectSeat } from '../../../../store/actions/ride.actions';
+import {
+  clearSelection,
+  selectSeat,
+} from '../../../../store/actions/ride.actions';
 import { selectSelectedItem } from '../../../../store/selectors/search-result.selectors';
 import { makeOrder } from '../../../../store/actions/order.actions';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-book-seat',
@@ -30,7 +34,7 @@ export class BookSeatComponent {
 
   constructor(
     private store: Store,
-    private orderService: OrderService,
+    private toastService: ToastService,
   ) {
     this.selectedCarriage$ = this.store.select(selectSelectedCarriage);
     this.selectedSeat$ = this.store.select(selectSelectedSeat);
@@ -72,7 +76,7 @@ export class BookSeatComponent {
                 stationEnd: toStationId,
               }),
             );
-            return EMPTY;
+            this.store.dispatch(clearSelection());
           }
           return EMPTY;
         }),

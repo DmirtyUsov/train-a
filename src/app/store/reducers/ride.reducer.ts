@@ -5,6 +5,7 @@ import {
   loadRideFailure,
   selectSeat,
   updateRidePrice,
+  clearSelection,
 } from '../actions/ride.actions';
 import { Ride } from '../../models/ride.model';
 import { ResponseError } from '../../models/error.model';
@@ -66,6 +67,14 @@ export const rideReducer = createReducer(
     (state, { price }): RideState => ({
       ...state,
       ridePrice: price,
+    }),
+  ),
+  on(
+    clearSelection,
+    (state): RideState => ({
+      ...state,
+      selectedCarriage: null,
+      selectedSeat: null,
     }),
   ),
 );

@@ -16,9 +16,7 @@
               class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3"
               [ngClass]="{ 'border-top-1 surface-border': !first }"
             >
-              <div class="md:w-10rem relative">
-                <p>Ride {{ order.rideId }}</p>
-              </div>
+              <app-order-item [order]="order"></app-order-item>
             </div>
           </div>
         </div>

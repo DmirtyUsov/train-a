@@ -13,6 +13,8 @@ export interface ScheduleSegment {
 
 export interface Order {
   id: number;
+  stationEnd: number;
+  stationStart: number;
   rideId: number;
   routeId: number;
   seatId: number;
