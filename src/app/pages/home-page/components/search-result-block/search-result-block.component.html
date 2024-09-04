@@ -15,6 +15,10 @@
     </p-tabPanel>
   </p-tabView>
   <div *ngIf="searchItems.length === 0">
-    <p>no rides are avaliable</p>
+    <p class="bg-yellow-100 p-4 rounded">
+      <b>We are sorry.</b> Please try to pick up stations or date until you get
+      the result. Facing with getting no response from the server to display
+      proper "no rides are avaliable" message.
+    </p>
   </div>
 </div>

@@ -34,7 +34,6 @@ export const routes: Routes = [
       import('./manager/manager.routes').then((mod) => mod.MANAGER_ROUTES),
     canMatch: [managerGuard],
   },
-
   {
     path: 'admin',
     component: NotAuthorizedComponent,

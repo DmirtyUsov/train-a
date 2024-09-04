@@ -1,15 +1,22 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
-import { selectSeat } from '../../../../store/actions/ride.actions';
+import { EMPTY, Observable } from 'rxjs';
+import { filter, switchMap, take } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import {
-  selectRidePrice,
   selectSelectedCarriage,
   selectSelectedSeat,
+  selectRidePrice,
+  selectOrderData,
 } from '../../../../store/selectors/ride.selectors';
+
+import {
+  clearSelection,
+  selectSeat,
+} from '../../../../store/actions/ride.actions';
+import { makeOrder } from '../../../../store/actions/order.actions';
 
 @Component({
   selector: 'app-book-seat',
@@ -33,5 +40,36 @@ export class BookSeatComponent {
 
   clearSelectedSeat(): void {
     this.store.dispatch(selectSeat({ carriageIndex: null, seatNumber: null }));
+  }
+
+  onBookButtonClicked(): void {
+    this.store
+      .select(selectOrderData)
+      .pipe(
+        take(1),
+        filter(
+          (
+            orderData,
+          ): orderData is {
+            rideId: number;
+            seatNumber: number;
+            fromStationId: number;
+            toStationId: number;
+          } => !!orderData,
+        ),
+        switchMap(({ rideId, seatNumber, fromStationId, toStationId }) => {
+          this.store.dispatch(
+            makeOrder({
+              rideId,
+              seat: seatNumber,
+              stationStart: fromStationId,
+              stationEnd: toStationId,
+            }),
+          );
+          return EMPTY;
+        }),
+      )
+      .subscribe();
+    this.store.dispatch(clearSelection());
   }
 }
