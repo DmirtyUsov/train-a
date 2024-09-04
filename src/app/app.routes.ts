@@ -9,7 +9,7 @@ import { NotAuthorizedComponent } from './pages/not-authorized/not-authorized.co
 import { guestGuard } from './guards/guest.guard';
 import { managerGuard } from './guards/manager.guard';
 import { userGuard } from './guards/user.guard';
-import { OrderPageComponent } from './pages/order-page/order-page.component';
+import { OrderPageComponent } from './pages/order-page/order-page/order-page.component';
 import { BackendTestComponent } from './components/backend-test/backend-test.component';
 
 export const routes: Routes = [
