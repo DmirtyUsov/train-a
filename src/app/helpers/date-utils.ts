@@ -1,7 +1,6 @@
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) {
-    console.error('Invalid date string:', dateString);
     return '';
   }
   return date.toLocaleDateString();
@@ -10,7 +9,6 @@ export function formatDate(dateString: string): string {
 export function formatTime(dateString: string): string {
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) {
-    console.error('Invalid date string:', dateString);
     return '';
   }
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

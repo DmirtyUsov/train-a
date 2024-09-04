@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Order } from '../../../../models/order.model';
 import { Observable, map } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
@@ -12,6 +11,7 @@ import { DataViewModule } from 'primeng/dataview';
 import { OrderItemComponent } from '../order-item/order-item.component';
 import { loadStations } from '../../../../store/actions/stations.actions';
 import { findStationIndices } from '../../../../helpers/trip.helpers';
+import { Order } from '../../../../models/order.model';
 
 @Component({
   selector: 'app-order-list',
@@ -22,6 +22,7 @@ import { findStationIndices } from '../../../../helpers/trip.helpers';
 })
 export class OrderListComponent implements OnInit {
   orders$: Observable<Order[]>;
+
   loading$: Observable<boolean>;
 
   constructor(private store: Store) {
@@ -42,9 +43,7 @@ export class OrderListComponent implements OnInit {
     this.store.dispatch(loadStations());
     this.store.dispatch(loadOrders({ all: true }));
 
-    this.orders$.subscribe((orders) => {
-      console.log('Sorted Orders:', orders);
-    });
+    this.orders$.subscribe();
   }
 
   getDepartureTime(order: Order): Date {

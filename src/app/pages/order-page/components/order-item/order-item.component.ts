@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { map } from 'rxjs';
 import { Order } from '../../../../models/order.model';
 import { DividerModule } from 'primeng/divider';
 import { CardModule } from 'primeng/card';
 import { Store } from '@ngrx/store';
-import { DatePipe } from '@angular/common';
 import { selectAllStations } from '../../../../store/selectors/stations.selectors';
-import { map } from 'rxjs';
+
 import { Station } from '../../../../models/station.models';
 import {
   calculateCarriagePrices,
@@ -40,13 +40,21 @@ export class OrderItemComponent implements OnInit {
   order!: Order;
 
   stationStart: string = '';
+
   stationEnd: string = '';
+
   departureTime: string = '';
+
   arrivalTime: string = '';
+
   tripDuration: string = '';
+
   carriageType: string = '';
+
   carNumber: number = 0;
+
   seatNumber: number = 0;
+
   price: number = 0;
 
   fromStationStartTime: { date: string; time: string } | undefined;
@@ -79,18 +87,17 @@ export class OrderItemComponent implements OnInit {
         this.seatNumber = seatInfo.seatNumberInCar;
         this.getOrderPrice();
       } else {
-        console.log('Seat ID is out of bounds');
+        return;
       }
     });
 
     this.setStationCities();
-    console.log('Order:', this.order);
     const [startSegmentIndex, endSegmentIndex] = findStationIndices(
       this.order.stationStart,
       this.order.stationEnd,
       this.order.path,
     );
-    console.log(startSegmentIndex, endSegmentIndex);
+
     this.departureTime =
       this.order.schedule.segments[startSegmentIndex].time[0];
     this.arrivalTime = this.order.schedule.segments[endSegmentIndex].time[1];
@@ -106,7 +113,7 @@ export class OrderItemComponent implements OnInit {
   ): { carIndex: number; carType: string; seatNumberInCar: number } | null {
     let currentSeatCount = 0;
 
-    for (let carIndex = 0; carIndex < carriages.length; carIndex++) {
+    for (let carIndex = 0; carIndex < carriages.length; carIndex += 1) {
       const carriageCode = carriages[carIndex];
       const carriageType = carriageTypes.find(
         (type) => type.code === carriageCode,
@@ -194,11 +201,6 @@ export class OrderItemComponent implements OnInit {
         this.hours = diffInHours % 24;
         this.minutes = diffInMinutes % 60;
       } else {
-        console.error(
-          'Invalid date values or end time is not later than start time:',
-          startDateTime,
-          endDateTime,
-        );
         this.weeks = 0;
         this.days = 0;
         this.hours = 0;
@@ -230,7 +232,7 @@ export class OrderItemComponent implements OnInit {
     if (priceForCarriageType !== undefined) {
       this.price = priceForCarriageType;
     } else {
-      console.log(`No price found for carriage type: ${this.carriageType}`);
+      this.price = 0;
     }
   }
 }

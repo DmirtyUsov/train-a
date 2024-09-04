@@ -33,3 +33,6 @@ export interface OrederRequest {
   stationStart: number;
   stationEnd: number;
 }
+export interface MakeOrderResponse {
+  id: string;
+}

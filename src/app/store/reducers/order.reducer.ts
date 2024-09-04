@@ -1,4 +1,3 @@
-// order.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import {
   loadOrdersSuccess,
@@ -25,34 +24,52 @@ export const initialState: OrderState = {
 
 export const orderReducer = createReducer(
   initialState,
-  on(loadOrders, (state) => ({
-    ...state,
-    loading: true,
-    error: null,
-  })),
-  on(loadOrdersSuccess, (state, { orders }) => ({
-    ...state,
-    orders,
-    loading: false,
-    error: null,
-  })),
-  on(loadOrdersFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-  })),
-  on(makeOrder, (state) => ({
-    ...state,
-    loading: true,
-  })),
-  on(makeOrderSuccess, (state, { response }) => ({
-    ...state,
-    loading: false,
-    error: null,
-  })),
-  on(makeOrderFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-  })),
+  on(
+    loadOrders,
+    (state): OrderState => ({
+      ...state,
+      loading: true,
+      error: null,
+    }),
+  ),
+  on(
+    loadOrdersSuccess,
+    (state, { orders }): OrderState => ({
+      ...state,
+      orders,
+      loading: false,
+      error: null,
+    }),
+  ),
+  on(
+    loadOrdersFailure,
+    (state, { error }): OrderState => ({
+      ...state,
+      loading: false,
+      error,
+    }),
+  ),
+  on(
+    makeOrder,
+    (state): OrderState => ({
+      ...state,
+      loading: true,
+    }),
+  ),
+  on(
+    makeOrderSuccess,
+    (state): OrderState => ({
+      ...state,
+      loading: false,
+      error: null,
+    }),
+  ),
+  on(
+    makeOrderFailure,
+    (state, { error }): OrderState => ({
+      ...state,
+      loading: false,
+      error,
+    }),
+  ),
 );

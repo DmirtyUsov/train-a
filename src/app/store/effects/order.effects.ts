@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -12,13 +13,13 @@ import {
 } from '../actions/order.actions';
 import { OrderService } from '../../services/order.service';
 import { ToastService } from '../../services/toast.service';
-import { HttpErrorResponse } from '@angular/common/http';
+
 import { ResponseError } from '../../models/error.model';
 
 @Injectable()
 export class OrderEffects {
-  loadOrders$ = createEffect(() =>
-    this.actions$.pipe(
+  loadOrders$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(loadOrders),
       switchMap(({ all }) =>
         this.orderService.getOrders(all).pipe(
@@ -26,11 +27,11 @@ export class OrderEffects {
           catchError((error) => of(loadOrdersFailure({ error }))),
         ),
       ),
-    ),
-  );
+    );
+  });
 
-  makeOrder$ = createEffect(() =>
-    this.actions$.pipe(
+  makeOrder$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(makeOrder),
       switchMap(({ rideId, seat, stationStart, stationEnd }) =>
         this.orderService
@@ -46,28 +47,30 @@ export class OrderEffects {
             }),
           ),
       ),
-    ),
-  );
+    );
+  });
 
   showOrderSuccessToast$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(makeOrderSuccess),
         tap(() => {
           this.toastService.success('Order successfully placed!');
         }),
-      ),
+      );
+    },
     { dispatch: false },
   );
 
   showOrderFailureToast$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(makeOrderFailure),
         tap(({ error }) => {
           this.toastService.error(error.message || 'Error occurred!');
         }),
-      ),
+      );
+    },
     { dispatch: false },
   );
 
