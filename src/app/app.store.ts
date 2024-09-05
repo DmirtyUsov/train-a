@@ -11,6 +11,8 @@ import { RideEffects } from './store/effects/ride.effects';
 import { rideReducer } from './store/reducers/ride.reducer';
 import { orderReducer } from './store/reducers/order.reducer';
 import { OrderEffects } from './store/effects/order.effects';
+import { RouteEffects } from './store/effects/route.effects';
+import { routeReducer } from './store/reducers/route.reducer';
 
 export const appStoreProviders = [
   provideStore({
@@ -20,6 +22,7 @@ export const appStoreProviders = [
     auth: authReducer,
     ride: rideReducer,
     order: orderReducer,
+    route: routeReducer,
   }),
   provideEffects([
     StationsEffects,
@@ -27,5 +30,6 @@ export const appStoreProviders = [
     AuthEffects,
     RideEffects,
     OrderEffects,
+    RouteEffects,
   ]),
 ];

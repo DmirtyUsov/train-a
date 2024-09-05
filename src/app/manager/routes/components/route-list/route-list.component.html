@@ -1,0 +1,28 @@
+<div *ngIf="loading$ | async; else content">
+  <p>Loading...</p>
+  <!-- Replace the above text with a spinner or any loading indicator -->
+</div>
+
+<ng-template #content>
+  <div *ngIf="routes$ | async as routes">
+    <p-dataView #dv [value]="routes" class="w-full">
+      <ng-template pTemplate="list" let-routes>
+        <div class="grid grid-nogutter w-full">
+          <div
+            class="col-12 w-full"
+            *ngFor="let route of routes; let first = first"
+          >
+            <div
+              class="flex flex-col sm:flex-row sm:items-center p-4 gap-3 w-full"
+              [ngClass]="{ 'border-top-1 surface-border': !first }"
+            >
+              <div class="w-full">
+                <app-route-item [route]="route" class="w-full"></app-route-item>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+  </div>
+</ng-template>
