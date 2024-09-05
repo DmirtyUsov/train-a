@@ -3,7 +3,7 @@
   label="Create"
   (onClick)="showCreateForm()"
   icon="pi pi-plus"
-  *ngIf="!(isCreateFormVisible$ | async)"
+  *ngIf="(isCreateFormVisible$ | async) === false"
 ></p-button>
 <app-create-route-form
   *ngIf="isCreateFormVisible$ | async"
