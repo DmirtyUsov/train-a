@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RouteListComponent } from './components/route-list/route-list.component';
 import { Store } from '@ngrx/store';
+import { RouteListComponent } from './components/route-list/route-list.component';
 import { loadStations } from '../../store/actions/stations.actions';
 
 @Component({

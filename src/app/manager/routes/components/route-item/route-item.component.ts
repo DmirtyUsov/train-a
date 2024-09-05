@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Route } from '../../../../models/route.model';
 import { DividerModule } from 'primeng/divider';
 import { CardModule } from 'primeng/card';
 import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
 import { ChipModule } from 'primeng/chip';
+import { Route } from '../../../../models/route.model';
 
 @Component({
   selector: 'app-route-item',
@@ -21,5 +21,6 @@ import { ChipModule } from 'primeng/chip';
 })
 export class RouteItemComponent {
   @Input() route!: Route;
+
   @Input() cities!: string[];
 }
