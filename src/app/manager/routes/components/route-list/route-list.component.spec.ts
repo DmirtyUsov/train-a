@@ -8,9 +8,8 @@ describe('RouteListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouteListComponent]
-    })
-    .compileComponents();
+      imports: [RouteListComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RouteListComponent);
     component = fixture.componentInstance;

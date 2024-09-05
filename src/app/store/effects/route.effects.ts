@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { RouteService } from '../../services/route.service';
 import {
@@ -6,8 +8,6 @@ import {
   loadRoutesSuccess,
   loadRoutesFailure,
 } from '../actions/route.actions';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { ResponseError } from '../../models/error.model';
 
 @Injectable()
