@@ -22,6 +22,7 @@ import { loadRoutes } from '../../../../store/actions/route.actions';
 })
 export class RouteListComponent implements OnInit {
   routes$: Observable<Route[]>;
+
   loading$: Observable<boolean>;
 
   constructor(private store: Store) {
