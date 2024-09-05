@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
 import { CardModule } from 'primeng/card';
-import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
 import { ChipModule } from 'primeng/chip';
+import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
 import { Route } from '../../../../models/route.model';
 
 @Component({
