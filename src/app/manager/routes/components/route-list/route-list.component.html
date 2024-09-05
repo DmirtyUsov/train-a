@@ -4,20 +4,24 @@
 </div>
 
 <ng-template #content>
-  <div *ngIf="routes$ | async as routes">
-    <p-dataView #dv [value]="routes" class="w-full">
+  <div *ngIf="routesWithCities$ | async as routesWithCities">
+    <p-dataView #dv [value]="routesWithCities" class="w-full">
       <ng-template pTemplate="list" let-routes>
         <div class="grid grid-nogutter w-full">
           <div
             class="col-12 w-full"
-            *ngFor="let route of routes; let first = first"
+            *ngFor="let routeWithCities of routesWithCities; let first = first"
           >
             <div
               class="flex flex-col sm:flex-row sm:items-center p-4 gap-3 w-full"
               [ngClass]="{ 'border-top-1 surface-border': !first }"
             >
               <div class="w-full">
-                <app-route-item [route]="route" class="w-full"></app-route-item>
+                <app-route-item
+                  [route]="routeWithCities.route"
+                  [cities]="routeWithCities.cities"
+                  class="w-full"
+                ></app-route-item>
               </div>
             </div>
           </div>

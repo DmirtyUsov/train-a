@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouteListComponent } from './components/route-list/route-list.component';
+import { Store } from '@ngrx/store';
+import { loadStations } from '../../store/actions/stations.actions';
 
 @Component({
   selector: 'app-routes',
@@ -8,4 +10,10 @@ import { RouteListComponent } from './components/route-list/route-list.component
   templateUrl: './routes.component.html',
   styleUrls: ['./routes.component.scss'],
 })
-export class RoutesComponent {}
+export class RoutesComponent implements OnInit {
+  constructor(private store: Store) {}
+
+  ngOnInit(): void {
+    this.store.dispatch(loadStations());
+  }
+}

@@ -1,1 +1,16 @@
-<p>Route {{ route.id }}</p>
+<p-card *ngIf="route" header="Route {{ route.id }}" class="w-full">
+  <!-- Carriage Block -->
+  <p class="text-lg text-gray-600 mb-2">Cities:</p>
+  <div class="flex flex-wrap gap-2 mb-4">
+    <div *ngFor="let city of cities">
+      <p-chip label="{{ city }}" />
+    </div>
+  </div>
+  <!-- Carriage Block -->
+  <p class="text-lg text-gray-600 mb-2">Carriage Types:</p>
+  <div class="flex flex-wrap gap-2">
+    <div *ngFor="let carriage of route.carriages">
+      <p-chip label="{{ carriage | carriageClass }}" />
+    </div>
+  </div>
+</p-card>
