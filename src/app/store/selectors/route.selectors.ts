@@ -34,3 +34,8 @@ export const selectRoutesWithCities = createSelector(
     }));
   },
 );
+
+export const selectIsCreateFormVisible = createSelector(
+  selectRouteState,
+  (state: RouteState) => state.isCreateFormVisible,
+);

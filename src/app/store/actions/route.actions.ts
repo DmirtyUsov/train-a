@@ -13,3 +13,6 @@ export const loadRoutesFailure = createAction(
   '[Route] Load Routes Failure',
   props<{ error: ResponseError }>(),
 );
+
+export const showCreateForm = createAction('[Route] Show Create Form');
+export const hideCreateForm = createAction('[Route] Hide Create Form');

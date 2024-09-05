@@ -1,1 +1,12 @@
+<p-button
+  class="m-4"
+  label="Create"
+  (onClick)="showCreateForm()"
+  icon="pi pi-plus"
+  *ngIf="!(isCreateFormVisible$ | async)"
+></p-button>
+<app-create-route-form
+  *ngIf="isCreateFormVisible$ | async"
+></app-create-route-form>
+
 <app-route-list></app-route-list>
