@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
+import { ButtonModule } from 'primeng/button';
 import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
 import { Route } from '../../../../models/route.model';
 
@@ -15,6 +16,7 @@ import { Route } from '../../../../models/route.model';
     CardModule,
     CarriageClassPipe,
     ChipModule,
+    ButtonModule,
   ],
   templateUrl: './route-item.component.html',
   styleUrls: ['./route-item.component.scss'],
