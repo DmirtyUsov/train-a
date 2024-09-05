@@ -69,14 +69,14 @@ export class CreateRouteFormComponent implements OnInit {
   }
 
   initializeStationDropdowns(count: number): void {
-    for (let i = 1; i <= count; i++) {
+    for (let i = 1; i <= count; i += 1) {
       this.addStationDropdownControl(`selectedStation${i}`);
     }
     this.checkDropdownValues();
   }
 
   initializeCarriageDropdowns(count: number): void {
-    for (let i = 1; i <= count; i++) {
+    for (let i = 1; i <= count; i += 1) {
       this.addCarriageDropdownControl(`selectedCarriage${i}`);
     }
     this.checkDropdownValues();
