@@ -1,0 +1,40 @@
+<p-card *ngIf="route" class="w-full">
+  <!-- Header Block -->
+  <div class="flex justify-between items-center">
+    <h2 class="text-lg font-bold">Route {{ route.id }}</h2>
+    <div class="flex gap-4">
+      <p-button
+        label="Update"
+        severity="secondary"
+        icon="pi pi-pencil"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        label="Assign Ride"
+        severity="secondary"
+        icon="pi pi-calendar-plus"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        severity="danger"
+        icon="pi pi-trash"
+        [outlined]="true"
+      ></p-button>
+    </div>
+  </div>
+
+  <!-- Carriage Block -->
+  <p class="text-lg text-gray-600 mb-2">Cities:</p>
+  <div class="flex flex-wrap gap-2 mb-4">
+    <div *ngFor="let city of cities">
+      <p-chip label="{{ city }}" />
+    </div>
+  </div>
+  <!-- Carriage Block -->
+  <p class="text-lg text-gray-600 mb-2">Carriage Types:</p>
+  <div class="flex flex-wrap gap-2">
+    <div *ngFor="let carriage of route.carriages">
+      <p-chip label="{{ carriage | carriageClass }}" />
+    </div>
+  </div>
+</p-card>

@@ -1,0 +1,32 @@
+<div *ngIf="loading$ | async; else content">
+  <p>Loading...</p>
+  <!-- Replace the above text with a spinner or any loading indicator -->
+</div>
+
+<ng-template #content>
+  <div *ngIf="routesWithCities$ | async as routesWithCities">
+    <p-dataView #dv [value]="routesWithCities" class="w-full">
+      <ng-template pTemplate="list" let-routes>
+        <div class="grid grid-nogutter w-full">
+          <div
+            class="col-12 w-full"
+            *ngFor="let routeWithCities of routesWithCities; let first = first"
+          >
+            <div
+              class="flex flex-col sm:flex-row sm:items-center p-4 gap-3 w-full"
+              [ngClass]="{ 'border-top-1 surface-border': !first }"
+            >
+              <div class="w-full">
+                <app-route-item
+                  [route]="routeWithCities.route"
+                  [cities]="routeWithCities.cities"
+                  class="w-full"
+                ></app-route-item>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+  </div>
+</ng-template>
