@@ -22,6 +22,10 @@ export const createRouteSuccess = createAction(
   '[Route] Create Route Success',
   props<{ route: Route }>(),
 );
+export const createRoutePartialSuccess = createAction(
+  '[Route] Create Route Partial Success',
+  props<{ route: Route }>(),
+);
 export const createRouteFailure = createAction(
   '[Route] Create Route Failure',
   props<{ error: ResponseError }>(),

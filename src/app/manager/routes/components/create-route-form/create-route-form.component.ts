@@ -9,7 +9,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { Station } from '../../../../models/station.models';
 import { selectAllStations } from '../../../../store/selectors/stations.selectors';
-import { hideCreateForm } from '../../../../store/actions/route.actions';
+import {
+  createRoute,
+  hideCreateForm,
+} from '../../../../store/actions/route.actions';
 import { CarriageService } from '../../../../services/carriage.service';
 import { CarriageType } from '../../../../models/carriage.model';
 
@@ -115,19 +118,34 @@ export class CreateRouteFormComponent implements OnInit {
       this.carriageControlNames.length < this.maxDropdowns;
   }
 
-  hideCreateForm(): void {
-    this.store.dispatch(hideCreateForm());
-  }
-
-  getSelectedStations(): string[] {
+  getSelectedStations(): Station[] {
     return this.stationControlNames
       .map((controlName) => this.formGroup.get(controlName)?.value)
       .filter((station) => station !== null);
   }
 
-  getSelectedCarriages(): string[] {
+  getSelectedCarriages(): CarriageType[] {
     return this.carriageControlNames
       .map((controlName) => this.formGroup.get(controlName)?.value)
       .filter((carriage) => carriage !== null);
+  }
+
+  onSaveButtonClick(): void {
+    const selectedStations = this.getSelectedStations();
+    const selectedCarriages = this.getSelectedCarriages();
+
+    const path = selectedStations.map((station) => station.id);
+    const carriages = selectedCarriages.map((carriage) => carriage.code);
+
+    const payload = {
+      path,
+      carriages,
+    };
+
+    console.log('Create Route Payload:', payload);
+    this.store.dispatch(createRoute({ route: payload }));
+
+    // Hide the form after dispatching the action
+    this.store.dispatch(hideCreateForm());
   }
 }

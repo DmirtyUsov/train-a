@@ -14,6 +14,7 @@ import {
   createRouteFailure,
   createRouteSuccess,
   createRoute,
+  createRoutePartialSuccess,
 } from '../actions/route.actions';
 import { Route } from '../../models/route.model';
 import { ResponseError } from '../../models/error.model';
@@ -79,6 +80,21 @@ export const routeReducer = createReducer(
       error: null,
     }),
   ),
+  on(createRoutePartialSuccess, (state, { route }) => {
+    const updatedRoutes = [...state.routes];
+    const index = updatedRoutes.findIndex((r) => r.id === route.id);
+    if (index === -1) {
+      updatedRoutes.push(route);
+    } else {
+      updatedRoutes[index] = route;
+    }
+    return {
+      ...state,
+      routes: updatedRoutes,
+      loading: false,
+      error: null,
+    };
+  }),
   on(
     createRouteFailure,
     (state, { error }): RouteState => ({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, delay, map, switchMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { RouteService } from '../../services/route.service';
 import {
@@ -8,7 +8,6 @@ import {
   loadRoutesSuccess,
   loadRoutesFailure,
   createRoute,
-  createRouteSuccess,
   createRouteFailure,
   updateRoute,
   updateRouteSuccess,
@@ -16,6 +15,7 @@ import {
   deleteRoute,
   deleteRouteSuccess,
   deleteRouteFailure,
+  createRoutePartialSuccess,
 } from '../actions/route.actions';
 import { formatError } from '../../helpers/route.helpers';
 
@@ -42,7 +42,20 @@ export class RouteEffects {
       ofType(createRoute),
       switchMap(({ route }) =>
         this.routeService.createRoute(route).pipe(
-          map((newRoute) => createRouteSuccess({ route: newRoute })),
+          switchMap((newRoute) => {
+            // Dispatch an intermediate success and then reload routes after a short delay
+            return of(createRoutePartialSuccess({ route: newRoute })).pipe(
+              delay(500), // Add a delay before reloading routes
+              switchMap(() =>
+                this.routeService.getAllRoutes().pipe(
+                  map((routes) => loadRoutesSuccess({ routes })),
+                  catchError((error) =>
+                    of(loadRoutesFailure({ error: formatError(error) })),
+                  ),
+                ),
+              ),
+            );
+          }),
           catchError((error) =>
             of(createRouteFailure({ error: formatError(error) })),
           ),
