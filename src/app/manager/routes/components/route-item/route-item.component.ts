@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
 import { DividerModule } from 'primeng/divider';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
 import { ButtonModule } from 'primeng/button';
 import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
 import { Route } from '../../../../models/route.model';
-import { Store } from '@ngrx/store';
 import { deleteRoute } from '../../../../store/actions/route.actions';
 
 @Component({
