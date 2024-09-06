@@ -9,10 +9,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { Station } from '../../../../models/station.models';
 import { selectAllStations } from '../../../../store/selectors/stations.selectors';
-import {
-  createRoute,
-  hideCreateForm,
-} from '../../../../store/actions/route.actions';
+import { createRoute } from '../../../../store/actions/route.actions';
 import { CarriageService } from '../../../../services/carriage.service';
 import { CarriageType } from '../../../../models/carriage.model';
 
@@ -142,10 +139,6 @@ export class CreateRouteFormComponent implements OnInit {
       carriages,
     };
 
-    console.log('Create Route Payload:', payload);
     this.store.dispatch(createRoute({ route: payload }));
-
-    // Hide the form after dispatching the action
-    //this.store.dispatch(hideCreateForm());
   }
 }

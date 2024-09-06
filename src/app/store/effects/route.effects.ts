@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { concat, of } from 'rxjs';
 import { catchError, delay, map, switchMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { RouteService } from '../../services/route.service';
@@ -46,10 +46,12 @@ export class RouteEffects {
         this.routeService.createRoute(route).pipe(
           switchMap((newRoute) => {
             this.toastService.success('New Route created successfully!');
-            // Dispatch an intermediate success and then reload routes after a short delay
-            return of(createRoutePartialSuccess({ route: newRoute })).pipe(
-              delay(500),
-              switchMap(() => [hideCreateForm(), loadRoutes()]),
+
+            // Return actions sequentially
+            return concat(
+              of(createRoutePartialSuccess({ route: newRoute })),
+              of(hideCreateForm()), // Hides the form
+              of(loadRoutes()), // Reloads routes
             );
           }),
           catchError((error) => {
