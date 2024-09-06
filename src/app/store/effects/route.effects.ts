@@ -84,10 +84,14 @@ export class RouteEffects {
       ofType(deleteRoute),
       switchMap(({ routeId }) =>
         this.routeService.deleteRoute(routeId).pipe(
-          map(() => deleteRouteSuccess({ routeId })),
-          catchError((error) =>
-            of(deleteRouteFailure({ error: formatError(error) })),
-          ),
+          map(() => {
+            this.toastService.success('Route deleted successfully!');
+            return deleteRouteSuccess({ routeId });
+          }),
+          catchError((error) => {
+            this.toastService.error(error.message || 'Failed to delete route.');
+            return of(deleteRouteFailure({ error: formatError(error) }));
+          }),
         ),
       ),
     );
