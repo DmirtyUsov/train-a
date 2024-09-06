@@ -8,6 +8,7 @@
         severity="secondary"
         icon="pi pi-pencil"
         [outlined]="true"
+        (click)="onUpdateButtonClick()"
       ></p-button>
       <p-button
         label="Assign Ride"
@@ -19,6 +20,7 @@
         severity="danger"
         icon="pi pi-trash"
         [outlined]="true"
+        (click)="deleteButtonClicked()"
       ></p-button>
     </div>
   </div>

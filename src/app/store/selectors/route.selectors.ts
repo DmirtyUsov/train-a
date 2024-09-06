@@ -10,12 +10,10 @@ export const selectAllRoutes = createSelector(
   selectRouteState,
   (state: RouteState) => state.routes,
 );
-
 export const selectRouteError = createSelector(
   selectRouteState,
   (state: RouteState) => state.error,
 );
-
 export const selectRouteLoading = createSelector(
   selectRouteState,
   (state: RouteState) => state.loading,
@@ -24,18 +22,31 @@ export const selectRouteLoading = createSelector(
 export const selectRoutesWithCities = createSelector(
   selectAllRoutes,
   selectAllStations,
-  (routes: Route[], stations: Station[]) => {
-    return routes.map((route) => ({
-      route,
-      cities: route.path.map((stationId: number) => {
-        const station = stations.find((item: Station) => item.id === stationId);
-        return station ? station.city : 'loading city...';
-      }),
-    }));
-  },
+  (routes: Route[], stations: Station[]) =>
+    routes
+      .slice()
+      .reverse()
+      .map((route) => ({
+        route,
+        // Only map cities if the path is fully available
+        cities:
+          route.path && route.path.length
+            ? route.path.map((stationId: number) => {
+                const station = stations.find(
+                  (item: Station) => item.id === stationId,
+                );
+                return station ? station.city : 'loading city...';
+              })
+            : ['loading path...'], // Show loading if path is not available
+      })),
 );
 
 export const selectIsCreateFormVisible = createSelector(
   selectRouteState,
   (state: RouteState) => state.isCreateFormVisible,
+);
+
+export const selectSelectedRoute = createSelector(
+  selectRouteState,
+  (state: RouteState) => state.selectedRoute,
 );

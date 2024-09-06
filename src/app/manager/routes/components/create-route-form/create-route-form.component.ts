@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { DividerModule } from 'primeng/divider';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -9,9 +9,15 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { Station } from '../../../../models/station.models';
 import { selectAllStations } from '../../../../store/selectors/stations.selectors';
-import { hideCreateForm } from '../../../../store/actions/route.actions';
+import {
+  clearSelectedRoute,
+  createRoute,
+  updateRoute,
+} from '../../../../store/actions/route.actions';
 import { CarriageService } from '../../../../services/carriage.service';
 import { CarriageType } from '../../../../models/carriage.model';
+import { Route } from '../../../../models/route.model';
+import { selectSelectedRoute } from '../../../../store/selectors/route.selectors';
 
 @Component({
   selector: 'app-create-route-form',
@@ -48,6 +54,8 @@ export class CreateRouteFormComponent implements OnInit {
 
   showAddCarriageButton = true;
 
+  selectedRoute: Route | null = null;
+
   constructor(
     private store: Store,
     private fb: FormBuilder,
@@ -66,6 +74,23 @@ export class CreateRouteFormComponent implements OnInit {
       this.carriageTypes = carriageTypes;
       this.initializeCarriageDropdowns(3);
     });
+
+    // Listen for changes to selectedRoute and update the form accordingly
+    this.store
+      .select(selectSelectedRoute)
+      .pipe(
+        tap((route) => {
+          this.selectedRoute = route;
+          if (this.selectedRoute) {
+            this.fillFormWithRouteData(this.selectedRoute);
+          } else {
+            // Optionally clear the form if no route is selected
+            this.clearForm();
+            this.initializeStationDropdowns(3);
+          }
+        }),
+      )
+      .subscribe();
   }
 
   initializeStationDropdowns(count: number): void {
@@ -115,19 +140,113 @@ export class CreateRouteFormComponent implements OnInit {
       this.carriageControlNames.length < this.maxDropdowns;
   }
 
-  hideCreateForm(): void {
-    this.store.dispatch(hideCreateForm());
+  fillFormWithRouteData(route: Route | null): void {
+    this.clearForm();
+
+    this.initializeStationDropdowns(3);
+    this.initializeCarriageDropdowns(3);
+
+    if (route) {
+      const path = route.path || [];
+      const carriages = route.carriages || [];
+
+      // Add controls based on route data
+      path.forEach((stationId, index) => {
+        const controlName = `selectedStation${index + 1}`;
+        this.formGroup
+          .get(controlName)
+          ?.setValue(
+            this.stations.find((station) => station.id === stationId) || null,
+          );
+      });
+
+      carriages.forEach((carriageCode, index) => {
+        const controlName = `selectedCarriage${index + 1}`;
+        this.formGroup
+          .get(controlName)
+          ?.setValue(
+            this.carriageTypes?.find(
+              (carriage) => carriage.code === carriageCode,
+            ) || null,
+          );
+      });
+    }
+
+    this.checkDropdownValues();
   }
 
-  getSelectedStations(): string[] {
+  ensureMinimumDropdowns(minCount: number): void {
+    const currentStationCount = this.stationControlNames.length;
+    const currentCarriageCount = this.carriageControlNames.length;
+
+    // Add extra dropdowns if the current number is less than the minimum required
+    for (let i = currentStationCount + 1; i <= minCount; i += 1) {
+      this.addStationDropdownControl(`selectedStation${i}`);
+    }
+
+    for (let i = currentCarriageCount + 1; i <= minCount; i += 1) {
+      this.addCarriageDropdownControl(`selectedCarriage${i}`);
+    }
+  }
+
+  clearForm(): void {
+    this.stationControlNames.forEach((name) =>
+      this.formGroup.removeControl(name),
+    );
+    this.carriageControlNames.forEach((name) =>
+      this.formGroup.removeControl(name),
+    );
+    this.stationControlNames = [];
+    this.carriageControlNames = [];
+  }
+
+  getSelectedStations(): Station[] {
     return this.stationControlNames
       .map((controlName) => this.formGroup.get(controlName)?.value)
       .filter((station) => station !== null);
   }
 
-  getSelectedCarriages(): string[] {
+  getSelectedCarriages(): CarriageType[] {
     return this.carriageControlNames
       .map((controlName) => this.formGroup.get(controlName)?.value)
       .filter((carriage) => carriage !== null);
+  }
+
+  onCancelButtonClick() {
+    this.store.dispatch(clearSelectedRoute());
+  }
+
+  onSaveButtonClick(): void {
+    const selectedStations = this.getSelectedStations();
+    const selectedCarriages = this.getSelectedCarriages();
+
+    const path = selectedStations.map((station) => station.id);
+    const carriages = selectedCarriages.map((carriage) => carriage.code);
+
+    const payload = {
+      path,
+      carriages,
+    };
+
+    this.store.dispatch(createRoute({ route: payload }));
+  }
+
+  onUpdateButtonClick(): void {
+    if (this.selectedRoute) {
+      const selectedStations = this.getSelectedStations();
+      const selectedCarriages = this.getSelectedCarriages();
+
+      const path = selectedStations.map((station) => station.id);
+      const carriages = selectedCarriages.map((carriage) => carriage.code);
+
+      const payload = {
+        path,
+        carriages,
+      };
+
+      this.store.dispatch(
+        updateRoute({ routeId: this.selectedRoute.id, route: payload }),
+      );
+    }
   }
 }
