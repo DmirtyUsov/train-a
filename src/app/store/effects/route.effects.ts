@@ -17,8 +17,7 @@ import {
   deleteRouteSuccess,
   deleteRouteFailure,
 } from '../actions/route.actions';
-import { ResponseError } from '../../models/error.model';
-import { HttpErrorResponse } from '@angular/common/http';
+import { formatError } from '../../helpers/route.helpers';
 
 @Injectable()
 export class RouteEffects {
@@ -30,7 +29,7 @@ export class RouteEffects {
         this.routeService.getAllRoutes().pipe(
           map((routes) => loadRoutesSuccess({ routes })),
           catchError((error) =>
-            of(loadRoutesFailure({ error: this.formatError(error) })),
+            of(loadRoutesFailure({ error: formatError(error) })),
           ),
         ),
       ),
@@ -45,7 +44,7 @@ export class RouteEffects {
         this.routeService.createRoute(route).pipe(
           map((newRoute) => createRouteSuccess({ route: newRoute })),
           catchError((error) =>
-            of(createRouteFailure({ error: this.formatError(error) })),
+            of(createRouteFailure({ error: formatError(error) })),
           ),
         ),
       ),
@@ -60,7 +59,7 @@ export class RouteEffects {
         this.routeService.updateRoute(routeId, route).pipe(
           map((updatedRoute) => updateRouteSuccess({ route: updatedRoute })),
           catchError((error) =>
-            of(updateRouteFailure({ error: this.formatError(error) })),
+            of(updateRouteFailure({ error: formatError(error) })),
           ),
         ),
       ),
@@ -75,7 +74,7 @@ export class RouteEffects {
         this.routeService.deleteRoute(routeId).pipe(
           map(() => deleteRouteSuccess({ routeId })),
           catchError((error) =>
-            of(deleteRouteFailure({ error: this.formatError(error) })),
+            of(deleteRouteFailure({ error: formatError(error) })),
           ),
         ),
       ),
@@ -86,11 +85,4 @@ export class RouteEffects {
     private actions$: Actions,
     private routeService: RouteService,
   ) {}
-
-  // Helper function to format errors
-  private formatError(error: HttpErrorResponse): ResponseError {
-    return (
-      error.error || { message: 'An error occurred', reason: 'unknown_error' }
-    );
-  }
 }
