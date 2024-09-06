@@ -14,4 +14,16 @@ export class RouteService {
   getAllRoutes(): Observable<Route[]> {
     return this.http.get<Route[]>(this.apiUrl);
   }
+
+  createRoute(route: Partial<Route>): Observable<Route> {
+    return this.http.post<Route>(this.apiUrl, route);
+  }
+
+  updateRoute(routeId: number, route: Partial<Route>): Observable<Route> {
+    return this.http.put<Route>(`${this.apiUrl}/${routeId}`, route);
+  }
+
+  deleteRoute(routeId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${routeId}`);
+  }
 }
