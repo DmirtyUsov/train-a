@@ -16,8 +16,10 @@ import {
   deleteRouteSuccess,
   deleteRouteFailure,
   createRoutePartialSuccess,
+  hideCreateForm,
 } from '../actions/route.actions';
 import { formatError } from '../../helpers/route.helpers';
+import { ToastService } from '../../services/toast.service';
 
 @Injectable()
 export class RouteEffects {
@@ -43,22 +45,17 @@ export class RouteEffects {
       switchMap(({ route }) =>
         this.routeService.createRoute(route).pipe(
           switchMap((newRoute) => {
+            this.toastService.success('New Route created successfully!');
             // Dispatch an intermediate success and then reload routes after a short delay
             return of(createRoutePartialSuccess({ route: newRoute })).pipe(
-              delay(500), // Add a delay before reloading routes
-              switchMap(() =>
-                this.routeService.getAllRoutes().pipe(
-                  map((routes) => loadRoutesSuccess({ routes })),
-                  catchError((error) =>
-                    of(loadRoutesFailure({ error: formatError(error) })),
-                  ),
-                ),
-              ),
+              delay(500),
+              switchMap(() => [hideCreateForm(), loadRoutes()]),
             );
           }),
-          catchError((error) =>
-            of(createRouteFailure({ error: formatError(error) })),
-          ),
+          catchError((error) => {
+            this.toastService.error(error.message || 'Failed to create route.');
+            return of(createRouteFailure({ error: formatError(error) }));
+          }),
         ),
       ),
     );
@@ -97,5 +94,6 @@ export class RouteEffects {
   constructor(
     private actions$: Actions,
     private routeService: RouteService,
+    private toastService: ToastService,
   ) {}
 }

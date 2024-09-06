@@ -146,6 +146,6 @@ export class CreateRouteFormComponent implements OnInit {
     this.store.dispatch(createRoute({ route: payload }));
 
     // Hide the form after dispatching the action
-    this.store.dispatch(hideCreateForm());
+    //this.store.dispatch(hideCreateForm());
   }
 }
