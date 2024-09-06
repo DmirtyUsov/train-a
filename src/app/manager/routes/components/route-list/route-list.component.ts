@@ -32,14 +32,7 @@ export class RouteListComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(loadRoutes());
 
-    this.routesWithCities$.subscribe({
-      next: (routesWithCities) => {
-        console.log('Routes with Cities:', routesWithCities);
-      },
-      error: (error) => {
-        console.error('Error fetching routes or stations:', error);
-      },
-    });
+    this.routesWithCities$.subscribe();
   }
 
   onRefreshButtonClick() {

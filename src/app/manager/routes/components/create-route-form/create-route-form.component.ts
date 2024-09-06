@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable, tap } from 'rxjs';
 import { DividerModule } from 'primeng/divider';
 import { CommonModule } from '@angular/common';
@@ -61,7 +61,7 @@ export class CreateRouteFormComponent implements OnInit {
     private fb: FormBuilder,
     private carriageService: CarriageService,
   ) {
-    this.stations$ = this.store.pipe(select(selectAllStations));
+    this.stations$ = this.store.select(selectAllStations);
     this.formGroup = this.fb.group({});
   }
 
@@ -80,7 +80,6 @@ export class CreateRouteFormComponent implements OnInit {
       .select(selectSelectedRoute)
       .pipe(
         tap((route) => {
-          console.log('Selected route:', route); // Debugging statement
           this.selectedRoute = route;
           if (this.selectedRoute) {
             this.fillFormWithRouteData(this.selectedRoute);
@@ -142,12 +141,8 @@ export class CreateRouteFormComponent implements OnInit {
   }
 
   fillFormWithRouteData(route: Route | null): void {
-    console.log('Filling form with route data:', route); // Debugging statement
-
-    // Clear existing controls
     this.clearForm();
 
-    // Initialize with default number of dropdowns
     this.initializeStationDropdowns(3);
     this.initializeCarriageDropdowns(3);
 
@@ -185,11 +180,11 @@ export class CreateRouteFormComponent implements OnInit {
     const currentCarriageCount = this.carriageControlNames.length;
 
     // Add extra dropdowns if the current number is less than the minimum required
-    for (let i = currentStationCount + 1; i <= minCount; i++) {
+    for (let i = currentStationCount + 1; i <= minCount; i += 1) {
       this.addStationDropdownControl(`selectedStation${i}`);
     }
 
-    for (let i = currentCarriageCount + 1; i <= minCount; i++) {
+    for (let i = currentCarriageCount + 1; i <= minCount; i += 1) {
       this.addCarriageDropdownControl(`selectedCarriage${i}`);
     }
   }
