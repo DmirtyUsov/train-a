@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { concat, of } from 'rxjs';
-import { catchError, delay, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { RouteService } from '../../services/route.service';
 import {
