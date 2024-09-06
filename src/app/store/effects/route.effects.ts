@@ -69,10 +69,16 @@ export class RouteEffects {
       ofType(updateRoute),
       switchMap(({ routeId, route }) =>
         this.routeService.updateRoute(routeId, route).pipe(
-          map((updatedRoute) => updateRouteSuccess({ route: updatedRoute })),
-          catchError((error) =>
-            of(updateRouteFailure({ error: formatError(error) })),
-          ),
+          map((updatedRoute) => {
+            // Success toast notification
+            this.toastService.success('Route updated successfully!');
+            return updateRouteSuccess({ route: updatedRoute });
+          }),
+          catchError((error) => {
+            // Error toast notification
+            this.toastService.error(error.message || 'Failed to update route.');
+            return of(updateRouteFailure({ error: formatError(error) }));
+          }),
         ),
       ),
     );

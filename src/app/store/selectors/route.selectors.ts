@@ -45,3 +45,8 @@ export const selectIsCreateFormVisible = createSelector(
   selectRouteState,
   (state: RouteState) => state.isCreateFormVisible,
 );
+
+export const selectSelectedRoute = createSelector(
+  selectRouteState,
+  (state: RouteState) => state.selectedRoute,
+);

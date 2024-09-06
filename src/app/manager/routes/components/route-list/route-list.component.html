@@ -4,6 +4,13 @@
 </div>
 
 <ng-template #content>
+  <div class="m-4">
+    <p-button
+      label="Refresh routes"
+      (onClick)="onRefreshButtonClick()"
+      [outlined]="true"
+    ></p-button>
+  </div>
   <div *ngIf="routesWithCities$ | async as routesWithCities">
     <p-dataView #dv [value]="routesWithCities" class="w-full">
       <ng-template pTemplate="list" let-routes>

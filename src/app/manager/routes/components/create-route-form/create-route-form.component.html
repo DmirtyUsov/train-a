@@ -21,7 +21,7 @@
         <p-button
           *ngIf="showAddStationButton"
           class="m-4"
-          label="Add More"
+          label="Add More Stations"
           (onClick)="addStationDropdown()"
           [outlined]="true"
         ></p-button>
@@ -47,18 +47,37 @@
         <p-button
           *ngIf="showAddCarriageButton"
           class="m-4"
-          label="Add More"
+          label="Add More Carriages"
           (onClick)="addCarriageDropdown()"
           [outlined]="true"
         ></p-button>
       </div>
     </div>
   </form>
-  <div class="mt-4">
-    <p-button
-      label="Save"
-      (onClick)="onSaveButtonClick()"
-      [outlined]="true"
-    ></p-button>
+  <div class="flex gap-4">
+    <!-- Display the Save button if no selectedRoute -->
+    <div class="mt-4" *ngIf="!selectedRoute">
+      <p-button
+        label="Save"
+        (onClick)="onSaveButtonClick()"
+        [outlined]="true"
+      ></p-button>
+    </div>
+    <!-- Display the Update button if there is a selectedRoute -->
+    <div class="mt-4" *ngIf="selectedRoute">
+      <p-button
+        label="Update"
+        (onClick)="onUpdateButtonClick()"
+        [outlined]="true"
+      ></p-button>
+    </div>
+    <div class="mt-4">
+      <p-button
+        label="Cancel"
+        (onClick)="onCancelButtonClick()"
+        [outlined]="true"
+        severity="danger"
+      ></p-button>
+    </div>
   </div>
 </p-card>

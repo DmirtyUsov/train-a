@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { DataViewModule } from 'primeng/dataview';
+import { ButtonModule } from 'primeng/button';
 import { RouteItemComponent } from '../route-item/route-item.component';
 import { Route } from '../../../../models/route.model';
 import {
@@ -14,7 +15,7 @@ import { loadRoutes } from '../../../../store/actions/route.actions';
 @Component({
   selector: 'app-route-list',
   standalone: true,
-  imports: [DataViewModule, CommonModule, RouteItemComponent],
+  imports: [DataViewModule, CommonModule, RouteItemComponent, ButtonModule],
   templateUrl: './route-list.component.html',
   styleUrls: ['./route-list.component.scss'],
 })
@@ -39,5 +40,9 @@ export class RouteListComponent implements OnInit {
         console.error('Error fetching routes or stations:', error);
       },
     });
+  }
+
+  onRefreshButtonClick() {
+    this.store.dispatch(loadRoutes());
   }
 }

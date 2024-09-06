@@ -32,6 +32,11 @@ export const createRouteFailure = createAction(
 );
 
 // Update Route Actions
+export const setSelectedRoute = createAction(
+  '[Route] Set Selected Route',
+  props<{ route: Route }>(),
+);
+export const clearSelectedRoute = createAction('[Route] Clear Selected Route');
 export const updateRoute = createAction(
   '[Route] Update Route',
   props<{ routeId: number; route: Partial<Route> }>(),

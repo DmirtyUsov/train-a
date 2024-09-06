@@ -15,12 +15,15 @@ import {
   createRouteSuccess,
   createRoute,
   createRoutePartialSuccess,
+  setSelectedRoute,
+  clearSelectedRoute,
 } from '../actions/route.actions';
 import { Route } from '../../models/route.model';
 import { ResponseError } from '../../models/error.model';
 
 export interface RouteState {
   routes: Route[];
+  selectedRoute: Route | null;
   error: ResponseError | null;
   loading: boolean;
   isCreateFormVisible: boolean;
@@ -28,6 +31,7 @@ export interface RouteState {
 
 export const initialState: RouteState = {
   routes: [],
+  selectedRoute: null,
   error: null,
   loading: false,
   isCreateFormVisible: false,
@@ -171,6 +175,26 @@ export const routeReducer = createReducer(
     (state): RouteState => ({
       ...state,
       isCreateFormVisible: false,
+    }),
+  ),
+
+  // Set selected route (combined with showing the create form)
+  on(
+    setSelectedRoute,
+    (state, { route }): RouteState => ({
+      ...state,
+      isCreateFormVisible: true,
+      selectedRoute: route,
+    }),
+  ),
+
+  // Clear selected route
+  on(
+    clearSelectedRoute,
+    (state): RouteState => ({
+      ...state,
+      isCreateFormVisible: false,
+      selectedRoute: null,
     }),
   ),
 );

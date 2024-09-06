@@ -7,7 +7,10 @@ import { ChipModule } from 'primeng/chip';
 import { ButtonModule } from 'primeng/button';
 import { CarriageClassPipe } from '../../../../pipes/carriage-class.pipe';
 import { Route } from '../../../../models/route.model';
-import { deleteRoute } from '../../../../store/actions/route.actions';
+import {
+  deleteRoute,
+  setSelectedRoute,
+} from '../../../../store/actions/route.actions';
 
 @Component({
   selector: 'app-route-item',
@@ -32,9 +35,12 @@ export class RouteItemComponent {
 
   deleteButtonClicked(): void {
     if (this.route && this.route.id) {
-      console.log('Delete Route Request:', { routeId: this.route.id });
-      // Dispatch the delete action
       this.store.dispatch(deleteRoute({ routeId: this.route.id }));
     }
+  }
+
+  onUpdateButtonClick(): void {
+    // Store the selected route
+    this.store.dispatch(setSelectedRoute({ route: this.route }));
   }
 }
