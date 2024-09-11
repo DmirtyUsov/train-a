@@ -1,0 +1,48 @@
+<p-card
+  *ngIf="order"
+  header="From {{ stationStart }} To {{ stationEnd }}"
+  class="w-full"
+>
+  <div class="flex flex-wrap justify-between items-center gap-20">
+    <!-- Start Trip -->
+    <div class="flex flex-col">
+      <h3 class="font-semibold">Start Trip</h3>
+      <p class="m-0">Station: {{ stationStart }}</p>
+      <p class="m-0">{{ departureTime | date: "MMMM dd hh:mm" }}</p>
+    </div>
+
+    <!-- Trip Duration -->
+    <div class="flex flex-col items-center mt-4">
+      <h3 class="font-semibold">Trip Duration</h3>
+      <div class="flex text-sm text-gray-600 gap-2">
+        <div *ngIf="weeks > 0">{{ weeks }} Week{{ weeks > 1 ? "s" : "" }}</div>
+        <div *ngIf="days > 0">{{ days }} Day{{ days > 1 ? "s" : "" }}</div>
+      </div>
+      <div class="flex gap-2">
+        <div *ngIf="hours > 0">{{ hours }}h</div>
+        <div *ngIf="minutes >= 0">{{ minutes }}m</div>
+      </div>
+    </div>
+
+    <!-- End Trip -->
+    <div class="flex flex-col">
+      <h3 class="font-semibold">End Trip</h3>
+      <p class="m-0">Station: {{ stationEnd }}</p>
+      <p class="m-0">{{ arrivalTime | date: "MMMM dd hh:mm" }}</p>
+    </div>
+
+    <!-- Carriage Details -->
+    <div class="flex flex-col">
+      <h3 class="font-semibold">Carriage</h3>
+      <p class="m-0">Type: {{ carriageType | carriageClass }}</p>
+      <p class="m-0">Car: {{ carNumber }}</p>
+    </div>
+
+    <!-- Seat and Price -->
+    <div class="flex flex-col">
+      <h3 class="font-semibold">Seat Details</h3>
+      <p class="m-0">Seat Number: {{ seatNumber }}</p>
+      <p class="m-0">{{ price | currency: "USD" : "symbol" }}</p>
+    </div>
+  </div>
+</p-card>

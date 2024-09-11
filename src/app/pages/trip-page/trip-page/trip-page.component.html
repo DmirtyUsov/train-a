@@ -1,0 +1,16 @@
+<div class="w-full max-w-6xl mx-auto">
+  <div *ngIf="loading$ | async; else content">
+    <p>Loading...</p>
+  </div>
+
+  <ng-template #content>
+    <div *ngIf="ride$ | async as ride; else errorTpl">
+      <app-trip-header></app-trip-header>
+      <app-carriage-info-list [ride]="ride"></app-carriage-info-list>
+      <app-book-seat></app-book-seat>
+    </div>
+    <ng-template #errorTpl>
+      <p *ngIf="error$ | async as error">Error: {{ error }}</p>
+    </ng-template>
+  </ng-template>
+</div>

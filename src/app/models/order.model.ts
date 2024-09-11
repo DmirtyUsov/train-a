@@ -13,6 +13,8 @@ export interface ScheduleSegment {
 
 export interface Order {
   id: number;
+  stationEnd: number;
+  stationStart: number;
   rideId: number;
   routeId: number;
   seatId: number;
@@ -23,4 +25,14 @@ export interface Order {
   schedule: {
     segments: ScheduleSegment[];
   };
+}
+
+export interface OrederRequest {
+  rideId: number;
+  seat: number;
+  stationStart: number;
+  stationEnd: number;
+}
+export interface MakeOrderResponse {
+  id: string;
 }

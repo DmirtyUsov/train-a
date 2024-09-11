@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Station } from '../models/station.models';
-import { SearchResponse } from '../models/search.model';
+import { SearchResponseStation } from '../models/station.models';
+import { SearchResponse } from '../models/search-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,18 +13,18 @@ export class SearchService {
   constructor(private http: HttpClient) {}
 
   getSearchResult(
-    fromStation: Station,
-    toStation: Station,
-    date: Date | null,
+    fromStation: SearchResponseStation,
+    toStation: SearchResponseStation,
+    date: string | null,
   ): Observable<SearchResponse> {
     let params = new HttpParams()
-      .set('fromLatitude', fromStation.latitude.toString())
-      .set('fromLongitude', fromStation.longitude.toString())
-      .set('toLatitude', toStation.latitude.toString())
-      .set('toLongitude', toStation.longitude.toString());
+      .set('fromLatitude', fromStation.geolocation.latitude.toString())
+      .set('fromLongitude', fromStation.geolocation.longitude.toString())
+      .set('toLatitude', toStation.geolocation.latitude.toString())
+      .set('toLongitude', toStation.geolocation.longitude.toString());
 
     if (date) {
-      params = params.set('time', date.getTime().toString());
+      params = params.set('time', date);
     }
 
     return this.http.get<SearchResponse>(this.apiUrl, { params });

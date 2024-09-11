@@ -1,7 +1,7 @@
-import { createSelector } from '@ngrx/store';
-import { AppState } from '../state.model';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { AuthState } from '../models/auth-state.model';
 
-const selectFeature = (state: AppState) => state.auth;
+const selectFeature = createFeatureSelector<AuthState>('auth');
 
 export const selectIsLoading = createSelector(
   selectFeature,
@@ -15,6 +15,11 @@ export const selectIsAuthenticated = createSelector(
 export const selectIsManager = createSelector(
   selectFeature,
   (state) => state.isManager,
+);
+
+export const selectProfile = createSelector(
+  selectFeature,
+  (state) => state.profile,
 );
 
 export const selectToken = createSelector(

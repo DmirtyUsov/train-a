@@ -1,0 +1,192 @@
+@if (isLoading$ | async) {
+  <div class="fixed top-0 left-0 right-0 z-30 flex justify-center">
+    <p-progressSpinner ariaLabel="loading" />
+  </div>
+}
+
+@if (stationList$ | async; as stationList) {
+  <div class="">
+    <form
+      [formGroup]="newStationForm"
+      (ngSubmit)="addStation()"
+      class="m-2 items-center flex flex-col content-center flex-wrap gap-2"
+    >
+      <h2 class="text-lg font-bold">New Station</h2>
+      <div>
+        <label for="city" class="block">City</label>
+        <p-iconField iconPosition="right">
+          @if (isFindingCity$ | async) {
+            <p-inputIcon styleClass="pi pi-spinner pi-spin" />
+          } @else {
+            <p-inputIcon styleClass="pi pi-search" />
+          }
+          <input
+            id="city"
+            type="text"
+            placeholder="Start typing"
+            pInputText
+            formControlName="city"
+            (keyup)="setCity($event)"
+          />
+        </p-iconField>
+
+        @if (
+          newStationForm.get("city")?.invalid &&
+          newStationForm.get("city")?.dirty
+        ) {
+          <small class="p-error block"> City name is required</small>
+        }
+        @if (newStationForm.get("city")?.hasError("minlength")) {
+          <small class="p-error block"> Min 2 chars {{ cityBound.min }}</small>
+        }
+      </div>
+
+      <div>
+        <h2>Coordinates</h2>
+        <div class="flex flex-row flex-wrap gap-1">
+          <div>
+            <label for="latitude" class="block">Latitude</label>
+            <p-inputNumber
+              inputId="latitude"
+              formControlName="latitude"
+              mode="decimal"
+              [maxFractionDigits]="15"
+              #latitude
+            />
+            @if (newStationForm.get("latitude")?.invalid) {
+              @if (
+                newStationForm.get("latitude")?.dirty && latitude.value === null
+              ) {
+                <small class="p-error block"> Latitude is required</small>
+              }
+
+              @if (newStationForm.get("latitude")?.hasError("max")) {
+                <small class="p-error block">
+                  Max value is {{ latitudeBound.max }}</small
+                >
+              }
+              @if (newStationForm.get("latitude")?.hasError("min")) {
+                <small class="p-error block">
+                  Min value is {{ latitudeBound.min }}</small
+                >
+              }
+            }
+          </div>
+
+          <div>
+            <label for="longitude" class="block">Longitude</label>
+            <p-inputNumber
+              inputId="longitude"
+              formControlName="longitude"
+              mode="decimal"
+              [maxFractionDigits]="15"
+              #longitude
+            />
+            @if (newStationForm.get("longitude")?.invalid) {
+              @if (
+                newStationForm.get("longitude")?.dirty &&
+                longitude.value === null
+              ) {
+                <small class="p-error block"> Longitude is required</small>
+              }
+
+              @if (newStationForm.get("longitude")?.hasError("max")) {
+                <small class="p-error block">
+                  Max value is {{ longitudeBound.max }}</small
+                >
+              }
+              @if (newStationForm.get("longitude")?.hasError("min")) {
+                <small class="p-error block">
+                  Min value is {{ longitude.min }}</small
+                >
+              }
+            }
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label for="connectedTo" class="block">Connected To</label>
+        <p-multiSelect
+          [options]="stationList"
+          formControlName="connectedTo"
+          placeholder="Select Cities"
+          optionLabel="city"
+          optionValue="id"
+          display="chip"
+          [showClear]="true"
+          [maxSelectedLabels]="100"
+        />
+        @if (
+          newStationForm.get("connectedTo")?.invalid &&
+          newStationForm.get("connectedTo")?.dirty
+        ) {
+          <small class="p-error block"> Connected stations are required</small>
+        }
+      </div>
+
+      <button
+        pButton
+        type="submit"
+        [disabled]="newStationForm.invalid"
+        class="w-fit"
+      >
+        Add Station
+      </button>
+    </form>
+  </div>
+
+  @if ((isLoading$ | async) === false) {
+    <p-table
+      [value]="stationList"
+      [tableStyle]="{ 'min-width': '25rem' }"
+      styleClass="p-datatable-striped p-datatable-sm"
+      class="text-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>id</th>
+          <th>City</th>
+          <th>latitude</th>
+          <th>longitude</th>
+          <th>connectedTo (km)</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-station>
+        <tr class="text-sm">
+          <td>{{ station.id }}</td>
+          <td>
+            <span class="text-lg bg-white border border-black rounded px-1">{{
+              station.city
+            }}</span>
+          </td>
+          <td>{{ station.latitude }}</td>
+          <td>{{ station.longitude }}</td>
+          <td class="flex flex-wrap gap-1">
+            @for (item of station.connectedTo; track $index) {
+              <div class="flex flex-col items-center">
+                <span class="bg-white border border-black rounded px-1">{{
+                  stationsObject[item.id].city
+                }}</span>
+                <span class="text-xs">{{
+                  item.distance | number: "1.0-0"
+                }}</span>
+              </div>
+            }
+          </td>
+          <td>
+            <p-confirmPopup [key]="'popupConfirmDelete-' + station.id" />
+            <p-button
+              icon="pi pi-trash"
+              [rounded]="true"
+              [text]="true"
+              severity="warning"
+              (click)="confirmDelete($event, station.id)"
+              title="Delete Station"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+}

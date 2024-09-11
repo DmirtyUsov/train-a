@@ -1,0 +1,27 @@
+<div *ngIf="loading$ | async; else content">
+  <p>Loading...</p>
+  <!-- Replace the above text with a spinner or any loading indicator -->
+</div>
+<ng-template #content>
+  <div *ngIf="orders$ | async as orders">
+    <p-dataView #dv [value]="orders" class="w-full">
+      <ng-template pTemplate="list" let-products>
+        <div class="grid grid-nogutter w-full">
+          <div
+            class="col-12 w-full"
+            *ngFor="let order of orders; let first = first"
+          >
+            <div
+              class="flex flex-col sm:flex-row sm:items-center p-4 gap-3 w-full"
+              [ngClass]="{ 'border-top-1 surface-border': !first }"
+            >
+              <div class="w-full">
+                <app-order-item [order]="order" class="w-full"></app-order-item>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+  </div>
+</ng-template>

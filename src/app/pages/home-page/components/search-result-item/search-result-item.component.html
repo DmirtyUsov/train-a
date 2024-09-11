@@ -1,0 +1,100 @@
+<div
+  class="cursor-pointer hover:bg-gray-100"
+  (click)="onSearchItemClick($event, item)"
+  (keydown.space)="onSearchItemClick($event, item)"
+  tabindex="0"
+>
+  <div
+    class="flex flex-column sm:flex-row sm:align-items-center p-2"
+    [ngClass]="{ 'border-top-1 surface-border': true }"
+  >
+    <div
+      class="flex flex-column md:flex-row justify-content-between md:align-items-center flex-1"
+    >
+      <div
+        class="flex flex-row justify-content-between align-items-start gap-4"
+      >
+        <div class="flex flex-row gap-8">
+          <!-- From City Block -->
+          <div class="flex flex-col items-center">
+            <div class="text-lg font-medium text-900 mt-2">
+              From: {{ item.fromStation.city | uppercase }}
+            </div>
+            <div class="text-sm text-gray-500">
+              {{ fromStationStartTime?.date }}
+            </div>
+            <div class="text-md text-gray-800">
+              {{ fromStationStartTime?.time }}
+            </div>
+          </div>
+
+          <!-- Time Difference Display -->
+          <div class="flex flex-col items-center mt-4">
+            <div class="text-lg font-medium text-900 mt-2">Duration</div>
+            <div class="text-sm text-gray-600">
+              <div *ngIf="weeks > 0">
+                {{ weeks }} Week{{ weeks > 1 ? "s" : "" }}
+              </div>
+              <div *ngIf="days > 0">
+                {{ days }} Day{{ days > 1 ? "s" : "" }}
+              </div>
+              <div class="text-lg flex gap-2">
+                <div *ngIf="hours > 0">{{ hours }}h</div>
+                <div *ngIf="minutes >= 0">{{ minutes }}m</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- To City Block -->
+          <div class="flex flex-col items-center">
+            <div class="text-lg font-medium text-900 mt-2">
+              To: {{ item.toStation.city | uppercase }}
+            </div>
+            <div class="text-sm text-gray-600">
+              {{ toStationEndTime?.date }}
+            </div>
+            <div class="text-md text-gray-800">
+              {{ toStationEndTime?.time }}
+            </div>
+          </div>
+
+          <p-divider layout="vertical" />
+
+          <!-- Carriage Block -->
+          <div class="flex gap-4">
+            <div
+              *ngFor="let carriage of item.carriages"
+              class="flex flex-col items-center"
+              style="flex-basis: 50%; max-width: 50%"
+            >
+              <div class="text-md font-medium text-600 mt-2">Carriage type</div>
+              <p>{{ carriage.type | carriageClass }}</p>
+              <div class="text-lg text-gray-900">
+                {{
+                  getCarriagePrice(carriage.type) | currency: "USD" : "symbol"
+                }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Route Info Block -->
+
+  <div class="surface-100 p-1 space-x-4">
+    <p-chip
+      label="City {{ item.route.path[0] }} -- City
+        {{ item.route.path[item.route.path.length - 1] }}"
+    />
+    <app-route-dialog
+      [route]="item.route"
+      [schedule]="item.schedule"
+    ></app-route-dialog>
+  </div>
+
+  <p-divider />
+</div>
+
+<p-divider />

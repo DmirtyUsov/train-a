@@ -1,0 +1,44 @@
+<div class="flex flex-col items-center">
+  <!-- Right side seats -->
+  <div
+    class="grid gap-2 grid-flow-col"
+    [ngStyle]="{
+      'grid-template-rows': 'repeat(' + seats.rightCols + ', 35px)',
+    }"
+  >
+    @for (row of seats.rightSide; track $index) {
+      @for (seat of row; track $index) {
+        <div
+          class="bg-blue-200 border-blue-400 text-center border rounded text-xs mb-2 p-2 w-8 h-8"
+          tabindex="0"
+        >
+          {{ seat }}
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Space between seats -->
+  <div class="my-4">
+    <div class="h-2"></div>
+  </div>
+
+  <!-- Left side seats -->
+  <div
+    class="grid gap-2 grid-flow-col"
+    [ngStyle]="{
+      'grid-template-rows': 'repeat(' + seats.leftCols + ', 35px)',
+    }"
+  >
+    @for (row of seats.leftSide; track $index) {
+      @for (seat of row; track $index) {
+        <div
+          class="bg-blue-200 border-blue-400 text-center border rounded text-xs mb-2 p-2 w-8 h-8"
+          tabindex="0"
+        >
+          {{ seat }}
+        </div>
+      }
+    }
+  </div>
+</div>

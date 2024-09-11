@@ -1,5 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { StationsState } from '../reducers/stations.reducer';
+import { Station } from '../../models/station.models';
+import { transformStations } from '../../helpers/search-result.helpers';
 
 export const selectStationsState =
   createFeatureSelector<StationsState>('stations');
@@ -17,4 +19,9 @@ export const selectStationsLoading = createSelector(
 export const selectStationsError = createSelector(
   selectStationsState,
   (state: StationsState) => state.error,
+);
+
+export const selectTransformedStations = createSelector(
+  selectAllStations,
+  (stations: Station[]) => transformStations(stations),
 );

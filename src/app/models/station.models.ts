@@ -10,3 +10,12 @@ export interface Station {
   longitude: number;
   connectedTo?: StationConnection[];
 }
+
+export interface SearchResponseStation {
+  stationId: number;
+  city: string;
+  geolocation: {
+    latitude: number;
+    longitude: number;
+  };
+}

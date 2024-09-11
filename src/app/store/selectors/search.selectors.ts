@@ -17,3 +17,8 @@ export const selectDateSelected = createSelector(
   selectSearchState,
   (state: SearchState) => state.dateSelected,
 );
+
+export const selectMappedDate = createSelector(
+  selectDateSelected,
+  (dateString) => (dateString ? new Date(dateString) : null),
+);

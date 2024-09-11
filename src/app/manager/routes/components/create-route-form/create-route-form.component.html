@@ -1,0 +1,83 @@
+<p-card class="w-full">
+  <form [formGroup]="formGroup">
+    <div class="flex w-full">
+      <!-- STATIONS SECTION -->
+      <div class="flex-1 w-full max-w-[50%]">
+        <p class="text-lg font-bold">Stations</p>
+        <div class="flex flex-row flex-wrap gap-4 p-4">
+          <!-- Render dropdowns based on stationControlNames -->
+          <div *ngFor="let controlName of stationControlNames">
+            <p-dropdown
+              [formControlName]="controlName"
+              [options]="stations"
+              optionLabel="city"
+              placeholder="Select a City"
+              (onChange)="checkDropdownValues()"
+              class="w-full"
+            />
+          </div>
+        </div>
+        <!-- Show the "Add More" button if not all selects have values -->
+        <p-button
+          *ngIf="showAddStationButton"
+          class="m-4"
+          label="Add More Stations"
+          (onClick)="addStationDropdown()"
+          [outlined]="true"
+        ></p-button>
+      </div>
+      <p-divider layout="vertical" />
+      <!-- CARRIAGES SECTION -->
+      <div class="flex-1 w-full max-w-[50%]">
+        <p class="text-lg font-bold">Carriages</p>
+        <div class="flex flex-row flex-wrap gap-4 p-4">
+          <!-- Render dropdowns based on carriageControlNames -->
+          <div *ngFor="let controlName of carriageControlNames">
+            <p-dropdown
+              [formControlName]="controlName"
+              [options]="carriageTypes"
+              optionLabel="name"
+              placeholder="Select a Carriage"
+              (onChange)="checkDropdownValues()"
+              class="w-full"
+            />
+          </div>
+        </div>
+        <!-- Show the "Add More" button if not all selects have values -->
+        <p-button
+          *ngIf="showAddCarriageButton"
+          class="m-4"
+          label="Add More Carriages"
+          (onClick)="addCarriageDropdown()"
+          [outlined]="true"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+  <div class="flex gap-4">
+    <!-- Display the Save button if no selectedRoute -->
+    <div class="mt-4" *ngIf="!selectedRoute">
+      <p-button
+        label="Save"
+        (onClick)="onSaveButtonClick()"
+        [outlined]="true"
+      ></p-button>
+    </div>
+    <!-- Display the Update button if there is a selectedRoute -->
+    <div class="mt-4" *ngIf="selectedRoute">
+      <p-button
+        label="Update"
+        (onClick)="onUpdateButtonClick()"
+        [outlined]="true"
+      ></p-button>
+    </div>
+    <div class="mt-4">
+      <p-button
+        label="Cancel"
+        (onClick)="onCancelButtonClick()"
+        [outlined]="true"
+        severity="danger"
+      ></p-button>
+    </div>
+  </div>
+</p-card>

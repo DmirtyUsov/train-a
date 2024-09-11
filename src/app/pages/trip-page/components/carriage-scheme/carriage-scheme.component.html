@@ -1,0 +1,69 @@
+<p>Car {{ carriageIndex + 1 }}</p>
+<div class="flex flex-col items-center">
+  <!-- Right side seats -->
+  <div
+    class="grid gap-2"
+    [ngStyle]="{
+      'grid-template-columns': 'repeat(' + carriageInfo?.rows + ', 35px)',
+    }"
+  >
+    <div *ngFor="let row of rightSeatNumbers">
+      <div
+        *ngFor="let seat of row"
+        [ngClass]="{
+          'bg-yellow-200 border-yellow-400':
+            seat === (selectedSeat$ | async) &&
+            carriageIndex + 1 === (selectedCarriage$ | async),
+          'bg-blue-200 border-blue-400': !(
+            seat === (selectedSeat$ | async) &&
+            carriageIndex + 1 === (selectedCarriage$ | async)
+          ),
+        }"
+        class="seat text-center border rounded text-xs mb-2 p-2 w-8 h-8 cursor-pointer"
+        tabindex="0"
+        (click)="selectSeat(seat)"
+        (keydown.enter)="selectSeat(seat)"
+        (keydown.space)="selectSeat(seat)"
+      >
+        {{ seat }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Space between seats -->
+  <div class="my-4">
+    <div class="h-2"></div>
+  </div>
+
+  <!-- Left side seats -->
+  <div
+    class="grid gap-2"
+    [ngStyle]="{
+      'grid-template-columns': 'repeat(' + carriageInfo?.rows + ', 35px)',
+    }"
+  >
+    <div *ngFor="let row of leftSeatNumbers">
+      <div
+        *ngFor="let seat of row"
+        [ngClass]="{
+          'bg-yellow-200 border-yellow-400':
+            seat === (selectedSeat$ | async) &&
+            carriageIndex + 1 === (selectedCarriage$ | async),
+          'bg-blue-200 border-blue-400': !(
+            seat === (selectedSeat$ | async) &&
+            carriageIndex + 1 === (selectedCarriage$ | async)
+          ),
+        }"
+        class="seat text-center border rounded text-xs mb-2 p-2 w-8 h-8 cursor-pointer"
+        tabindex="0"
+        (click)="selectSeat(seat)"
+        (keydown.enter)="selectSeat(seat)"
+        (keydown.space)="selectSeat(seat)"
+      >
+        {{ seat }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-divider />
